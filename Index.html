@@ -3123,11 +3123,42 @@ window.onload = loadData;
   }
 </style>
 
-<!-- 3. Tombol baru (Link murni, pasti bisa diklik) -->
-<a href="bot.html" class="bot-link-baru" title="Chat dengan Bot">
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><circle cx="9" cy="10" r="1" fill="white"/><circle cx="15" cy="10" r="1" fill="white"/><line x1="9" y1="14" x2="15" y2="14"/></svg>
+<!-- Tombol Chat Bot - MENUTUPI tombol lama di pojok kanan bawah -->
+<a href="bot.html" class="bot-link-baru" title="Chat dengan Bot" aria-label="Chat dengan Bot">
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    <circle cx="9" cy="10" r="1" fill="white"/>
+    <circle cx="15" cy="10" r="1" fill="white"/>
+    <line x1="9" y1="14" x2="15" y2="14"/>
+  </svg>
 </a>
 
-</script>
+<style>
+  .bot-link-baru {
+    position: fixed;
+    right: 24px;               /* ⬅️ SAMAKAN dengan tombol lama */
+    bottom: 24px;              /* ⬅️ SAMAKAN dengan tombol lama */
+    width: 60px;               /* ⬅️ samakan / lebih besar dari tombol lama */
+    height: 60px;
+    background: #2563eb;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+    z-index: 99999;            /* ⬅️ LEBIH TINGGI dari tombol lama */
+    text-decoration: none;
+    transition: transform 0.2s ease, background 0.2s ease;
+  }
+
+  .bot-link-baru:hover {
+    background: #1d4ed8;
+    transform: scale(1.08);
+  }
+
+  .bot-link-baru:active {
+    transform: scale(0.95);
+  }
+</style>
 </body>
 </html>
