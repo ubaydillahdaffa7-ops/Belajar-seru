@@ -2779,6 +2779,74 @@ TOOLS.ujian = {
     }
 };
 
+/* =========================================================
+   VIVO 1820 FIX — dipasang setelah semua inisialisasi.
+   Cuma menambahkan setup ulang event & fallback untuk
+   browser lama. TIDAK mengubah TOOLS, state, atau UI.
+   ========================================================= */
+function applyVivoFix() {
+    try {
+        // 1. Paksa bottom-nav & nav-item bisa diklik
+        var nav = document.querySelector('.bottom-nav');
+        if (nav) {
+            nav.style.position = 'fixed';
+            nav.style.bottom = '0';
+            nav.style.left = '0';
+            nav.style.right = '0';
+            nav.style.zIndex = '999999';
+            nav.style.background = '#ffffff';
+            nav.style.display = 'flex';
+            nav.style.flexDirection = 'row';
+            nav.style.pointerEvents = 'auto';
+        }
+
+        // 2. Tiap nav-item: paksa pointer-event & pasang listener
+        //    eksplisit (untuk browser lama yang event bubbling-nya aneh)
+        var views = ['view-beranda', 'view-belajar', 'view-tool', 'view-info'];
+        var items = document.querySelectorAll('.nav-item');
+        for (var i = 0; i < items.length; i++) {
+            (function(idx) {
+                var btn = items[idx];
+                btn.style.pointerEvents = 'auto';
+                btn.style.zIndex = '1000000';
+                btn.style.visibility = 'visible';
+                btn.style.opacity = '1';
+                btn.style.cursor = 'pointer';
+
+                // Hapus onclick lama, ganti dengan yang lebih stabil
+                btn.onclick = null;
+                btn.addEventListener('click', function(ev) {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    switchMainView(views[idx], btn);
+                }, true);
+            })(i);
+        }
+
+        // 3. FAB jangan nutupi nav
+        var fab = document.querySelector('.bot-fab');
+        if (fab) {
+            fab.style.zIndex = '50';
+            fab.style.bottom = '84px';
+        }
+
+        // 4. Content jangan overlap nav
+        var content = document.querySelector('.content-area');
+        if (content) content.style.paddingBottom = '90px';
+
+        console.log('[VIVO FIX] Nav & FAB di-reset untuk browser lama.');
+    } catch (e) {
+        console.warn('[VIVO FIX] Gagal apply:', e);
+    }
+}
+
+// Jalankan setelah DOM siap + delay sedikit untuk browser lambat
+setTimeout(applyVivoFix, 300);
+window.addEventListener('load', applyVivoFix);
+
+/* =========================================================
+   INIT
+   ========================================================= */
 window.onload = loadData;
 </script>
 </body>
