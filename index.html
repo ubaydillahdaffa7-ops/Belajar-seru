@@ -1,11 +1,1815 @@
 <!DOCTYPE html>
-<html lang="id" data-theme="dark"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#050405"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg">
-<title>DAFZZ INTELLIGENCE</title><link rel="stylesheet" href="style.css"></head><body>
-<canvas id="bg"></canvas>
-<div id="sp"><div class="ring"></div><div class="logo big">DAFZZ INTELLIGENCE</div><p class="by">𝙱𝚢 𓆩 ᖽᐸɪղᘜ ༒ ᙃᴀ̷𝖿ᴢᴢ 𓆪</p><p class="sl">LEARN DIFFERENT. UNDERSTAND DEEPER.</p><p class="k">Ketuk untuk melewati</p></div>
-<div id="lv"></div>
-<header><button class="g ib" onclick="dr()" aria-label="Menu" id="mb"></button><span class="logo">DAFZZ</span><button class="g ib" onclick="go('srch')" aria-label="Cari" id="sb"></button></header>
-<aside id="dw"></aside><main id="v"></main><nav id="n"></nav><div id="ts"></div>
-<script src="app.js"></script></body></html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DAFZZ INTELLIGENCE</title>
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --primary-light: #a29bfe;
+            --primary-soft: #f0edff;
+            --bg-main: #f8f9fe;
+            --card-bg: #ffffff;
+            --text-main: #2d3436;
+            --text-sub: #636e72;
+            --accent-yellow: #ffeaa7;
+            --accent-red: #ff7675;
+            --shadow: 0 10px 25px -5px rgba(108, 92, 231, 0.15);
+            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        /* user-select hanya pada elemen interaktif */
+        button, .nav-item, .tab-btn, .tool-card, header, .bottom-nav, .modal-title {
+            user-select: none;
+        }
+
+        body {
+            background-color: #1e1e2e;
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 420px;
+            height: 90vh;
+            max-height: 850px;
+            background: var(--bg-main);
+            position: relative;
+            border-radius: 36px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Splash Screen */
+        #splash {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--primary) 0%, #8e44ad 100%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            transition: opacity 0.4s ease, visibility 0.4s;
+        }
+
+        .splash-logo {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+
+        /* Header UI */
+        header {
+            padding: 20px 20px 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-main);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .user-info h2 { font-size: 1.05rem; font-weight: 700; }
+        .user-info p { font-size: 0.75rem; color: var(--text-sub); }
+
+        /* Navigation Bar Sub (Tab) */
+        .tab-nav {
+            display: flex;
+            padding: 0 20px;
+            gap: 8px;
+            margin-bottom: 12px;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: var(--card-bg);
+            border: 1px solid rgba(0,0,0,0.05);
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-sub);
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Views Content */
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 20px 20px;
+        }
+
+        .view { display: none; }
+        .view.active { display: block; }
+
+        /* Card Visual Components */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-bottom: 14px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .card-purple {
+            background: linear-gradient(135deg, var(--primary) 0%, #7d5fff 100%);
+            color: white;
+        }
+
+        .card-yellow {
+            background: linear-gradient(135deg, #fff9e6 0%, #ffeaa7 100%);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .grid-tools {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-md);
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.2s;
+        }
+
+        .tool-card:hover { transform: translateY(-3px); }
+        .tool-card svg { color: var(--primary); }
+        .tool-card h4 { font-size: 0.85rem; }
+
+        /* Bottom Nav UI */
+        .bottom-nav {
+            height: 70px;
+            background: rgba(255, 255, 255, 0.95);
+            border-top: 1px solid rgba(0,0,0,0.06);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            background: none;
+            border: none;
+            color: var(--text-sub);
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 25%;
+        }
+
+        .nav-item.active { color: var(--primary); }
+
+        /* Modal Overlay */
+        .modal {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            padding: 20px;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+
+        button { cursor: pointer; }
+        input, textarea, select { 
+            width: 100%; 
+            padding: 10px; 
+            margin: 8px 0; 
+            border: 1px solid #e0e0e0; 
+            border-radius: 10px; 
+            font-size: 0.9rem; 
+            font-family: inherit;
+            color: var(--text-main);
+        }
+        input:focus, textarea:focus, select:focus { outline: 2px solid var(--primary-soft); border-color: var(--primary-light); }
+        textarea { min-height: 90px; resize: vertical; }
+        .btn-main { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 10px; font-weight: bold; }
+        .btn-secondary { width: 100%; padding: 10px; background: var(--bg-main); color: var(--text-main); border: 1px solid #e0e0e0; border-radius: 10px; font-weight: 600; margin-top: 8px; }
+        .btn-danger { width: 100%; padding: 10px; background: #fff0ee; color: var(--accent-red); border: none; border-radius: 10px; font-weight: 600; margin-top: 8px; }
+
+        /* ==== TOOL-SPECIFIC STYLES (konsisten dengan UI utama) ==== */
+        .toast {
+            position: absolute;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text-main);
+            color: white;
+            padding: 10px 18px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 3000;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        .toast.show { opacity: 1; }
+
+        .modal-tool-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 4px; }
+        .modal-tool-sub { font-size: 0.75rem; color: var(--text-sub); margin-bottom: 14px; }
+
+        .result-box {
+            background: var(--primary-soft);
+            padding: 12px;
+            border-radius: 12px;
+            margin: 10px 0;
+            font-weight: 600;
+            color: var(--primary);
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            background: var(--bg-main);
+            border-radius: 10px;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            gap: 8px;
+        }
+        .list-item .del-btn {
+            background: none; border: none; color: var(--accent-red);
+            font-size: 0.7rem; font-weight: 600; padding: 4px 8px;
+            border-radius: 6px;
+        }
+        .list-item .del-btn:hover { background: #fff0ee; }
+
+        .calc-display {
+            background: var(--text-main);
+            color: white;
+            padding: 16px;
+            border-radius: 12px;
+            text-align: right;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            word-break: break-all;
+        }
+        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+        .calc-btn {
+            padding: 14px 4px; background: var(--bg-main); border: none;
+            border-radius: 10px; font-size: 1rem; font-weight: 600;
+            color: var(--text-main); transition: transform 0.1s;
+        }
+        .calc-btn:active { transform: scale(0.95); }
+        .calc-btn.op { background: var(--primary-soft); color: var(--primary); }
+        .calc-btn.eq { background: var(--primary); color: white; }
+        .calc-btn.clear { background: #fff0ee; color: var(--accent-red); }
+
+        .timer-display {
+            text-align: center; font-size: 2.8rem; font-weight: 800;
+            color: var(--text-main); padding: 16px 0;
+            font-variant-numeric: tabular-nums;
+        }
+        .timer-display.running { color: var(--primary); }
+        .timer-presets { display: flex; gap: 6px; margin-bottom: 12px; }
+        .timer-presets button {
+            flex: 1; padding: 8px; background: var(--bg-main); border: none;
+            border-radius: 8px; font-size: 0.8rem; font-weight: 600;
+            color: var(--text-sub);
+        }
+        .timer-presets button.active { background: var(--primary); color: white; }
+
+        .flashcard {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            padding: 30px 20px;
+            border-radius: var(--radius-md);
+            text-align: center;
+            min-height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            cursor: pointer;
+            line-height: 1.4;
+            word-break: break-word;
+        }
+
+        .quiz-option {
+            display: block; width: 100%; text-align: left; padding: 12px;
+            margin: 6px 0; background: var(--bg-main);
+            border: 2px solid transparent; border-radius: 10px;
+            font-size: 0.85rem; color: var(--text-main);
+        }
+        .quiz-option.selected { border-color: var(--primary); background: var(--primary-soft); }
+        .quiz-option.correct { border-color: #00b894; background: #e8f8f4; }
+        .quiz-option.wrong { border-color: var(--accent-red); background: #fff0ee; }
+
+        .check-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 12px; background: var(--bg-main);
+            border-radius: 10px; margin-bottom: 6px; font-size: 0.85rem;
+        }
+        .check-item input { width: auto; margin: 0; accent-color: var(--primary); }
+        .check-item.done label { text-decoration: line-through; color: var(--text-sub); }
+
+        .element-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px;
+        }
+        .element-cell {
+            background: var(--bg-main); padding: 6px 2px; border-radius: 6px;
+            text-align: center; cursor: pointer; transition: background 0.15s;
+        }
+        .element-cell:hover { background: var(--primary-soft); }
+        .element-cell .num { color: var(--text-sub); font-size: 0.55rem; }
+        .element-cell .sym { font-weight: bold; color: var(--primary); font-size: 0.95rem; display: block; }
+        .element-cell .name { color: var(--text-sub); font-size: 0.6rem; }
+
+        .volume-row { display: flex; align-items: center; gap: 10px; margin: 10px 0; }
+        .volume-row input[type="range"] { flex: 1; margin: 0; }
+
+        .day-tab { display: flex; gap: 4px; margin-bottom: 10px; overflow-x: auto; }
+        .day-tab button {
+            padding: 6px 10px; background: var(--bg-main); border: none;
+            border-radius: 8px; font-size: 0.75rem; font-weight: 600;
+            color: var(--text-sub); white-space: nowrap;
+        }
+        .day-tab button.active { background: var(--primary); color: white; }
+
+        .empty-state {
+            text-align: center; padding: 20px; color: var(--text-sub);
+            font-size: 0.8rem;
+        }
+
+        .file-preview {
+            width: 100%; max-height: 260px; object-fit: contain;
+            border-radius: 10px; margin: 8px 0; background: var(--bg-main);
+        }
+
+        .center-btn { display: flex; justify-content: center; padding: 10px 0; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div id="splash" onclick="dismissSplash()">
+        <div class="splash-logo">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        </div>
+        <h2 style="margin-top: 14px; font-weight: 800;">DAFZZ INTELLIGENCE</h2>
+        <p style="font-size: 0.75rem; opacity: 0.8; margin-top: 4px;">Klik layar jika tidak otomatis masuk</p>
+    </div>
+
+    <header>
+        <div class="user-profile">
+            <div class="avatar">D</div>
+            <div class="user-info">
+                <h2 id="user-name">Siswa DAFZZ</h2>
+                <p id="user-status">⚡ Level <span id="lvl-val">1</span> • <span id="xp-val">0</span> XP</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="content-area">
+        <!-- VIEW 1 -->
+        <div id="view-beranda" class="view active">
+            <div class="card card-purple">
+                <span style="font-size: 0.7rem; text-transform: uppercase;">Pelajaran Utama Hari Ini</span>
+                <h2 style="font-size: 1.4rem; margin-top: 4px;">Matematika</h2>
+                <p style="font-size: 0.75rem; opacity: 0.9; margin-top: 4px;">07.00 - 08.30 • Ruang B1</p>
+            </div>
+            <div class="grid-2" style="margin-bottom: 14px;">
+                <div class="card" style="text-align: center; margin: 0;">
+                    <span style="font-size: 0.7rem; color: var(--text-sub);">Streak Belajar</span>
+                    <h3 style="color: #e17055; font-size: 1.1rem; margin-top: 2px;">🔥 <span id="streak-val">1</span> Hari</h3>
+                </div>
+                <div class="card" style="text-align: center; margin: 0;">
+                    <span style="font-size: 0.7rem; color: var(--text-sub);">Ujian Mendatang</span>
+                    <h3 style="color: var(--primary); font-size: 1.1rem; margin-top: 2px;">📝 4 Soal</h3>
+                </div>
+            </div>
+            <div class="card card-yellow">
+                <span style="font-size: 0.7rem; color: #d63031; font-weight: bold;">Ulangan Harian</span>
+                <h4 style="margin-top: 2px;">IPA - Biologi Sel</h4>
+                <p style="font-size: 0.75rem; color: var(--text-sub);">⏳ 3 Hari Lagi (11 Nov)</p>
+            </div>
+        </div>
+
+        <!-- VIEW 2 -->
+        <div id="view-belajar" class="view">
+            <div class="tab-nav">
+                <button class="tab-btn active" onclick="switchSubTab(event, 'materi')">Materi</button>
+                <button class="tab-btn" onclick="switchSubTab(event, 'jadwal')">Jadwal</button>
+                <button class="tab-btn" onclick="switchSubTab(event, 'catatan')">Catatan</button>
+            </div>
+            <div id="sub-materi" class="sub-tab-content">
+                <div class="card">
+                    <h4>Bab 1: Persamaan Kuadrat</h4>
+                    <p style="font-size: 0.75rem; color: var(--text-sub); margin: 4px 0 10px;">Pelajari rumus ABC dan fungsi kuadrat.</p>
+                    <button class="btn-main" onclick="addXP(20)">Selesaikan Bab (+20 XP)</button>
+                </div>
+            </div>
+            <div id="sub-jadwal" class="sub-tab-content" style="display: none;">
+                <div class="card"><h4>Senin</h4><p style="font-size: 0.8rem; color: var(--text-sub);">07.00 - IPA | 08.30 - MTK | 10.00 - PKN</p></div>
+                <div class="card"><h4>Selasa</h4><p style="font-size: 0.8rem; color: var(--text-sub);">07.00 - TIK | 08.30 - SBK</p></div>
+            </div>
+            <div id="sub-catatan" class="sub-tab-content" style="display: none;">
+                <div class="card">
+                    <input type="text" id="note-in" placeholder="Tulis catatan cepat..." maxlength="200">
+                    <button class="btn-main" onclick="saveNote()">Simpan Catatan</button>
+                </div>
+                <div id="note-list"></div>
+            </div>
+        </div>
+
+        <!-- VIEW 3: TOOLS (SVG line icons) -->
+        <div id="view-tool" class="view">
+            <h3 style="margin-bottom: 12px; font-size: 1rem;">18 Tools Pintar</h3>
+            <div class="grid-tools">
+                <div class="tool-card" onclick="openToolModal('kalkulator')">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="8" y2="10"/><line x1="12" y1="10" x2="12" y2="10"/><line x1="16" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="8" y2="14"/><line x1="12" y1="14" x2="12" y2="14"/><line x1="16" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="16" y2="18"/></svg>
+                    <h4>Kalkulator</h4>
+                </div>
+                <div class="tool-card" onclick="openToolModal('pomodoro')">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    <h4>Pomodoro</h4>
+                </div>
+                <div class="tool-card" onclick="openToolModal('flashcard')">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                    <h4>Flashcard</h4>
+                </div>
+                <div class="tool-card" onclick="openToolModal('konverter')">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+                    <h4>Konverter</h4>
+                </div>
+                <div class="tool-card" onclick="openToolModal('periodik')">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                    <h4>Tabel Periodik</h4>
+                </div>
+                <div class="tool-card" onclick="openToolModal('pdf')">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    <h4>Pembaca PDF</h4>
+                </div>
+                <div class="tool-card" onclick="openToolModal('katakata')">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+                    <h4>Hitung Kata</h4>
+                </div>
+                <div class="tool-card" onclick="openToolModal('stopwatch')">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="9" y1="2" x2="15" y2="2"/></svg>
+                    <h4>Stopwatch</h4>
+                </div>
+                <div class="tool-card" onclick="openToolModal('rumus')">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 4H6l6 8-6 8h12"/></svg>
+                    <h4>Rumus MTK</h4>
+                </div>
+                <div class="tool-card" onclick="openToolModal('tabungan')">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M16 13h2"/></svg>
+                    <h4>Tabungan</h4>
+                </div>
+                <div class="tool-card" onclick="openToolModal('papan')">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                    <h4>Foto Papan</h4>
+                </div>
+                <div class="tool-card" onclick="openToolModal('rak')">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                    <h4>Rak Buku</h4>
+                </div>
+                <div class="tool-card" onclick="openToolModal('piket')">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+                    <h4>Piket</h4>
+                </div>
+                <div class="tool-card" onclick="openToolModal('mindmap')">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                    <h4>Mindmap</h4>
+                </div>
+                <div class="tool-card" onclick="openToolModal('kamus')">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                    <h4>Kamus Sains</h4>
+                </div>
+                <div class="tool-card" onclick="openToolModal('seragam')">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
+                    <h4>Seragam</h4>
+                </div>
+                <div class="tool-card" onclick="openToolModal('hujan')">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+                    <h4>Audio Hujan</h4>
+                </div>
+                <div class="tool-card" onclick="openToolModal('ujian')">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                    <h4>Simulasi Ujian</h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 4 -->
+        <div id="view-info" class="view">
+            <div class="card" style="text-align: center;">
+                <h3>Siswa DAFZZ</h3>
+                <p style="font-size: 0.8rem; color: var(--text-sub);">Versi 2.1 (PC & Mobile Ready)</p>
+            </div>
+            <div class="card">
+                <h4>Penyimpanan Data</h4>
+                <button class="btn-main" style="background: #e17055; margin-top: 10px;" onclick="resetAllData()">Reset Data LocalStorage</button>
+            </div>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <button class="nav-item active" onclick="switchMainView(event, 'view-beranda')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+            <span>Beranda</span>
+        </button>
+        <button class="nav-item" onclick="switchMainView(event, 'view-belajar')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            <span>Belajar</span>
+        </button>
+        <button class="nav-item" onclick="switchMainView(event, 'view-tool')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            <span>Tool</span>
+        </button>
+        <button class="nav-item" onclick="switchMainView(event, 'view-info')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            <span>Info</span>
+        </button>
+    </nav>
+
+    <div id="modal-box" class="modal">
+        <div class="modal-content">
+            <h3 id="modal-title" class="modal-tool-title">Tool</h3>
+            <div id="modal-body"></div>
+            <button class="btn-main" style="margin-top: 14px; background: #636e72;" onclick="closeModalBox()">Tutup</button>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+</div>
+
+<script>
+/* =========================================================
+   STATE & PERSISTENSI
+   ========================================================= */
+const DEFAULT_STATE = {
+    xp: 0, level: 1, streak: 1, notes: [],
+    flashcards: [],
+    savings: [],
+    books: [],
+    piket: { senin: [], selasa: [], rabu: [], kamis: [], jumat: [], sabtu: [], minggu: [] },
+    mindmap: { center: '', branches: [] },
+    seragam: {}
+};
+
+let state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+let audioCtx = null;
+let activeTimers = [];
+let rainCtx = null, rainSource = null, rainGain = null;
+
+/* =========================================================
+   SOUND (sama seperti awal — beep sintetis)
+   ========================================================= */
+function playBeep() {
+    try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.frequency.setValueAtTime(500, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.08);
+    } catch (e) {}
+}
+
+/* =========================================================
+   TOAST (pengganti alert untuk feedback ringan)
+   ========================================================= */
+let toastTimeout;
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.innerText = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+/* =========================================================
+   SPLASH
+   ========================================================= */
+function dismissSplash() {
+    const splash = document.getElementById('splash');
+    if (!splash) return;
+    splash.style.opacity = '0';
+    setTimeout(() => { splash.style.display = 'none'; }, 400);
+}
+setTimeout(dismissSplash, 1000);
+
+/* =========================================================
+   LOAD / SAVE DATA
+   ========================================================= */
+function loadData() {
+    try {
+        const local = localStorage.getItem('dafzz_state');
+        if (local) {
+            const parsed = JSON.parse(local);
+            state = Object.assign({}, DEFAULT_STATE, parsed);
+            state.piket = Object.assign({}, DEFAULT_STATE.piket, parsed.piket || {});
+            state.mindmap = Object.assign({}, DEFAULT_STATE.mindmap, parsed.mindmap || {});
+        }
+    } catch (e) {
+        console.warn('Data corrupt, reset ke default.', e);
+        state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+    }
+    updateUI();
+    renderNotesUI();
+}
+
+function saveData() {
+    try {
+        localStorage.setItem('dafzz_state', JSON.stringify(state));
+    } catch (e) {
+        console.warn('Gagal save:', e);
+    }
+    updateUI();
+}
+
+function updateUI() {
+    const lvl = Math.floor(state.xp / 100) + 1;
+    document.getElementById('xp-val').innerText = state.xp;
+    document.getElementById('lvl-val').innerText = lvl;
+    document.getElementById('streak-val').innerText = state.streak;
+}
+
+/* =========================================================
+   NAVIGASI
+   ========================================================= */
+function switchMainView(e, viewId) {
+    playBeep();
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById(viewId).classList.add('active');
+    e.currentTarget.classList.add('active');
+}
+
+function switchSubTab(e, tabId) {
+    playBeep();
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.sub-tab-content').forEach(c => c.style.display = 'none');
+    e.currentTarget.classList.add('active');
+    document.getElementById('sub-' + tabId).style.display = 'block';
+}
+
+/* =========================================================
+   XP, CATATAN
+   ========================================================= */
+function addXP(amount) {
+    playBeep();
+    state.xp += amount;
+    saveData();
+    showToast(`+${amount} XP diperoleh!`);
+}
+
+function saveNote() {
+    const input = document.getElementById('note-in');
+    if (input.value.trim() !== '') {
+        state.notes.push(input.value.trim());
+        input.value = '';
+        saveData();
+        renderNotesUI();
+        showToast('Catatan tersimpan');
+    } else {
+        showToast('Catatan kosong');
+    }
+}
+
+function renderNotesUI() {
+    const list = document.getElementById('note-list');
+    if (!state.notes || state.notes.length === 0) {
+        list.innerHTML = '<div class="card empty-state">Belum ada catatan</div>';
+        return;
+    }
+    list.innerHTML = state.notes.map((n, i) => `
+        <div class="card" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <span style="flex:1; word-break: break-word;">${escapeHtml(n)}</span>
+            <button class="del-btn" style="color: var(--accent-red); border: none; background: none; font-size:0.75rem; font-weight:600; margin-left:10px;" onclick="deleteNote(${i})">Hapus</button>
+        </div>
+    `).join('');
+}
+
+function deleteNote(index) {
+    if (!confirm('Hapus catatan ini?')) return;
+    state.notes.splice(index, 1);
+    saveData();
+    renderNotesUI();
+    showToast('Catatan dihapus');
+}
+
+function resetAllData() {
+    if (confirm("Reset seluruh data?")) {
+        localStorage.removeItem('dafzz_state');
+        location.reload();
+    }
+}
+
+function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, s => ({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[s]));
+}
+
+/* =========================================================
+   MODAL SYSTEM
+   ========================================================= */
+function clearActiveTimers() {
+    activeTimers.forEach(id => clearInterval(id));
+    activeTimers = [];
+    stopRain();
+}
+
+function openToolModal(toolKey) {
+    playBeep();
+    const tool = TOOLS[toolKey];
+    if (!tool) { showToast('Tool tidak ditemukan'); return; }
+    document.getElementById('modal-title').innerText = tool.name;
+    document.getElementById('modal-body').innerHTML = tool.render();
+    document.getElementById('modal-box').style.display = 'flex';
+    try { tool.init?.(); } catch (e) { console.error(e); }
+}
+
+function closeModalBox() {
+    document.getElementById('modal-box').style.display = 'none';
+    clearActiveTimers();
+}
+
+document.getElementById('modal-box').addEventListener('click', e => {
+    if (e.target.id === 'modal-box') closeModalBox();
+});
+
+/* =========================================================
+   TOOL IMPLEMENTATIONS
+   ========================================================= */
+const TOOLS = {};
+
+/* 1. KALKULATOR */
+TOOLS.kalkulator = {
+    name: 'Kalkulator Ilmiah',
+    render: () => `
+        <p class="modal-tool-sub">Hitung ekspresi matematika dengan aman.</p>
+        <div class="calc-display" id="calc-display">0</div>
+        <div class="calc-grid" id="calc-grid">
+            <button class="calc-btn clear" data-calc="C">C</button>
+            <button class="calc-btn op" data-calc="(">(</button>
+            <button class="calc-btn op" data-calc=")">)</button>
+            <button class="calc-btn op" data-calc="/">÷</button>
+            <button class="calc-btn" data-calc="7">7</button>
+            <button class="calc-btn" data-calc="8">8</button>
+            <button class="calc-btn" data-calc="9">9</button>
+            <button class="calc-btn op" data-calc="*">×</button>
+            <button class="calc-btn" data-calc="4">4</button>
+            <button class="calc-btn" data-calc="5">5</button>
+            <button class="calc-btn" data-calc="6">6</button>
+            <button class="calc-btn op" data-calc="-">−</button>
+            <button class="calc-btn" data-calc="1">1</button>
+            <button class="calc-btn" data-calc="2">2</button>
+            <button class="calc-btn" data-calc="3">3</button>
+            <button class="calc-btn op" data-calc="+">+</button>
+            <button class="calc-btn" data-calc="0">0</button>
+            <button class="calc-btn" data-calc=".">.</button>
+            <button class="calc-btn clear" data-calc="DEL">DEL</button>
+            <button class="calc-btn eq" data-calc="=">=</button>
+        </div>
+    `,
+    init: () => {
+        let expr = '';
+        const display = document.getElementById('calc-display');
+        document.getElementById('calc-grid').onclick = (e) => {
+            const btn = e.target.closest('[data-calc]');
+            if (!btn) return;
+            playBeep();
+            const v = btn.dataset.calc;
+            if (v === 'C') expr = '';
+            else if (v === 'DEL') expr = expr.slice(0, -1);
+            else if (v === '=') {
+                try {
+                    const safe = expr.replace(/[^0-9+\-*/().]/g, '');
+                    if (!safe) throw new Error('empty');
+                    const result = Function('"use strict"; return (' + safe + ')')();
+                    if (!isFinite(result)) throw new Error('inf');
+                    expr = String(result);
+                } catch (err) {
+                    expr = 'Error';
+                }
+            } else {
+                if (expr === 'Error') expr = '';
+                expr += v;
+            }
+            display.innerText = expr || '0';
+        };
+    }
+};
+
+/* 2. POMODORO */
+TOOLS.pomodoro = {
+    name: 'Timer Pomodoro',
+    render: () => `
+        <p class="modal-tool-sub">Fokus 25 menit, istirahat 5 menit.</p>
+        <div class="timer-presets" id="pomo-presets">
+            <button data-min="5">5 mnt</button>
+            <button data-min="15">15 mnt</button>
+            <button data-min="25" class="active">25 mnt</button>
+            <button data-min="45">45 mnt</button>
+        </div>
+        <div class="timer-display" id="pomo-display">25:00</div>
+        <button class="btn-main" id="pomo-toggle">Mulai</button>
+        <button class="btn-secondary" id="pomo-reset">Reset</button>
+    `,
+    init: () => {
+        let timeLeft = 25 * 60;
+        let running = false;
+        let intervalId = null;
+        const display = document.getElementById('pomo-display');
+        const toggle = document.getElementById('pomo-toggle');
+
+        const render = () => {
+            const m = Math.floor(timeLeft / 60);
+            const s = timeLeft % 60;
+            display.innerText = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+            display.classList.toggle('running', running);
+        };
+
+        const tick = () => {
+            if (timeLeft > 0) {
+                timeLeft--;
+                render();
+            } else {
+                clearInterval(intervalId);
+                running = false;
+                toggle.innerText = 'Mulai';
+                render();
+                playBeep();
+                showToast('Waktu habis!');
+            }
+        };
+
+        toggle.onclick = () => {
+            playBeep();
+            if (running) {
+                clearInterval(intervalId);
+                activeTimers = activeTimers.filter(id => id !== intervalId);
+                running = false;
+                toggle.innerText = 'Mulai';
+            } else {
+                running = true;
+                toggle.innerText = 'Jeda';
+                intervalId = setInterval(tick, 1000);
+                activeTimers.push(intervalId);
+            }
+            render();
+        };
+
+        document.getElementById('pomo-reset').onclick = () => {
+            playBeep();
+            clearInterval(intervalId);
+            activeTimers = activeTimers.filter(id => id !== intervalId);
+            running = false;
+            timeLeft = 25 * 60;
+            toggle.innerText = 'Mulai';
+            document.querySelectorAll('#pomo-presets button').forEach(b => b.classList.remove('active'));
+            document.querySelector('#pomo-presets button[data-min="25"]').classList.add('active');
+            render();
+        };
+
+        document.getElementById('pomo-presets').onclick = (e) => {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+            playBeep();
+            clearInterval(intervalId);
+            activeTimers = activeTimers.filter(id => id !== intervalId);
+            running = false;
+            timeLeft = parseInt(btn.dataset.min) * 60;
+            document.querySelectorAll('#pomo-presets button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            toggle.innerText = 'Mulai';
+            render();
+        };
+
+        render();
+    }
+};
+
+/* 3. FLASHCARD */
+TOOLS.flashcard = {
+    name: 'Flashcard',
+    render: () => `
+        <p class="modal-tool-sub">Kartu belajar — klik kartu untuk membalik.</p>
+        <input type="text" id="fc-front" placeholder="Depan (pertanyaan)" maxlength="120">
+        <input type="text" id="fc-back" placeholder="Belakang (jawaban)" maxlength="120">
+        <button class="btn-main" id="fc-add">Tambah Kartu</button>
+        <div id="fc-study" style="margin-top: 16px;"></div>
+        <div id="fc-list" style="margin-top: 12px;"></div>
+    `,
+    init: () => {
+        let currentIndex = 0;
+        let showingBack = false;
+
+        const renderStudy = () => {
+            const wrap = document.getElementById('fc-study');
+            if (!state.flashcards.length) {
+                wrap.innerHTML = '<div class="empty-state">Belum ada kartu. Tambahkan di atas.</div>';
+                return;
+            }
+            if (currentIndex >= state.flashcards.length) currentIndex = 0;
+            const card = state.flashcards[currentIndex];
+            const text = showingBack ? card.back : card.front;
+            wrap.innerHTML = `
+                <div class="flashcard" id="fc-card">${escapeHtml(text)}</div>
+                <div style="display:flex; gap:8px;">
+                    <button class="btn-secondary" id="fc-prev" style="margin-top:0;">Sebelumnya</button>
+                    <button class="btn-secondary" id="fc-next" style="margin-top:0;">Berikutnya</button>
+                </div>
+                <p style="text-align:center; font-size:0.7rem; color:var(--text-sub); margin-top:8px;">${currentIndex + 1} / ${state.flashcards.length}</p>
+            `;
+            document.getElementById('fc-card').onclick = () => {
+                playBeep();
+                showingBack = !showingBack;
+                renderStudy();
+            };
+            document.getElementById('fc-prev').onclick = () => {
+                playBeep();
+                currentIndex = (currentIndex - 1 + state.flashcards.length) % state.flashcards.length;
+                showingBack = false;
+                renderStudy();
+            };
+            document.getElementById('fc-next').onclick = () => {
+                playBeep();
+                currentIndex = (currentIndex + 1) % state.flashcards.length;
+                showingBack = false;
+                renderStudy();
+            };
+        };
+
+        const renderList = () => {
+            const list = document.getElementById('fc-list');
+            if (!state.flashcards.length) { list.innerHTML = ''; return; }
+            list.innerHTML = state.flashcards.map((c, i) => `
+                <div class="list-item">
+                    <span style="flex:1; word-break:break-word;"><strong>${escapeHtml(c.front)}</strong> → ${escapeHtml(c.back)}</span>
+                    <button class="del-btn" onclick="fcDelete(${i})">Hapus</button>
+                </div>
+            `).join('');
+        };
+
+        window.fcDelete = (i) => {
+            if (!confirm('Hapus kartu ini?')) return;
+            state.flashcards.splice(i, 1);
+            saveData();
+            currentIndex = 0;
+            showingBack = false;
+            renderStudy();
+            renderList();
+            showToast('Kartu dihapus');
+        };
+
+        document.getElementById('fc-add').onclick = () => {
+            const f = document.getElementById('fc-front').value.trim();
+            const b = document.getElementById('fc-back').value.trim();
+            if (!f || !b) { showToast('Isi depan & belakang'); return; }
+            state.flashcards.push({ front: f, back: b });
+            saveData();
+            document.getElementById('fc-front').value = '';
+            document.getElementById('fc-back').value = '';
+            renderStudy();
+            renderList();
+            showToast('Kartu ditambahkan');
+        };
+
+        renderStudy();
+        renderList();
+    }
+};
+
+/* 4. KONVERTER */
+TOOLS.konverter = {
+    name: 'Konverter Satuan',
+    render: () => `
+        <p class="modal-tool-sub">Konversi panjang, berat, suhu, dan volume.</p>
+        <select id="conv-type">
+            <option value="panjang">Panjang</option>
+            <option value="berat">Berat</option>
+            <option value="suhu">Suhu</option>
+            <option value="volume">Volume</option>
+        </select>
+        <input type="number" id="conv-input" placeholder="Nilai" value="1" step="any">
+        <select id="conv-from"></select>
+        <select id="conv-to"></select>
+        <div class="result-box" id="conv-result">—</div>
+        <button class="btn-secondary" id="conv-swap">Tukar Arah</button>
+    `,
+    init: () => {
+        const units = {
+            panjang: { m: 1, cm: 0.01, mm: 0.001, km: 1000, in: 0.0254, ft: 0.3048, mi: 1609.344 },
+            berat: { g: 1, kg: 1000, mg: 0.001, ton: 1000000, lb: 453.592, oz: 28.3495 },
+            suhu: { C: 1, F: 1, K: 1 },
+            volume: { L: 1, mL: 0.001, gal: 3.78541, qt: 0.946353 }
+        };
+        const typeSel = document.getElementById('conv-type');
+        const fromSel = document.getElementById('conv-from');
+        const toSel = document.getElementById('conv-to');
+        const input = document.getElementById('conv-input');
+        const result = document.getElementById('conv-result');
+
+        const fillUnits = () => {
+            const type = typeSel.value;
+            const keys = Object.keys(units[type]);
+            fromSel.innerHTML = keys.map(k => `<option value="${k}">${k}</option>`).join('');
+            toSel.innerHTML = keys.map(k => `<option value="${k}">${k}</option>`).join('');
+            if (keys.length > 1) toSel.value = keys[1];
+            convert();
+        };
+
+        const convert = () => {
+            const type = typeSel.value;
+            const val = parseFloat(input.value);
+            if (isNaN(val)) { result.innerText = '—'; return; }
+            const from = fromSel.value;
+            const to = toSel.value;
+            let out;
+            if (type === 'suhu') {
+                let c;
+                if (from === 'C') c = val;
+                else if (from === 'F') c = (val - 32) * 5 / 9;
+                else c = val - 273.15;
+                if (to === 'C') out = c;
+                else if (to === 'F') out = c * 9 / 5 + 32;
+                else out = c + 273.15;
+            } else {
+                out = (val * units[type][from]) / units[type][to];
+            }
+            result.innerText = `${val} ${from} = ${Number(out.toFixed(6))} ${to}`;
+        };
+
+        typeSel.onchange = () => { fillUnits(); playBeep(); };
+        fromSel.onchange = convert;
+        toSel.onchange = convert;
+        input.oninput = convert;
+        document.getElementById('conv-swap').onclick = () => {
+            playBeep();
+            const tmp = fromSel.value;
+            fromSel.value = toSel.value;
+            toSel.value = tmp;
+            convert();
+        };
+
+        fillUnits();
+    }
+};
+
+/* 5. TABEL PERIODIK */
+TOOLS.periodik = {
+    name: 'Tabel Periodik',
+    render: () => `
+        <p class="modal-tool-sub">20 unsur pertama. Klik untuk info.</p>
+        <div class="element-grid" id="element-grid"></div>
+        <div class="result-box" id="element-info" style="margin-top:12px;">Pilih unsur</div>
+    `,
+    init: () => {
+        const elements = [
+            ['H','Hidrogen',1,'1.008'],['He','Helium',2,'4.003'],
+            ['Li','Litium',3,'6.94'],['Be','Berilium',4,'9.012'],
+            ['B','Boron',5,'10.81'],['C','Karbon',6,'12.01'],
+            ['N','Nitrogen',7,'14.01'],['O','Oksigen',8,'16.00'],
+            ['F','Fluor',9,'19.00'],['Ne','Neon',10,'20.18'],
+            ['Na','Natrium',11,'22.99'],['Mg','Magnesium',12,'24.31'],
+            ['Al','Aluminium',13,'26.98'],['Si','Silikon',14,'28.09'],
+            ['P','Fosfor',15,'30.97'],['S','Sulfur',16,'32.06'],
+            ['Cl','Klorin',17,'35.45'],['Ar','Argon',18,'39.95'],
+            ['K','Kalium',19,'39.10'],['Ca','Kalsium',20,'40.08']
+        ];
+        const grid = document.getElementById('element-grid');
+        const info = document.getElementById('element-info');
+        grid.innerHTML = elements.map((e, i) => `
+            <div class="element-cell" data-idx="${i}">
+                <div class="num">${e[2]}</div>
+                <span class="sym">${e[0]}</span>
+                <div class="name">${e[1]}</div>
+            </div>
+        `).join('');
+        grid.onclick = (ev) => {
+            const cell = ev.target.closest('.element-cell');
+            if (!cell) return;
+            playBeep();
+            const e = elements[parseInt(cell.dataset.idx)];
+            info.innerHTML = `<strong>${e[1]} (${e[0]})</strong><br>Nomor atom: ${e[2]} • Massa: ${e[3]}`;
+        };
+    }
+};
+
+/* 6. PEMBACA PDF */
+TOOLS.pdf = {
+    name: 'Pembaca PDF',
+    render: () => `
+        <p class="modal-tool-sub">Pilih file PDF dari perangkatmu.</p>
+        <input type="file" id="pdf-file" accept="application/pdf">
+        <div id="pdf-info" class="empty-state">Belum ada file</div>
+        <a id="pdf-open" class="btn-main" style="display:none; text-align:center; text-decoration:none; padding:12px;" target="_blank">Buka PDF</a>
+    `,
+    init: () => {
+        document.getElementById('pdf-file').onchange = (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            playBeep();
+            if (file.type !== 'application/pdf') {
+                showToast('Bukan file PDF');
+                return;
+            }
+            const url = URL.createObjectURL(file);
+            document.getElementById('pdf-info').innerHTML =
+                `<div class="list-item"><span>${escapeHtml(file.name)}</span><span style="color:var(--text-sub); font-size:0.7rem;">${(file.size/1024).toFixed(1)} KB</span></div>`;
+            const openBtn = document.getElementById('pdf-open');
+            openBtn.href = url;
+            openBtn.style.display = 'block';
+            showToast('PDF siap dibuka');
+        };
+    }
+};
+
+/* 7. HITUNG KATA */
+TOOLS.katakata = {
+    name: 'Hitung Kata',
+    render: () => `
+        <p class="modal-tool-sub">Hitung kata, karakter, dan kalimat.</p>
+        <textarea id="kk-text" placeholder="Tulis atau tempel teks di sini..."></textarea>
+        <div class="result-box" id="kk-result">0 kata • 0 karakter • 0 kalimat</div>
+    `,
+    init: () => {
+        const text = document.getElementById('kk-text');
+        const result = document.getElementById('kk-result');
+        const update = () => {
+            const t = text.value;
+            const words = t.trim() ? t.trim().split(/\s+/).length : 0;
+            const chars = t.length;
+            const sentences = t.trim() ? (t.match(/[.!?]+/g) || []).length || (t.trim() ? 1 : 0) : 0;
+            result.innerText = `${words} kata • ${chars} karakter • ${sentences} kalimat`;
+        };
+        text.oninput = update;
+        update();
+    }
+};
+
+/* 8. STOPWATCH */
+TOOLS.stopwatch = {
+    name: 'Stopwatch',
+    render: () => `
+        <p class="modal-tool-sub">Ukur waktu dengan presisi.</p>
+        <div class="timer-display" id="sw-display">00:00:00.00</div>
+        <button class="btn-main" id="sw-toggle">Mulai</button>
+        <button class="btn-secondary" id="sw-lap">Lap</button>
+        <button class="btn-danger" id="sw-reset">Reset</button>
+        <div id="sw-laps" style="margin-top:12px;"></div>
+    `,
+    init: () => {
+        let startTime = 0, elapsed = 0, running = false, intervalId = null;
+        const display = document.getElementById('sw-display');
+        const toggle = document.getElementById('sw-toggle');
+        const laps = [];
+        const lapsEl = document.getElementById('sw-laps');
+
+        const fmt = (ms) => {
+            const totalSec = Math.floor(ms / 1000);
+            const h = Math.floor(totalSec / 3600);
+            const m = Math.floor((totalSec % 3600) / 60);
+            const s = totalSec % 60;
+            const cs = Math.floor((ms % 1000) / 10);
+            return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}.${String(cs).padStart(2,'0')}`;
+        };
+
+        const render = () => {
+            display.innerText = fmt(elapsed);
+            display.classList.toggle('running', running);
+        };
+
+        const tick = () => { elapsed = Date.now() - startTime; render(); };
+
+        toggle.onclick = () => {
+            playBeep();
+            if (running) {
+                clearInterval(intervalId);
+                activeTimers = activeTimers.filter(id => id !== intervalId);
+                running = false;
+                toggle.innerText = 'Lanjut';
+            } else {
+                startTime = Date.now() - elapsed;
+                running = true;
+                toggle.innerText = 'Jeda';
+                intervalId = setInterval(tick, 50);
+                activeTimers.push(intervalId);
+            }
+            render();
+        };
+
+        document.getElementById('sw-lap').onclick = () => {
+            if (!running) return;
+            playBeep();
+            laps.push(elapsed);
+            lapsEl.innerHTML = laps.map((l, i) => `
+                <div class="list-item"><span>Lap ${i+1}</span><span>${fmt(l)}</span></div>
+            `).join('');
+        };
+
+        document.getElementById('sw-reset').onclick = () => {
+            playBeep();
+            clearInterval(intervalId);
+            activeTimers = activeTimers.filter(id => id !== intervalId);
+            running = false;
+            elapsed = 0;
+            laps.length = 0;
+            lapsEl.innerHTML = '';
+            toggle.innerText = 'Mulai';
+            render();
+        };
+
+        render();
+    }
+};
+
+/* 9. RUMUS MTK */
+TOOLS.rumus = {
+    name: 'Rumus Matematika',
+    render: () => `
+        <p class="modal-tool-sub">Kumpulan rumus penting.</p>
+        <div style="max-height: 60vh; overflow-y:auto;">
+            <div class="card"><strong>Luas Persegi</strong><p style="font-size:0.8rem; color:var(--text-sub);">L = s × s</p></div>
+            <div class="card"><strong>Luas Persegi Panjang</strong><p style="font-size:0.8rem; color:var(--text-sub);">L = p × l</p></div>
+            <div class="card"><strong>Luas Segitiga</strong><p style="font-size:0.8rem; color:var(--text-sub);">L = ½ × a × t</p></div>
+            <div class="card"><strong>Luas Lingkaran</strong><p style="font-size:0.8rem; color:var(--text-sub);">L = π × r²</p></div>
+            <div class="card"><strong>Keliling Lingkaran</strong><p style="font-size:0.8rem; color:var(--text-sub);">K = 2 × π × r</p></div>
+            <div class="card"><strong>Rumus ABC</strong><p style="font-size:0.8rem; color:var(--text-sub);">x = (-b ± √(b² - 4ac)) / 2a</p></div>
+            <div class="card"><strong>Teorema Pythagoras</strong><p style="font-size:0.8rem; color:var(--text-sub);">c² = a² + b²</p></div>
+            <div class="card"><strong>Volume Kubus</strong><p style="font-size:0.8rem; color:var(--text-sub);">V = s³</p></div>
+            <div class="card"><strong>Volume Balok</strong><p style="font-size:0.8rem; color:var(--text-sub);">V = p × l × t</p></div>
+        </div>
+    `,
+    init: () => {}
+};
+
+/* 10. TABUNGAN */
+TOOLS.tabungan = {
+    name: 'Tabungan Kas',
+    render: () => `
+        <p class="modal-tool-sub">Catat pemasukan tabunganmu.</p>
+        <input type="text" id="tab-name" placeholder="Keterangan (mis. Uang saku)" maxlength="60">
+        <input type="number" id="tab-amount" placeholder="Jumlah (Rp)" min="0">
+        <button class="btn-main" id="tab-add">Tambah</button>
+        <div class="result-box" id="tab-total">Total: Rp 0</div>
+        <div id="tab-list"></div>
+    `,
+    init: () => {
+        const listEl = document.getElementById('tab-list');
+        const totalEl = document.getElementById('tab-total');
+        const render = () => {
+            const total = state.savings.reduce((s, x) => s + x.amount, 0);
+            totalEl.innerText = 'Total: Rp ' + total.toLocaleString('id-ID');
+            if (!state.savings.length) {
+                listEl.innerHTML = '<div class="empty-state">Belum ada catatan</div>';
+                return;
+            }
+            listEl.innerHTML = state.savings.map((s, i) => `
+                <div class="list-item">
+                    <span style="flex:1;">${escapeHtml(s.name)}</span>
+                    <span style="color:var(--primary); font-weight:600;">Rp ${s.amount.toLocaleString('id-ID')}</span>
+                    <button class="del-btn" onclick="tabDelete(${i})">Hapus</button>
+                </div>
+            `).join('');
+        };
+        window.tabDelete = (i) => {
+            if (!confirm('Hapus catatan ini?')) return;
+            state.savings.splice(i, 1);
+            saveData();
+            render();
+        };
+        document.getElementById('tab-add').onclick = () => {
+            const name = document.getElementById('tab-name').value.trim();
+            const amount = parseFloat(document.getElementById('tab-amount').value);
+            if (!name || isNaN(amount) || amount <= 0) { showToast('Isi nama & jumlah'); return; }
+            playBeep();
+            state.savings.push({ name, amount });
+            saveData();
+            document.getElementById('tab-name').value = '';
+            document.getElementById('tab-amount').value = '';
+            render();
+            showToast('Tabungan ditambahkan');
+        };
+        render();
+    }
+};
+
+/* 11. FOTO PAPAN */
+TOOLS.papan = {
+    name: 'Foto Papan Tulis',
+    render: () => `
+        <p class="modal-tool-sub">Unggah atau ambil foto papan tulis.</p>
+        <input type="file" id="papan-file" accept="image/*" capture="environment">
+        <div id="papan-preview" class="empty-state">Belum ada foto</div>
+    `,
+    init: () => {
+        document.getElementById('papan-file').onchange = (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            playBeep();
+            const url = URL.createObjectURL(file);
+            document.getElementById('papan-preview').innerHTML =
+                `<img src="${url}" class="file-preview" alt="Papan tulis">`;
+            showToast('Foto dimuat');
+        };
+    }
+};
+
+/* 12. RAK BUKU */
+TOOLS.rak = {
+    name: 'Rak Buku',
+    render: () => `
+        <p class="modal-tool-sub">Daftar buku bacaanmu.</p>
+        <input type="text" id="book-title" placeholder="Judul buku" maxlength="80">
+        <input type="text" id="book-author" placeholder="Penulis" maxlength="60">
+        <button class="btn-main" id="book-add">Tambah Buku</button>
+        <div id="book-list" style="margin-top:12px;"></div>
+    `,
+    init: () => {
+        const listEl = document.getElementById('book-list');
+        const render = () => {
+            if (!state.books.length) {
+                listEl.innerHTML = '<div class="empty-state">Rak masih kosong</div>';
+                return;
+            }
+            listEl.innerHTML = state.books.map((b, i) => `
+                <div class="list-item">
+                    <div style="flex:1;">
+                        <strong>${escapeHtml(b.title)}</strong><br>
+                        <span style="color:var(--text-sub); font-size:0.75rem;">${escapeHtml(b.author)}</span>
+                    </div>
+                    <button class="del-btn" onclick="bookDelete(${i})">Hapus</button>
+                </div>
+            `).join('');
+        };
+        window.bookDelete = (i) => {
+            if (!confirm('Hapus buku ini?')) return;
+            state.books.splice(i, 1);
+            saveData();
+            render();
+        };
+        document.getElementById('book-add').onclick = () => {
+            const title = document.getElementById('book-title').value.trim();
+            const author = document.getElementById('book-author').value.trim() || '—';
+            if (!title) { showToast('Isi judul buku'); return; }
+            playBeep();
+            state.books.push({ title, author });
+            saveData();
+            document.getElementById('book-title').value = '';
+            document.getElementById('book-author').value = '';
+            render();
+            showToast('Buku ditambahkan');
+        };
+        render();
+    }
+};
+
+/* 13. PIKET */
+TOOLS.piket = {
+    name: 'Jadwal Piket',
+    render: () => `
+        <p class="modal-tool-sub">Atur jadwal piket per hari.</p>
+        <div class="day-tab" id="piket-days">
+            <button data-day="senin" class="active">Sen</button>
+            <button data-day="selasa">Sel</button>
+            <button data-day="rabu">Rab</button>
+            <button data-day="kamis">Kam</button>
+            <button data-day="jumat">Jum</button>
+            <button data-day="sabtu">Sab</button>
+            <button data-day="minggu">Min</button>
+        </div>
+        <input type="text" id="piket-name" placeholder="Nama petugas" maxlength="40">
+        <button class="btn-main" id="piket-add">Tambah ke Hari Ini</button>
+        <div id="piket-list" style="margin-top:12px;"></div>
+    `,
+    init: () => {
+        let currentDay = 'senin';
+        const listEl = document.getElementById('piket-list');
+        const render = () => {
+            const arr = state.piket[currentDay] || [];
+            if (!arr.length) {
+                listEl.innerHTML = '<div class="empty-state">Belum ada petugas</div>';
+                return;
+            }
+            listEl.innerHTML = arr.map((n, i) => `
+                <div class="list-item">
+                    <span style="flex:1;">${escapeHtml(n)}</span>
+                    <button class="del-btn" onclick="piketDelete(${i})">Hapus</button>
+                </div>
+            `).join('');
+        };
+        window.piketDelete = (i) => {
+            state.piket[currentDay].splice(i, 1);
+            saveData();
+            render();
+        };
+        document.getElementById('piket-days').onclick = (e) => {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+            playBeep();
+            currentDay = btn.dataset.day;
+            document.querySelectorAll('#piket-days button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            render();
+        };
+        document.getElementById('piket-add').onclick = () => {
+            const name = document.getElementById('piket-name').value.trim();
+            if (!name) { showToast('Isi nama'); return; }
+            playBeep();
+            if (!state.piket[currentDay]) state.piket[currentDay] = [];
+            state.piket[currentDay].push(name);
+            saveData();
+            document.getElementById('piket-name').value = '';
+            render();
+            showToast('Petugas ditambahkan');
+        };
+        render();
+    }
+};
+
+/* 14. MINDMAP */
+TOOLS.mindmap = {
+    name: 'Mindmap',
+    render: () => `
+        <p class="modal-tool-sub">Topik utama + cabang pikiran.</p>
+        <input type="text" id="mm-center" placeholder="Topik utama" maxlength="60" value="${escapeHtml(state.mindmap.center || '')}">
+        <button class="btn-secondary" id="mm-save-center">Simpan Topik</button>
+        <input type="text" id="mm-branch" placeholder="Cabang baru..." maxlength="60" style="margin-top:12px;">
+        <button class="btn-main" id="mm-add">Tambah Cabang</button>
+        <div id="mm-display" style="margin-top:16px;"></div>
+    `,
+    init: () => {
+        const display = document.getElementById('mm-display');
+        const render = () => {
+            if (!state.mindmap.center && !state.mindmap.branches.length) {
+                display.innerHTML = '<div class="empty-state">Belum ada mindmap</div>';
+                return;
+            }
+            display.innerHTML = `
+                <div style="background:linear-gradient(135deg,var(--primary),var(--primary-light)); color:white; padding:14px; border-radius:12px; text-align:center; font-weight:700; margin-bottom:8px;">
+                    ${escapeHtml(state.mindmap.center || 'Topik Utama')}
+                </div>
+                ${state.mindmap.branches.map((b, i) => `
+                    <div class="list-item" style="margin-left:12px;">
+                        <span style="flex:1;">↳ ${escapeHtml(b)}</span>
+                        <button class="del-btn" onclick="mmDelete(${i})">Hapus</button>
+                    </div>
+                `).join('')}
+            `;
+        };
+        window.mmDelete = (i) => {
+            state.mindmap.branches.splice(i, 1);
+            saveData();
+            render();
+        };
+        document.getElementById('mm-save-center').onclick = () => {
+            playBeep();
+            state.mindmap.center = document.getElementById('mm-center').value.trim();
+            saveData();
+            render();
+            showToast('Topik disimpan');
+        };
+        document.getElementById('mm-add').onclick = () => {
+            const b = document.getElementById('mm-branch').value.trim();
+            if (!b) { showToast('Isi cabang'); return; }
+            playBeep();
+            state.mindmap.branches.push(b);
+            saveData();
+            document.getElementById('mm-branch').value = '';
+            render();
+            showToast('Cabang ditambahkan');
+        };
+        render();
+    }
+};
+
+/* 15. KAMUS SAINS */
+TOOLS.kamus = {
+    name: 'Kamus Sains',
+    render: () => `
+        <p class="modal-tool-sub">Istilah sains populer.</p>
+        <input type="text" id="kamus-search" placeholder="Cari istilah...">
+        <div id="kamus-list" style="margin-top:10px;"></div>
+    `,
+    init: () => {
+        const entries = [
+            ['Fotosintesis', 'Proses tumbuhan membuat makanan menggunakan cahaya matahari.'],
+            ['Mitosis', 'Pembelahan sel menghasilkan 2 sel identik.'],
+            ['Meiosis', 'Pembelahan sel menghasilkan 4 sel gamet dengan setengah kromosom.'],
+            ['Osmosis', 'Perpindahan air dari konsentrasi rendah ke tinggi melalui membran semipermeabel.'],
+            ['Difusi', 'Perpindahan partikel dari konsentrasi tinggi ke rendah.'],
+            ['Enzim', 'Protein katalis yang mempercepat reaksi biokimia.'],
+            ['DNA', 'Molekul pembawa informasi genetik.'],
+            ['Atom', 'Unit terkecil materi yang masih punya sifat unsur.'],
+            ['Molekul', 'Gabungan dua atau lebih atom.'],
+            ['Gravitasi', 'Gaya tarik antara benda bermassa.'],
+            ['Energi Kinetik', 'Energi yang dimiliki benda bergerak.'],
+            ['Energi Potensial', 'Energi tersimpan karena posisi atau keadaan.'],
+            ['Reaksi Eksoterm', 'Reaksi yang melepaskan kalor.'],
+            ['Reaksi Endoterm', 'Reaksi yang menyerap kalor.'],
+            ['Ekosistem', 'Hubungan makhluk hidup dengan lingkungannya.']
+        ];
+        const listEl = document.getElementById('kamus-list');
+        const render = (filter = '') => {
+            const q = filter.toLowerCase();
+            const filtered = entries.filter(e => e[0].toLowerCase().includes(q) || e[1].toLowerCase().includes(q));
+            if (!filtered.length) {
+                listEl.innerHTML = '<div class="empty-state">Tidak ditemukan</div>';
+                return;
+            }
+            listEl.innerHTML = filtered.map(e => `
+                <div class="card">
+                    <strong style="color:var(--primary);">${escapeHtml(e[0])}</strong>
+                    <p style="font-size:0.8rem; color:var(--text-sub); margin-top:4px;">${escapeHtml(e[1])}</p>
+                </div>
+            `).join('');
+        };
+        document.getElementById('kamus-search').oninput = (e) => render(e.target.value);
+        render();
+    }
+};
+
+/* 16. SERAGAM */
+TOOLS.seragam = {
+    name: 'Checklist Seragam',
+    render: () => `
+        <p class="modal-tool-sub">Centang perlengkapan seragammu.</p>
+        <div id="seragam-list"></div>
+        <div class="result-box" id="seragam-status">0 / 0 siap</div>
+    `,
+    init: () => {
+        const items = ['Baju Putih', 'Baju Batik', 'Baju Pramuka', 'Baju Olahraga', 'Dasi', 'Topi', 'Sepatu', 'Kaos Kaki', 'Sabuk'];
+        const listEl = document.getElementById('seragam-list');
+        const statusEl = document.getElementById('seragam-status');
+        const render = () => {
+            listEl.innerHTML = items.map(it => {
+                const checked = state.seragam[it] || false;
+                return `<div class="check-item ${checked ? 'done' : ''}">
+                    <input type="checkbox" data-item="${escapeHtml(it)}" ${checked ? 'checked' : ''}>
+                    <label>${escapeHtml(it)}</label>
+                </div>`;
+            }).join('');
+            const done = items.filter(it => state.seragam[it]).length;
+            statusEl.innerText = `${done} / ${items.length} siap`;
+            listEl.querySelectorAll('input[type=checkbox]').forEach(cb => {
+                cb.onchange = () => {
+                    playBeep();
+                    state.seragam[cb.dataset.item] = cb.checked;
+                    saveData();
+                    render();
+                };
+            });
+        };
+        render();
+    }
+};
+
+/* 17. AUDIO HUJAN */
+TOOLS.hujan = {
+    name: 'Audio Ambience Hujan',
+    render: () => `
+        <p class="modal-tool-sub">Suara hujan untuk relaksasi belajar.</p>
+        <div class="result-box" id="rain-status">Audio mati</div>
+        <button class="btn-main" id="rain-toggle">Putar Suara Hujan</button>
+        <div class="volume-row">
+            <span style="font-size:0.75rem; color:var(--text-sub);">Volume</span>
+            <input type="range" id="rain-volume" min="0" max="1" step="0.01" value="0.3">
+        </div>
+    `,
+    init: () => {
+        const status = document.getElementById('rain-status');
+        const toggle = document.getElementById('rain-toggle');
+        const vol = document.getElementById('rain-volume');
+        let playing = false;
+
+        const startRain = () => {
+            if (rainCtx) return;
+            rainCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const bufferSize = 2 * rainCtx.sampleRate;
+            const buffer = rainCtx.createBuffer(1, bufferSize, rainCtx.sampleRate);
+            const data = buffer.getChannelData(0);
+            let lastOut = 0;
+            for (let i = 0; i < bufferSize; i++) {
+                const white = Math.random() * 2 - 1;
+                data[i] = (lastOut + 0.02 * white) / 1.02;
+                lastOut = data[i];
+                data[i] *= 3.5;
+            }
+            rainSource = rainCtx.createBufferSource();
+            rainSource.buffer = buffer;
+            rainSource.loop = true;
+            const filter = rainCtx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.value = 1400;
+            rainGain = rainCtx.createGain();
+            rainGain.gain.value = parseFloat(vol.value);
+            rainSource.connect(filter);
+            filter.connect(rainGain);
+            rainGain.connect(rainCtx.destination);
+            rainSource.start();
+        };
+
+        toggle.onclick = () => {
+            playBeep();
+            if (playing) {
+                stopRain();
+                playing = false;
+                toggle.innerText = 'Putar Suara Hujan';
+                status.innerText = 'Audio mati';
+            } else {
+                try {
+                    startRain();
+                    playing = true;
+                    toggle.innerText = 'Hentikan Suara';
+                    status.innerText = 'Audio menyala';
+                } catch (e) {
+                    showToast('Browser tidak mendukung audio');
+                }
+            }
+        };
+
+        vol.oninput = () => {
+            if (rainGain) rainGain.gain.value = parseFloat(vol.value);
+        };
+
+        // status reset
+        status.innerText = 'Audio mati';
+    }
+};
+
+function stopRain() {
+    if (rainSource) {
+        try { rainSource.stop(); } catch (e) {}
+        rainSource = null;
+    }
+    if (rainCtx) {
+        try { rainCtx.close(); } catch (e) {}
+        rainCtx = null;
+    }
+    rainGain = null;
+}
+
+/* 18. SIMULASI UJIAN */
+TOOLS.ujian = {
+    name: 'Simulasi Ujian',
+    render: () => `
+        <p class="modal-tool-sub">5 soal pilihan ganda.</p>
+        <div id="quiz-container"></div>
+        <button class="btn-main" id="quiz-submit" style="margin-top:12px;">Periksa Jawaban</button>
+        <div class="result-box" id="quiz-result" style="display:none;"></div>
+    `,
+    init: () => {
+        const questions = [
+            { q: 'Ibu kota Indonesia adalah...', opts: ['Bandung', 'Jakarta', 'Surabaya', 'Medan'], a: 1 },
+            { q: 'Hasil dari 7 × 8 adalah...', opts: ['54', '56', '48', '64'], a: 1 },
+            { q: 'Planet terdekat dari Matahari adalah...', opts: ['Venus', 'Bumi', 'Merkurius', 'Mars'], a: 2 },
+            { q: 'Rumus kimia air adalah...', opts: ['CO₂', 'H₂O', 'NaCl', 'O₂'], a: 1 },
+            { q: 'Proklamasi Kemerdekaan RI dibacakan pada...', opts: ['17 Agustus 1945', '1 Juni 1945', '28 Oktober 1928', '10 November 1945'], a: 0 }
+        ];
+        const container = document.getElementById('quiz-container');
+        const answers = new Array(questions.length).fill(-1);
+
+        const render = () => {
+            container.innerHTML = questions.map((q, qi) => `
+                <div class="card" style="margin-bottom:10px;">
+                    <p style="font-weight:600; font-size:0.85rem; margin-bottom:8px;">${qi+1}. ${escapeHtml(q.q)}</p>
+                    ${q.opts.map((o, oi) => `
+                        <button class="quiz-option ${answers[qi] === oi ? 'selected' : ''}" data-q="${qi}" data-o="${oi}">
+                            ${String.fromCharCode(65 + oi)}. ${escapeHtml(o)}
+                        </button>
+                    `).join('')}
+                </div>
+            `).join('');
+            container.querySelectorAll('.quiz-option').forEach(btn => {
+                btn.onclick = () => {
+                    playBeep();
+                    answers[parseInt(btn.dataset.q)] = parseInt(btn.dataset.o);
+                    render();
+                };
+            });
+        };
+
+        document.getElementById('quiz-submit').onclick = () => {
+            playBeep();
+            let score = 0;
+            const correctMap = questions.map((q, i) => {
+                if (answers[i] === q.a) score++;
+                return answers[i] === q.a;
+            });
+            const resultEl = document.getElementById('quiz-result');
+            resultEl.style.display = 'block';
+            resultEl.innerText = `Skor: ${score} / ${questions.length} (${Math.round(score/questions.length*100)})`;
+            // colorize
+            container.querySelectorAll('.quiz-option').forEach(btn => {
+                const q = parseInt(btn.dataset.q);
+                const o = parseInt(btn.dataset.o);
+                btn.classList.remove('correct', 'wrong');
+                if (o === questions[q].a) btn.classList.add('correct');
+                else if (answers[q] === o) btn.classList.add('wrong');
+            });
+            if (score >= 4) showToast('Hebat!');
+            else if (score >= 3) showToast('Bagus, tingkatkan lagi!');
+            else showToast('Belajar lagi ya!');
+        };
+
+        render();
+    }
+};
+
+/* =========================================================
+   INIT
+   ========================================================= */
+window.onload = loadData;
+</script>
+</body>
+</html>
