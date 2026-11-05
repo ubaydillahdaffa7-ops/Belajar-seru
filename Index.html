@@ -3091,32 +3091,43 @@ setTimeout(() => {
 }, 500);
 
 window.onload = loadData;
-
+/* =======================================================
+   KODE FINAL: SEMBUNYIKAN TOMBOL LAMA & GANTI DENGAN LINK
+   ======================================================= */
 <script>
-  // KODE SAKTI: PAKSA TOMBOL CHAT JADI LINK
+  // 1. Hapus paksa tombol lama dari halaman
   document.addEventListener("DOMContentLoaded", function() {
-    var btn = document.querySelector('.bot-fab');
-    if (btn) {
-      var a = document.createElement('a');
-      a.href = 'bot.html';
-      a.className = 'bot-fab';
-      a.style.textDecoration = 'none';
-      a.innerHTML = btn.innerHTML;
-      btn.parentNode.replaceChild(a, btn);
+    var tombolLama = document.querySelector('.bot-fab');
+    if (tombolLama) {
+      tombolLama.remove(); // Hapus total dari layar
     }
   });
 </script>
+
 <style>
-  .bot-fab { display: none !important; } /* Sembunyikan tombol lama yang error */
-  .bot-baru {
-    position: fixed; right: 16px; bottom: 84px; width: 58px; height: 58px;
-    border-radius: 50%; background: linear-gradient(135deg, #7c3aed, #ec4899);
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 8px 20px rgba(124,58,237,0.5); z-index: 999999; text-decoration: none;
+  /* 2. Desain tombol baru persis seperti aslinya */
+  .bot-link-baru {
+    position: fixed;
+    right: 16px;
+    bottom: 20px; /* Posisi pas di atas menu navigasi bawah */
+    width: 58px; 
+    height: 58px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #7c3aed, #ec4899);
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    box-shadow: 0 8px 20px rgba(124,58,237,0.5);
+    z-index: 999999;
+    text-decoration: none;
   }
 </style>
 
-<a href="bot.html" class="bot-baru" title="Chat dengan Bot">
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><circle cx="9" cy="10" r="1" fill="white"/><circle cx="15" cy="10" r="1" fill="white"/><line x1="9" y1="14" x2="15" y2="14"/></svg></a>
+<!-- 3. Tombol baru (Link murni, pasti bisa diklik) -->
+<a href="bot.html" class="bot-link-baru" title="Chat dengan Bot">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><circle cx="9" cy="10" r="1" fill="white"/><circle cx="15" cy="10" r="1" fill="white"/><line x1="9" y1="14" x2="15" y2="14"/></svg>
+</a>
+
+</script>
 </body>
 </html>
