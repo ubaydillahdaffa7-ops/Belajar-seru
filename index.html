@@ -2847,6 +2847,120 @@ window.addEventListener('load', applyVivoFix);
 /* =========================================================
    INIT
    ========================================================= */
+/* =========================================================
+   REAL-TIME: Jam, Sapaan, Pelajaran Otomatis
+   ========================================================= */
+const JADWAL_HARIAN = {
+    1: { mapel: 'Matematika',      jam: '07.00 - 08.30', ruang: 'Ruang B1' },
+    2: { mapel: 'TIK',             jam: '07.00 - 08.30', ruang: 'Lab Komputer' },
+    3: { mapel: 'Matematika',      jam: '07.00 - 08.30', ruang: 'Ruang B1' },
+    4: { mapel: 'IPS',             jam: '07.00 - 08.30', ruang: 'Ruang B2' },
+    5: { mapel: 'Agama',           jam: '07.00 - 08.30', ruang: 'Ruang A1' },
+    6: { mapel: 'Ekstrakurikuler', jam: '07.00 - 09.00', ruang: 'Lapangan' }
+};
+
+function getGreeting(hour) {
+    if (hour >= 4 && hour < 11) return 'Selamat pagi';
+    if (hour >= 11 && hour < 15) return 'Selamat siang';
+    if (hour >= 15 && hour < 18) return 'Selamat sore';
+    return 'Selamat malam';
+}
+
+function updateLiveClock() {
+    const now = new Date();
+    const hh = String(now.getHours()).padStart(2, '0');
+    const mm = String(now.getMinutes()).padStart(2, '0');
+    const ss = String(now.getSeconds()).padStart(2, '0');
+
+    const clockEl = document.getElementById('live-clock');
+    if (clockEl) clockEl.innerText = hh + ':' + mm + ':' + ss;
+
+    const mapelEl = document.getElementById('beranda-mapel');
+    const jamEl = document.getElementById('beranda-jam');
+    const ruangEl = document.getElementById('beranda-ruang');
+
+    if (mapelEl && jamEl && ruangEl) {
+        const day = now.getDay();
+        const jadwal = JADWAL_HARIAN[day];
+        if (jadwal) {
+            mapelEl.innerText = jadwal.mapel;
+            jamEl.innerText = jadwal.jam;
+            ruangEl.innerText = jadwal.ruang;
+        } else {
+            mapelEl.innerText = 'Hari Libur';
+            jamEl.innerText = 'Tidak ada kelas';
+            ruangEl.innerText = '-';
+        }
+    }
+
+    const moodEl = document.getElementById('mood-text');
+    if (moodEl && !moodEl.dataset.greeted) {
+        const g = getGreeting(now.getHours());
+        moodEl.innerText = g + ', Siswa DAFZZ! ' + moodEl.innerText;
+        moodEl.dataset.greeted = '1';
+    }
+}
+
+setInterval(updateLiveClock, 1000);
+updateLiveClock();
+
+/* =========================================================
+   VIVO 1820 FIX
+   ========================================================= */
+function applyVivoFix() {
+    try {
+        var nav = document.querySelector('.bottom-nav');
+        if (nav) {
+            nav.style.position = 'fixed';
+            nav.style.bottom = '0';
+            nav.style.left = '0';
+            nav.style.right = '0';
+            nav.style.zIndex = '999999';
+            nav.style.background = '#ffffff';
+            nav.style.display = 'flex';
+            nav.style.flexDirection = 'row';
+            nav.style.pointerEvents = 'auto';
+        }
+
+        var views = ['view-beranda', 'view-belajar', 'view-tool', 'view-info'];
+        var items = document.querySelectorAll('.nav-item');
+        for (var i = 0; i < items.length; i++) {
+            (function(idx) {
+                var btn = items[idx];
+                btn.style.pointerEvents = 'auto';
+                btn.style.zIndex = '1000000';
+                btn.style.visibility = 'visible';
+                btn.style.opacity = '1';
+                btn.style.cursor = 'pointer';
+                btn.onclick = null;
+                btn.addEventListener('click', function(ev) {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    switchMainView(views[idx], btn);
+                }, true);
+            })(i);
+        }
+
+        var fab = document.querySelector('.bot-fab');
+        if (fab) {
+            fab.style.zIndex = '50';
+            fab.style.bottom = '84px';
+        }
+
+        var content = document.querySelector('.content-area');
+        if (content) content.style.paddingBottom = '90px';
+
+        console.log('[VIVO FIX] Nav & FAB di-reset.');
+    } catch (e) {
+        console.warn('[VIVO FIX] Gagal:', e);
+    }
+}
+setTimeout(applyVivoFix, 300);
+window.addEventListener('load', applyVivoFix);
+
+/* =========================================================
+   INIT
+   ========================================================= */
 window.onload = loadData;
 </script>
 </body>
