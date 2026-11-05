@@ -2961,6 +2961,135 @@ window.addEventListener('load', applyVivoFix);
 /* =========================================================
    INIT
    ========================================================= */
+/* ============ FITUR JADWAL BARU ============ */
+const JADWAL_DATA = {
+    senin: [{ mapel: 'IPA', jam: '07.00 - 08.30' }, { mapel: 'PKN', jam: '08.30 - 10.00' }, { mapel: 'MTK', jam: '10.00 - 11.30' }],
+    selasa: [{ mapel: 'TIK', jam: '07.00 - 08.30' }, { mapel: 'IPA', jam: '08.30 - 10.00' }, { mapel: 'SBK', jam: '10.00 - 11.30' }],
+    rabu: [{ mapel: 'IPS', jam: '07.00 - 08.30' }, { mapel: 'BK', jam: '08.30 - 10.00' }, { mapel: 'BIN', jam: '10.00 - 11.30' }, { mapel: 'PAI', jam: '11.30 - 13.00' }],
+    kamis: [{ mapel: 'B. Inggris', jam: '07.00 - 08.30' }, { mapel: 'IPS', jam: '08.30 - 10.00' }, { mapel: 'B. Jawa', jam: '10.00 - 11.30' }, { mapel: 'BK', jam: '11.30 - 13.00' }],
+    jumat: [{ mapel: 'MTK', jam: '07.00 - 08.30' }, { mapel: 'BIN', jam: '08.30 - 10.30' }],
+    sabtu: [{ mapel: 'PJOK', jam: '07.00 - 08.30' }, { mapel: 'BTQ', jam: '08.30 - 10.00' }, { mapel: 'B. Inggris', jam: '10.00 - 12.00' }]
+};
+const HARI_IDX = { 0: 'minggu', 1: 'senin', 2: 'selasa', 3: 'rabu', 4: 'kamis', 5: 'jumat', 6: 'sabtu' };
+let hBeranda = null;
+
+function bukaPilihHari() {
+    if (typeof playBeep === 'function') playBeep();
+    let m = document.getElementById('modal-hari');
+    if (!m) {
+        m = document.createElement('div');
+        m.id = 'modal-hari';
+        m.className = 'modal';
+        m.innerHTML = `
+            <div class="modal-content">
+                <h3 class="modal-tool-title">Pilih Hari</h3>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;">
+                    <button class="btn-main" style="background:#ef4444;" onclick="pilihHariBeranda('senin')">Senin</button>
+                    <button class="btn-main" style="background:#f97316;" onclick="pilihHariBeranda('selasa')">Selasa</button>
+                    <button class="btn-main" style="background:#fbbf24;color:#000;" onclick="pilihHariBeranda('rabu')">Rabu</button>
+                    <button class="btn-main" style="background:#10b981;" onclick="pilihHariBeranda('kamis')">Kamis</button>
+                    <button class="btn-main" style="background:#3b82f6;" onclick="pilihHariBeranda('jumat')">Jumat</button>
+                    <button class="btn-main" style="background:#8b5cf6;" onclick="pilihHariBeranda('sabtu')">Sabtu</button>
+                </div>
+                <button class="btn-secondary" style="margin-top:20px;" onclick="document.getElementById('modal-hari').classList.remove('show')">Batal</button>
+            </div>
+        `;
+        document.querySelector('.app-container').appendChild(m);
+        m.addEventListener('click', e => { if (e.target.id === 'modal-hari') m.classList.remove('show'); });
+    }
+    m.classList.add('show');
+}
+
+function pilihHariBeranda(hari) {
+    if (typeof playBeep === 'function') playBeep();
+    hBeranda = hari;
+    updateJadwalBeranda();
+    document.getElementById('modal-hari').classList.remove('show');
+}
+
+function updateJadwalBeranda() {
+    let hKey = hBeranda ? hBeranda : HARI_IDX[new Date().getDay()];
+    let label = hBeranda ? 'Pelajaran Hari ' + hKey.charAt(0).toUpperCase() + hKey.slice(1) : 'Pelajaran Utama Hari Ini';
+    
+    const elLabel = document.querySelector('.card-main > span');
+    if (elLabel) elLabel.innerText = label;
+
+    const elMapel = document.getElementById('beranda-mapel');
+    const elJam = document.getElementById('beranda-jam');
+    const elRuang = document.getElementById('beranda-ruang');
+    if (!elMapel) return;
+
+    if (hKey === 'minggu' || !JADWAL_DATA[hKey]) {
+        elMapel.innerText = 'Hari Libur';
+        if (elJam) elJam.innerText = '-';
+        if (elRuang) elRuang.innerText = '-';
+        return;
+    }
+    const utama = JADWAL_DATA[hKey][0];
+    elMapel.innerText = utama.mapel;
+    if (elJam) elJam.innerText = utama.jam;
+    if (elRuang) elRuang.innerText = 'Ruang kelas';
+}
+
+function pilihJadwalHari(hari, btn) {
+    if (typeof playBeep === 'function') playBeep();
+    document.querySelectorAll('#jadwal-day-tabs button').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    
+    const container = document.getElementById('jadwal-detail-container');
+    if (!container) return;
+    const list = JADWAL_DATA[hari];
+    if (!list) return;
+
+    container.innerHTML = list.map(item => `
+        <div class="list-item" style="flex-direction:column;align-items:flex-start;padding:14px 16px;border-left:4px solid var(--primary);">
+            <div style="font-size:1rem;font-weight:800;color:var(--text-main);">${item.mapel}</div>
+            <div style="font-size:0.75rem;font-weight:600;color:var(--text-sub);margin-top:2px;">${item.jam}</div>
+        </div>
+    `).join('');
+}
+
+/* ============ SUNTIK HTML OTOMATIS ============ */
+setTimeout(() => {
+    // 1. Ubah Kartu Beranda
+    const cardMain = document.querySelector('.card-main');
+    if (cardMain) {
+        cardMain.onclick = bukaPilihHari;
+        cardMain.style.cursor = 'pointer';
+        const h2 = cardMain.querySelector('h2');
+        if (h2) h2.id = 'beranda-mapel';
+        const p = cardMain.querySelector('p');
+        if (p) {
+            p.innerHTML = `
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <span id="beranda-jam">--</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-left:8px;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                <span id="beranda-ruang">--</span>
+            `;
+        }
+    }
+
+    // 2. Ubah Tab Jadwal di Menu Belajar
+    const subJadwal = document.getElementById('sub-jadwal');
+    if (subJadwal) {
+        subJadwal.innerHTML = `
+            <div class="day-tab" id="jadwal-day-tabs">
+                <button data-day="senin" class="active" onclick="pilihJadwalHari('senin', this)">Senin</button>
+                <button data-day="selasa" onclick="pilihJadwalHari('selasa', this)">Selasa</button>
+                <button data-day="rabu" onclick="pilihJadwalHari('rabu', this)">Rabu</button>
+                <button data-day="kamis" onclick="pilihJadwalHari('kamis', this)">Kamis</button>
+                <button data-day="jumat" onclick="pilihJadwalHari('jumat', this)">Jumat</button>
+                <button data-day="sabtu" onclick="pilihJadwalHari('sabtu', this)">Sabtu</button>
+            </div>
+            <div id="jadwal-detail-container"></div>
+        `;
+    }
+    
+    // 3. Jalankan inisialisasi awal
+    updateJadwalBeranda();
+    pilihJadwalHari('senin', document.querySelector('#jadwal-day-tabs button[data-day="senin"]'));
+}, 500);
+
 window.onload = loadData;
 </script>
 </body>
