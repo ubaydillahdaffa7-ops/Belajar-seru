@@ -57,7 +57,6 @@
         min-height: 100vh;
     }
 
-    /* Canvas particle FX */
     #fx-canvas {
         position: fixed;
         inset: 0;
@@ -66,7 +65,6 @@
         opacity: 0.5;
     }
 
-    /* App container */
     .app-container {
         width: 100%;
         max-width: 480px;
@@ -93,7 +91,6 @@
         }
     }
 
-    /* === SPLASH === */
     #splash {
         position: absolute;
         inset: 0;
@@ -137,7 +134,6 @@
     .splash h2 { margin-top: 20px; font-weight: 800; font-size: 1.5rem; letter-spacing: 1px; }
     .splash p { font-size: 0.75rem; opacity: 0.9; margin-top: 8px; }
 
-    /* === HEADER === */
     header {
         padding: 16px 18px 10px;
         display: flex;
@@ -148,6 +144,7 @@
         border-bottom: 1px solid rgba(124,58,237,0.1);
         position: relative;
         z-index: 5;
+        flex-shrink: 0;
     }
 
     .user-profile { display: flex; align-items: center; gap: 12px; }
@@ -185,12 +182,11 @@
         box-shadow: 0 2px 6px rgba(251,191,36,0.4);
     }
 
-    /* === CONTENT === */
     .content-area {
         flex: 1;
         overflow-y: auto;
         overflow-x: hidden;
-        padding: 14px 18px 100px;
+        padding: 14px 18px 30px;
         scroll-behavior: smooth;
         position: relative;
         z-index: 2;
@@ -212,7 +208,6 @@
         to { opacity: 1; transform: translateY(0); }
     }
 
-    /* === CARDS === */
     .card {
         background: var(--card-bg);
         border-radius: var(--radius-md);
@@ -228,7 +223,6 @@
         box-shadow: var(--shadow);
     }
 
-    /* Main Lesson Card */
     .card-main {
         background: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);
         background-size: 200% 200%;
@@ -287,7 +281,6 @@
         position: relative;
     }
 
-    /* Grid */
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
     .stat-card {
@@ -326,7 +319,6 @@
         75% { transform: translateY(-4px) rotate(8deg); }
     }
 
-    /* Fun strip */
     .fun-strip {
         display: flex;
         gap: 8px;
@@ -391,7 +383,6 @@
         line-height: 1.4;
     }
 
-    /* Schedule */
     .schedule-item {
         display: flex;
         align-items: center;
@@ -440,7 +431,6 @@
     .schedule-content h4 { font-size: 0.88rem; font-weight: 800; margin-bottom: 3px; }
     .schedule-content p { font-size: 0.72rem; color: var(--text-sub); line-height: 1.4; }
 
-    /* Calendar */
     .calendar-container {
         background: white;
         border-radius: var(--radius-md);
@@ -533,7 +523,6 @@
     .legend-dot.ulangan { background: linear-gradient(135deg, #fef3c7, #fde68a); border: 1px solid #fbbf24; }
     .legend-dot.today { background: linear-gradient(135deg, #7c3aed, #ec4899); }
 
-    /* Tool Grid */
     .grid-tools {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
@@ -598,7 +587,6 @@
     .tool-card:hover svg { transform: scale(1.15) rotate(-5deg); }
     .tool-card h4 { font-size: 0.82rem; font-weight: 800; }
 
-    /* 18 warna */
     .tool-card[data-tool="kalkulator"] { background: linear-gradient(135deg, #667eea, #764ba2); }
     .tool-card[data-tool="pomodoro"]   { background: linear-gradient(135deg, #f093fb, #f5576c); }
     .tool-card[data-tool="flashcard"]  { background: linear-gradient(135deg, #4facfe, #00f2fe); }
@@ -618,7 +606,6 @@
     .tool-card[data-tool="hujan"]      { background: linear-gradient(135deg, #4568dc, #b06ab3); }
     .tool-card[data-tool="ujian"]      { background: linear-gradient(135deg, #f857a6, #ff5858); }
 
-    /* Tab Nav */
     .tab-nav {
         display: flex; padding: 0 0 12px; gap: 8px; overflow-x: auto;
     }
@@ -648,7 +635,6 @@
 
     .tab-btn svg { width: 14px; height: 14px; }
 
-    /* Section Header */
     .section-header {
         display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
     }
@@ -663,7 +649,6 @@
     }
     .icon-badge svg { width: 16px; height: 16px; }
 
-    /* Empty state */
     .empty-state {
         text-align: center;
         padding: 24px 20px;
@@ -684,7 +669,6 @@
         animation: emojiBounce 2s infinite;
     }
 
-    /* Input */
     input, textarea, select {
         width: 100%;
         padding: 10px 12px;
@@ -749,10 +733,10 @@
         display: flex; align-items: center; justify-content: center; gap: 6px;
     }
 
-    /* Bottom Nav */
+    /* Bottom Nav — FIXED with z-index 9999 */
     .bottom-nav {
         height: 68px;
-        background: rgba(255,255,255,0.95);
+        background: rgba(255,255,255,0.98);
         backdrop-filter: blur(20px);
         border-top: 1px solid rgba(124,58,237,0.1);
         display: flex;
@@ -760,7 +744,9 @@
         align-items: center;
         padding-bottom: env(safe-area-inset-bottom, 0);
         position: relative;
-        z-index: 10;
+        z-index: 9999;
+        flex-shrink: 0;
+        pointer-events: auto;
     }
 
     .nav-item {
@@ -776,6 +762,8 @@
         width: 25%; padding: 8px 0;
         transition: all 0.2s;
         position: relative;
+        pointer-events: auto;
+        z-index: 10000;
     }
 
     .nav-item svg { transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
@@ -789,6 +777,7 @@
         content: '';
         position: absolute;
         top: 0;
+        width: 20px;
         height: 3px;
         border-radius: 0 0 3px 3px;
         background: linear-gradient(90deg, #7c3aed, #ec4899);
@@ -799,7 +788,6 @@
         to { width: 20px; opacity: 1; }
     }
 
-    /* Modal */
     .modal {
         position: absolute; inset: 0;
         background: rgba(17, 12, 46, 0.55);
@@ -1014,11 +1002,11 @@
         border-radius: 10px; margin: 8px 0; background: var(--bg-main);
     }
 
-    /* Bot FAB */
+    /* Bot FAB — turunkan z-index supaya tidak blokir nav */
     .bot-fab {
         position: absolute;
         right: 16px;
-        bottom: 84px;
+        bottom: 90px;
         width: 58px; height: 58px;
         border-radius: 50%;
         background: linear-gradient(135deg, #7c3aed, #ec4899);
@@ -1029,7 +1017,7 @@
         cursor: pointer;
         box-shadow: 0 8px 20px rgba(124,58,237,0.5), 0 0 0 0 rgba(124,58,237,0.4);
         display: flex; align-items: center; justify-content: center;
-        z-index: 100;
+        z-index: 50;
         transition: transform 0.2s;
     }
     .bot-fab:hover { transform: scale(1.15); }
@@ -1055,7 +1043,6 @@
         50% { transform: scale(1.3); opacity: 0; }
     }
 
-    /* Info branding */
     .brand-card {
         background: linear-gradient(135deg, #1f2937 0%, #7c3aed 100%);
         color: white;
@@ -1149,7 +1136,6 @@
         margin-top: 8px;
     }
 
-    /* Mood + tips icons */
     .mood-icon, .tips-icon {
         display: inline-flex; align-items: center; justify-content: center;
         width: 28px; height: 28px; border-radius: 8px;
@@ -1517,19 +1503,19 @@
     </button>
 
     <nav class="bottom-nav">
-        <button class="nav-item active" onclick="switchMainView(event, 'view-beranda')">
+        <button class="nav-item active" onclick="switchMainView('view-beranda', this)">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
             <span>Beranda</span>
         </button>
-        <button class="nav-item" onclick="switchMainView(event, 'view-belajar')">
+        <button class="nav-item" onclick="switchMainView('view-belajar', this)">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
             <span>Belajar</span>
         </button>
-        <button class="nav-item" onclick="switchMainView(event, 'view-tool')">
+        <button class="nav-item" onclick="switchMainView('view-tool', this)">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
             <span>Tool</span>
         </button>
-        <button class="nav-item" onclick="switchMainView(event, 'view-info')">
+        <button class="nav-item" onclick="switchMainView('view-info', this)">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
             <span>Info</span>
         </button>
@@ -1687,13 +1673,15 @@ function updateUI() {
     document.getElementById('streak-val').innerText = state.streak;
 }
 
-function switchMainView(e, viewId) {
+function switchMainView(viewId, btn) {
     playBeep();
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    document.getElementById(viewId).classList.add('active');
-    e.currentTarget.classList.add('active');
-    document.querySelector('.content-area').scrollTop = 0;
+    const targetView = document.getElementById(viewId);
+    if (targetView) targetView.classList.add('active');
+    if (btn) btn.classList.add('active');
+    const content = document.querySelector('.content-area');
+    if (content) content.scrollTop = 0;
 }
 
 function switchSubTab(e, tabId) {
