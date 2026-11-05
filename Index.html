@@ -3092,16 +3092,19 @@ setTimeout(() => {
 
 window.onload = loadData;
 
+<script>
+  // KODE SAKTI: PAKSA TOMBOL CHAT JADI LINK
   document.addEventListener("DOMContentLoaded", function() {
-    var tombolChat = document.querySelector('.bot-fab');
-    if (tombolChat) {
-        tombolChat.onclick = function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            window.location.href = 'bot.html';
-        };
+    var btn = document.querySelector('.bot-fab');
+    if (btn) {
+      var a = document.createElement('a');
+      a.href = 'bot.html';
+      a.className = 'bot-fab';
+      a.style.textDecoration = 'none';
+      a.innerHTML = btn.innerHTML;
+      btn.parentNode.replaceChild(a, btn);
     }
-});
+  });
 </script>
 </body>
 </html>
