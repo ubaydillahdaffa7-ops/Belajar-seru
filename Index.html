@@ -1830,28 +1830,8 @@ function buildToolGrid() {
 
 /* ============ BOT CHAT ============ */
 function openBotChat() {
-    playBeep();
-    document.getElementById('modal-title').innerText = 'Chat Bot';
-    document.getElementById('modal-body').innerHTML = `
-        <div style="text-align:center; padding:30px 10px;">
-            <div style="width: 80px; height: 80px; margin: 0 auto 20px; border-radius: 24px; background: linear-gradient(135deg, #7c3aed, #ec4899); display: flex; align-items: center; justify-content: center; color: white; animation: pulse 2s infinite; box-shadow: 0 8px 20px rgba(124,58,237,0.4);">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                    <circle cx="9" cy="10" r="1" fill="currentColor"/>
-                    <circle cx="15" cy="10" r="1" fill="currentColor"/>
-                    <line x1="9" y1="14" x2="15" y2="14"/>
-                </svg>
-            </div>
-            <h4 style="font-size: 1rem; margin-bottom: 8px;">Chat Bot Belum Tersedia</h4>
-            <p style="font-size: 0.82rem; color: var(--text-sub); line-height: 1.6;">
-                Fitur bot pintar akan segera hadir di repo terpisah!<br><br>
-                <strong style="color: var(--primary);">Nantikan ya</strong>
-            </p>
-        </div>
-    `;
-    document.getElementById('modal-box').classList.add('show');
+    window.location.href = 'bot.html';
 }
-
 /* ============ MODAL ============ */
 function clearActiveTimers() {
     activeTimers.forEach(id => clearInterval(id));
