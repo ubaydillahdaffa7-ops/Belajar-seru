@@ -3091,6 +3091,16 @@ setTimeout(() => {
 }, 500);
 
 window.onload = loadData;
+
+  // --- SCRIPT TAMBAHAN: NGARAHIN TOMBOL BOT OTOMATIS ---
+  document.addEventListener("DOMContentLoaded", function() {
+    var tombolChat = document.querySelector('.bot-fab');
+    if (tombolChat) {
+      tombolChat.onclick = function() {
+        window.location.href = 'bot.html';
+      };
+    }
+  });
 </script>
 </body>
 </html>
