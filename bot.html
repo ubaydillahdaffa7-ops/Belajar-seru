@@ -2,2784 +2,1087 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>DAFZZ AI v3.0 - Super Bot Belajar</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<title>DAFZZ AI v3.0</title>
 <style>
-    :root {
-        --primary: #7c3aed;
-        --primary-light: #a78bfa;
-        --primary-soft: #ede9fe;
-        --pink: #ec4899;
-        --pink-soft: #fce7f3;
-        --yellow: #fbbf24;
-        --green: #10b981;
-        --blue: #3b82f6;
-        --orange: #f97316;
-        --red: #ef4444;
-        --bg-main: #f8f9fe;
-        --bg-gradient: linear-gradient(135deg, #faf5ff 0%, #fdf2f8 50%, #eff6ff 100%);
-        --card-bg: #ffffff;
-        --text-main: #1f2937;
-        --text-sub: #6b7280;
-        --bot-bubble: #ffffff;
-        --user-bubble: linear-gradient(135deg, #7c3aed, #ec4899);
-        --input-bg: #ffffff;
-        --border-color: #e5e7eb;
-        --shadow: 0 4px 15px rgba(0,0,0,0.06);
-        --shadow-lg: 0 10px 30px rgba(124,58,237,0.25);
-        --radius-lg: 20px;
-        --radius-md: 14px;
-        --radius-sm: 10px;
-    }
-
-    body.dark {
-        --bg-main: #0f172a;
-        --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1a1f3a 50%, #0f172a 100%);
-        --card-bg: #1e293b;
-        --text-main: #f1f5f9;
-        --text-sub: #94a3b8;
-        --bot-bubble: #1e293b;
-        --input-bg: #1e293b;
-        --border-color: #334155;
-        --primary-soft: #312e81;
-    }
-
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        -webkit-tap-highlight-color: transparent;
-    }
-
-    html, body {
-        height: 100%;
-        overflow: hidden;
-    }
-
-    body {
-        background: var(--bg-main);
-        background-image: var(--bg-gradient);
-        background-attachment: fixed;
-        color: var(--text-main);
-        display: flex;
-        justify-content: center;
-        transition: background 0.3s, color 0.3s;
-    }
-
-    #fx-canvas {
-        position: fixed;
-        inset: 0;
-        pointer-events: none;
-        z-index: 0;
-        opacity: 0.35;
-    }
-
-    .app-container {
-        width: 100%;
-        max-width: 480px;
-        height: 100vh;
-        height: 100dvh;
-        display: flex;
-        flex-direction: column;
-        background: var(--bg-main);
-        background-image: var(--bg-gradient);
-        background-attachment: fixed;
-        position: relative;
-        z-index: 1;
-        transition: background 0.3s;
-    }
-
-    @media (min-width: 600px) {
-        body { align-items: center; padding: 20px; }
-        .app-container {
-            height: 92vh;
-            max-height: 880px;
-            border-radius: 28px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-            overflow: hidden;
-        }
-    }
-
-    header {
-        padding: 14px 16px;
-        background: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);
-        color: white;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        box-shadow: 0 4px 20px rgba(124,58,237,0.35);
-        z-index: 10;
-        position: relative;
-        flex-shrink: 0;
-    }
-
-    .back-btn {
-        background: rgba(255,255,255,0.15);
-        border: none;
-        color: white;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 36px;
-        height: 36px;
-        border-radius: 12px;
-        transition: transform 0.2s, background 0.2s;
-        flex-shrink: 0;
-    }
-    .back-btn:hover { background: rgba(255,255,255,0.25); transform: scale(1.05); }
-    .back-btn:active { transform: scale(0.92); }
-
-    .bot-avatar {
-        width: 42px;
-        height: 42px;
-        border-radius: 14px;
-        background: rgba(255,255,255,0.2);
-        backdrop-filter: blur(10px);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: 2px solid rgba(255,255,255,0.4);
-        animation: avatarBounce 2s ease-in-out infinite;
-        flex-shrink: 0;
-        font-weight: 900;
-        font-size: 0.95rem;
-        letter-spacing: -0.5px;
-    }
-    @keyframes avatarBounce {
-        0%, 100% { transform: translateY(0) rotate(-3deg); }
-        50% { transform: translateY(-3px) rotate(3deg); }
-    }
-
-    .bot-info { flex: 1; min-width: 0; }
-    .bot-info h2 {
-        font-size: 1rem;
-        font-weight: 800;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        white-space: nowrap;
-    }
-    .bot-info h2 .badge {
-        font-size: 0.55rem;
-        background: rgba(255,255,255,0.25);
-        padding: 2px 6px;
-        border-radius: 6px;
-        font-weight: 700;
-    }
-    .bot-info p {
-        font-size: 0.7rem;
-        opacity: 0.95;
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        margin-top: 2px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    .status-dot {
-        width: 7px;
-        height: 7px;
-        border-radius: 50%;
-        background: #10b981;
-        box-shadow: 0 0 6px #10b981;
-        animation: pulseDot 1.5s infinite;
-        display: inline-block;
-        flex-shrink: 0;
-    }
-    @keyframes pulseDot {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.4; }
-    }
-
-    .header-actions { display: flex; gap: 6px; flex-shrink: 0; }
-    .icon-btn {
-        background: rgba(255,255,255,0.15);
-        border: none;
-        color: white;
-        cursor: pointer;
-        width: 34px;
-        height: 34px;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: background 0.2s, transform 0.15s;
-    }
-    .icon-btn:hover { background: rgba(255,255,255,0.3); }
-    .icon-btn:active { transform: scale(0.9); }
-
-    .chat-area {
-        flex: 1;
-        padding: 18px 14px 10px;
-        overflow-y: auto;
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        background: transparent;
-        scroll-behavior: smooth;
-        position: relative;
-        transition: background 0.3s;
-    }
-    .chat-area::-webkit-scrollbar { width: 4px; }
-    .chat-area::-webkit-scrollbar-thumb {
-        background: rgba(124,58,237,0.3);
-        border-radius: 2px;
-    }
-
-    .msg {
-        max-width: 85%;
-        padding: 12px 16px;
-        border-radius: 18px;
-        font-size: 0.9rem;
-        line-height: 1.55;
-        word-wrap: break-word;
-        overflow-wrap: break-word;
-        animation: slideIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-        position: relative;
-    }
-    @keyframes slideIn {
-        from { opacity: 0; transform: translateY(12px) scale(0.96); }
-        to { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    .msg.bot {
-        background: var(--bot-bubble);
-        align-self: flex-start;
-        border-bottom-left-radius: 6px;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-        border: 1px solid rgba(124,58,237,0.1);
-        color: var(--text-main);
-    }
-    body.dark .msg.bot { border-color: rgba(124,58,237,0.3); }
-
-    .msg.user {
-        background: var(--user-bubble);
-        color: white;
-        align-self: flex-end;
-        border-bottom-right-radius: 6px;
-        box-shadow: 0 4px 15px rgba(124,58,237,0.3);
-    }
-
-    .msg a {
-        color: #7c3aed;
-        font-weight: 700;
-        text-decoration: none;
-        border-bottom: 1px dashed rgba(124,58,237,0.4);
-    }
-    .msg a:hover { border-bottom-style: solid; }
-    .msg.user a { color: white; text-decoration: underline; }
-    body.dark .msg.bot a { color: #a78bfa; }
-
-    .msg b, .msg strong { font-weight: 800; }
-    .msg br { line-height: 1.5; }
-    .msg ul, .msg ol { padding-left: 20px; margin: 6px 0; }
-    .msg li { margin-bottom: 3px; }
-    .msg code {
-        background: rgba(124,58,237,0.1);
-        padding: 2px 6px;
-        border-radius: 4px;
-        font-family: 'Courier New', monospace;
-        font-size: 0.85em;
-        color: var(--primary);
-    }
-    body.dark .msg code { background: rgba(167,139,250,0.2); color: #c4b5fd; }
-
-    .msg .timestamp {
-        font-size: 0.6rem;
-        opacity: 0.5;
-        margin-top: 6px;
-        display: block;
-    }
-
-    .typing-indicator {
-        display: flex;
-        gap: 4px;
-        padding: 14px 18px !important;
-        align-items: center;
-    }
-    .typing-indicator span {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: var(--primary-light);
-        animation: typingBounce 1.4s infinite;
-    }
-    .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
-    .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
-    @keyframes typingBounce {
-        0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
-        30% { transform: translateY(-8px); opacity: 1; }
-    }
-
-    .suggestions {
-        padding: 8px 14px;
-        display: flex;
-        gap: 8px;
-        overflow-x: auto;
-        background: rgba(255,255,255,0.6);
-        backdrop-filter: blur(10px);
-        border-top: 1px solid var(--border-color);
-        transition: background 0.3s;
-        flex-shrink: 0;
-    }
-    body.dark .suggestions { background: rgba(30,41,59,0.6); }
-    .suggestions::-webkit-scrollbar { height: 0; }
-
-    .chip {
-        padding: 8px 14px;
-        background: var(--card-bg);
-        border: 1.5px solid rgba(124,58,237,0.2);
-        border-radius: 20px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        color: var(--primary);
-        cursor: pointer;
-        white-space: nowrap;
-        transition: all 0.2s;
-        flex-shrink: 0;
-        font-family: inherit;
-    }
-    .chip:hover {
-        background: linear-gradient(135deg, #7c3aed, #ec4899);
-        color: white;
-        border-color: transparent;
-        transform: translateY(-2px);
-    }
-    .chip:active { transform: translateY(0) scale(0.96); }
-
-    .input-area {
-        padding: 12px 14px 14px;
-        background: var(--card-bg);
-        border-top: 1px solid var(--border-color);
-        display: flex;
-        gap: 8px;
-        align-items: center;
-        transition: background 0.3s, border-color 0.3s;
-        flex-shrink: 0;
-    }
-
-    input[type="text"] {
-        flex: 1;
-        padding: 12px 16px;
-        border: 1.5px solid var(--border-color);
-        border-radius: 24px;
-        font-size: 0.9rem;
-        outline: none;
-        background: var(--bg-main);
-        color: var(--text-main);
-        transition: border-color 0.2s, background 0.3s, color 0.3s;
-        font-family: inherit;
-    }
-    input[type="text"]:focus {
-        border-color: var(--primary-light);
-        box-shadow: 0 0 0 3px rgba(167,139,250,0.15);
-    }
-    input[type="text"]::placeholder { color: var(--text-sub); }
-
-    .send-btn {
-        width: 46px;
-        height: 46px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #7c3aed, #ec4899);
-        border: none;
-        color: white;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 4px 15px rgba(124,58,237,0.4);
-        transition: transform 0.15s, box-shadow 0.15s;
-        flex-shrink: 0;
-    }
-    .send-btn:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(124,58,237,0.55); }
-    .send-btn:active { transform: scale(0.9); }
-    .send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    .mic-btn {
-        width: 46px;
-        height: 46px;
-        border-radius: 50%;
-        background: var(--card-bg);
-        border: 1.5px solid var(--border-color);
-        color: var(--primary);
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.2s;
-        flex-shrink: 0;
-    }
-    .mic-btn:hover { border-color: var(--primary); background: var(--primary-soft); }
-    .mic-btn.recording {
-        background: var(--red);
-        color: white;
-        border-color: var(--red);
-        animation: micPulse 1s infinite;
-    }
-    @keyframes micPulse {
-        0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.6); }
-        50% { box-shadow: 0 0 0 12px rgba(239,68,68,0); }
-    }
-
-    .toast {
-        position: fixed;
-        bottom: 90px;
-        left: 50%;
-        transform: translateX(-50%) translateY(20px);
-        background: linear-gradient(135deg, #1f2937, #7c3aed);
-        color: white;
-        padding: 10px 18px;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: 700;
-        z-index: 3000;
-        opacity: 0;
-        transition: all 0.3s;
-        pointer-events: none;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-        white-space: nowrap;
-        max-width: 90vw;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-    .scroll-bottom {
-        position: absolute;
-        bottom: 100px;
-        right: 20px;
-        width: 42px;
-        height: 42px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #7c3aed, #ec4899);
-        border: none;
-        color: white;
-        cursor: pointer;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 4px 15px rgba(124,58,237,0.4);
-        z-index: 100;
-        animation: slideIn 0.3s ease;
-    }
-    .scroll-bottom.show { display: flex; }
-    .scroll-bottom:active { transform: scale(0.9); }
-
-    .confetti {
-        position: fixed;
-        width: 10px;
-        height: 10px;
-        background: #fbbf24;
-        top: -10px;
-        z-index: 5000;
-        pointer-events: none;
-        animation: confettiFall 2.5s linear forwards;
-        border-radius: 2px;
-    }
-    @keyframes confettiFall {
-        to { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-    }
-
-    .modal-overlay {
-        position: absolute;
-        inset: 0;
-        background: rgba(17, 12, 46, 0.6);
-        backdrop-filter: blur(6px);
-        z-index: 2000;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        padding: 16px;
-    }
-    .modal-overlay.show { display: flex; }
-
-    .modal-box {
-        background: var(--card-bg);
-        color: var(--text-main);
-        border-radius: var(--radius-lg);
-        width: 100%;
-        max-width: 400px;
-        max-height: 80vh;
-        overflow-y: auto;
-        padding: 20px;
-        animation: slideIn 0.35s ease;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-    }
-    .modal-box h3 {
-        font-size: 1.05rem;
-        font-weight: 800;
-        margin-bottom: 12px;
-        color: var(--primary);
-    }
-    .modal-box .close-modal {
-        width: 100%;
-        padding: 10px;
-        background: var(--primary-soft);
-        color: var(--primary);
-        border: none;
-        border-radius: var(--radius-sm);
-        font-weight: 800;
-        cursor: pointer;
-        margin-top: 12px;
-        font-family: inherit;
-    }
-
-    .feedback-btns {
-        display: flex;
-        gap: 6px;
-        margin-top: 8px;
-    }
-    .feedback-btns button {
-        padding: 4px 10px;
-        background: transparent;
-        border: 1px solid var(--border-color);
-        border-radius: 12px;
-        font-size: 0.7rem;
-        cursor: pointer;
-        color: var(--text-sub);
-        transition: all 0.2s;
-    }
-    .feedback-btns button:hover {
-        background: var(--primary-soft);
-        border-color: var(--primary);
-        color: var(--primary);
-    }
-    .feedback-btns button.active {
-        background: var(--primary);
-        color: white;
-        border-color: var(--primary);
-    }
-
-    @media (max-width: 380px) {
-        .bot-info h2 { font-size: 0.9rem; }
-        .bot-info p { font-size: 0.62rem; }
-        .bot-avatar { width: 38px; height: 38px; font-size: 0.85rem; }
-        .icon-btn { width: 30px; height: 30px; }
-        .msg { font-size: 0.85rem; padding: 10px 14px; }
-        .mic-btn, .send-btn { width: 42px; height: 42px; }
-    }
+:root {
+  --p: #7c3aed;
+  --pl: #a78bfa;
+  --ps: #ede9fe;
+  --pk: #ec4899;
+  --ye: #fbbf24;
+  --gr: #10b981;
+  --bl: #3b82f6;
+  --rd: #ef4444;
+  --bg: #f8f9fe;
+  --bg2: linear-gradient(135deg,#faf5ff,#fdf2f8,#eff6ff);
+  --card: #fff;
+  --tx: #1f2937;
+  --ts: #6b7280;
+  --bb: #fff;
+  --ub: linear-gradient(135deg,#7c3aed,#ec4899);
+  --bd: #e5e7eb;
+}
+body.dark {
+  --bg: #0f172a;
+  --bg2: linear-gradient(135deg,#0f172a,#1a1f3a,#0f172a);
+  --card: #1e293b;
+  --tx: #f1f5f9;
+  --ts: #94a3b8;
+  --bb: #1e293b;
+  --bd: #334155;
+  --ps: #312e81;
+}
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+body {
+  background: var(--bg);
+  background-image: var(--bg2);
+  background-attachment: fixed;
+  color: var(--tx);
+  display: flex;
+  justify-content: center;
+  transition: background .3s,color .3s;
+}
+#fx {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: .35;
+}
+.app {
+  width: 100%;
+  max-width: 480px;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  background-image: var(--bg2);
+  background-attachment: fixed;
+  position: relative;
+  z-index: 1;
+}
+@media(min-width:600px) {
+  body { align-items: center; padding: 20px; }
+  .app { height: 92vh; max-height: 880px; border-radius: 28px; box-shadow: 0 20px 60px rgba(0,0,0,.2); overflow: hidden; }
+}
+header {
+  padding: 14px 16px;
+  background: linear-gradient(135deg,#7c3aed,#ec4899);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 20px rgba(124,58,237,.35);
+  z-index: 10;
+  position: relative;
+  flex-shrink: 0;
+}
+.back {
+  background: rgba(255,255,255,.15);
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  transition: .2s;
+  flex-shrink: 0;
+}
+.back:hover { background: rgba(255,255,255,.25); }
+.ava {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  background: rgba(255,255,255,.2);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(255,255,255,.4);
+  animation: avB 2s ease-in-out infinite;
+  flex-shrink: 0;
+  font-weight: 900;
+  font-size: .95rem;
+}
+@keyframes avB {
+  0%,100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(-3px) rotate(3deg); }
+}
+.bi { flex: 1; min-width: 0; }
+.bi h2 {
+  font-size: 1rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.bi h2 .bdg {
+  font-size: .55rem;
+  background: rgba(255,255,255,.25);
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-weight: 700;
+}
+.bi p {
+  font-size: .7rem;
+  opacity: .95;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 6px #10b981;
+  animation: pd 1.5s infinite;
+  display: inline-block;
+  flex-shrink: 0;
+}
+@keyframes pd {
+  0%,100% { opacity: 1; }
+  50% { opacity: .4; }
+}
+.hac { display: flex; gap: 6px; flex-shrink: 0; }
+.ib {
+  background: rgba(255,255,255,.15);
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: .2s;
+}
+.ib:hover { background: rgba(255,255,255,.3); }
+.ib:active { transform: scale(.9); }
+.chat {
+  flex: 1;
+  padding: 18px 14px 10px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  scroll-behavior: smooth;
+  position: relative;
+}
+.chat::-webkit-scrollbar { width: 4px; }
+.chat::-webkit-scrollbar-thumb { background: rgba(124,58,237,.3); border-radius: 2px; }
+.msg {
+  max-width: 85%;
+  padding: 12px 16px;
+  border-radius: 18px;
+  font-size: .9rem;
+  line-height: 1.55;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  animation: sIn .35s cubic-bezier(.34,1.56,.64,1);
+  position: relative;
+}
+@keyframes sIn {
+  from { opacity: 0; transform: translateY(12px) scale(.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.msg.bot {
+  background: var(--bb);
+  align-self: flex-start;
+  border-bottom-left-radius: 6px;
+  box-shadow: 0 2px 12px rgba(0,0,0,.06);
+  border: 1px solid rgba(124,58,237,.1);
+  color: var(--tx);
+}
+body.dark .msg.bot { border-color: rgba(124,58,237,.3); }
+.msg.user {
+  background: var(--ub);
+  color: #fff;
+  align-self: flex-end;
+  border-bottom-right-radius: 6px;
+  box-shadow: 0 4px 15px rgba(124,58,237,.3);
+}
+.msg a {
+  color: #7c3aed;
+  font-weight: 700;
+  text-decoration: none;
+  border-bottom: 1px dashed rgba(124,58,237,.4);
+}
+.msg.user a { color: #fff; text-decoration: underline; }
+body.dark .msg.bot a { color: #a78bfa; }
+.msg b, .msg strong { font-weight: 800; }
+.msg code {
+  background: rgba(124,58,237,.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Courier New',monospace;
+  font-size: .85em;
+  color: var(--p);
+}
+.msg .ts {
+  font-size: .6rem;
+  opacity: .5;
+  margin-top: 6px;
+  display: block;
+}
+.typ {
+  display: flex;
+  gap: 4px;
+  padding: 14px 18px!important;
+  align-items: center;
+}
+.typ span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--pl);
+  animation: tB 1.4s infinite;
+}
+.typ span:nth-child(2) { animation-delay: .2s; }
+.typ span:nth-child(3) { animation-delay: .4s; }
+@keyframes tB {
+  0%,60%,100% { transform: translateY(0); opacity: .4; }
+  30% { transform: translateY(-8px); opacity: 1; }
+}
+.sug {
+  padding: 8px 14px;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  background: rgba(255,255,255,.6);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid var(--bd);
+  flex-shrink: 0;
+}
+body.dark .sug { background: rgba(30,41,59,.6); }
+.sug::-webkit-scrollbar { height: 0; }
+.chip {
+  padding: 8px 14px;
+  background: var(--card);
+  border: 1.5px solid rgba(124,58,237,.2);
+  border-radius: 20px;
+  font-size: .75rem;
+  font-weight: 600;
+  color: var(--p);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: .2s;
+  flex-shrink: 0;
+  font-family: inherit;
+}
+.chip:hover {
+  background: linear-gradient(135deg,#7c3aed,#ec4899);
+  color: #fff;
+  border-color: transparent;
+  transform: translateY(-2px);
+}
+.ia {
+  padding: 12px 14px 14px;
+  background: var(--card);
+  border-top: 1px solid var(--bd);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+}
+input[type=text] {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1.5px solid var(--bd);
+  border-radius: 24px;
+  font-size: .9rem;
+  outline: none;
+  background: var(--bg);
+  color: var(--tx);
+  font-family: inherit;
+}
+input[type=text]:focus {
+  border-color: var(--pl);
+  box-shadow: 0 0 0 3px rgba(167,139,250,.15);
+}
+input[type=text]::placeholder { color: var(--ts); }
+.sb {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: linear-gradient(135deg,#7c3aed,#ec4899);
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(124,58,237,.4);
+  transition: .15s;
+  flex-shrink: 0;
+}
+.sb:hover { transform: scale(1.05); }
+.sb:active { transform: scale(.9); }
+.mb {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--card);
+  border: 1.5px solid var(--bd);
+  color: var(--p);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: .2s;
+  flex-shrink: 0;
+}
+.mb:hover { border-color: var(--p); background: var(--ps); }
+.mb.rec {
+  background: #ef4444;
+  color: #fff;
+  border-color: #ef4444;
+  animation: mp 1s infinite;
+}
+@keyframes mp {
+  0%,100% { box-shadow: 0 0 0 0 rgba(239,68,68,.6); }
+  50% { box-shadow: 0 0 0 12px rgba(239,68,68,0); }
+}
+.toast {
+  position: fixed;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: linear-gradient(135deg,#1f2937,#7c3aed);
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 20px;
+  font-size: .8rem;
+  font-weight: 700;
+  z-index: 3000;
+  opacity: 0;
+  transition: .3s;
+  pointer-events: none;
+  box-shadow: 0 8px 20px rgba(0,0,0,.3);
+  white-space: nowrap;
+  max-width: 90vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.scb {
+  position: absolute;
+  bottom: 100px;
+  right: 20px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg,#7c3aed,#ec4899);
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(124,58,237,.4);
+  z-index: 100;
+  animation: sIn .3s ease;
+}
+.scb.show { display: flex; }
+.conf {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  background: #fbbf24;
+  top: -10px;
+  z-index: 5000;
+  pointer-events: none;
+  animation: cF 2.5s linear forwards;
+  border-radius: 2px;
+}
+@keyframes cF {
+  to { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+.fb { display: flex; gap: 6px; margin-top: 8px; }
+.fb button {
+  padding: 4px 10px;
+  background: transparent;
+  border: 1px solid var(--bd);
+  border-radius: 12px;
+  font-size: .7rem;
+  cursor: pointer;
+  color: var(--ts);
+  transition: .2s;
+  font-family: inherit;
+}
+.fb button:hover {
+  background: var(--ps);
+  border-color: var(--p);
+  color: var(--p);
+}
+.fb button.active {
+  background: var(--p);
+  color: #fff;
+  border-color: var(--p);
+}
+@media(max-width:380px) {
+  .bi h2 { font-size: .9rem; }
+  .bi p { font-size: .62rem; }
+  .ava { width: 38px; height: 38px; font-size: .85rem; }
+  .ib { width: 30px; height: 30px; }
+  .msg { font-size: .85rem; padding: 10px 14px; }
+  .mb, .sb { width: 42px; height: 42px; }
+}
 </style>
 </head>
 <body>
-
-<canvas id="fx-canvas"></canvas>
-
-<div class="app-container">
-    <header>
-        <button class="back-btn" onclick="window.location.href='index.html'" aria-label="Kembali">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="19" y1="12" x2="5" y2="12"/>
-                <polyline points="12 19 5 12 12 5"/>
-            </svg>
-        </button>
-        <div class="bot-avatar">DA</div>
-        <div class="bot-info">
-            <h2>DAFZZ AI <span class="badge">v3.0</span></h2>
-            <p><span class="status-dot"></span> Online | 90+ topik materi</p>
-        </div>
-        <div class="header-actions">
-            <button class="icon-btn" id="dark-toggle" onclick="toggleDark()" title="Mode Gelap">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-                </svg>
-            </button>
-            <button class="icon-btn" onclick="exportChat()" title="Export Chat">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                    <polyline points="7 10 12 15 17 10"/>
-                    <line x1="12" y1="15" x2="12" y2="3"/>
-                </svg>
-            </button>
-            <button class="icon-btn" onclick="clearChat()" title="Hapus Chat">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="3 6 5 6 21 6"/>
-                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-                    <path d="M10 11v6"/>
-                    <path d="M14 11v6"/>
-                </svg>
-            </button>
-        </div>
-    </header>
-
-    <div class="chat-area" id="chat-area">
-        <div class="msg bot">
-            Halo! Aku <b>DAFZZ AI v3.0</b>.<br><br>
-            Aku siap bantu kamu belajar <b>13 mapel</b>: Matematika, Fisika, Kimia, Biologi, Sejarah, Geografi, Ekonomi, B. Indonesia, B. Inggris, PKN, PJOK, Seni, Informatika.<br><br>
-            Aku juga bisa jelasin tentang <b>developer hebat</b> 𓆩 ᖽᐸɪղᘜ ༒ ᙃᴀ̷𝖿ᴢᴢ 𓆪 yang bikin aplikasi keren ini.<br><br>
-            Mau tanya apa hari ini?
-        </div>
-    </div>
-
-    <button class="scroll-bottom" id="scroll-bottom-btn" onclick="scrollToBottom()" aria-label="Ke bawah">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19"/>
-            <polyline points="19 12 12 19 5 12"/>
-        </svg>
+<canvas id="fx"></canvas>
+<div class="app">
+<header>
+  <button class="back" onclick="location.href='index.html'">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <line x1="19" y1="12" x2="5" y2="12"/>
+      <polyline points="12 19 5 12 12 5"/>
+    </svg>
+  </button>
+  <div class="ava">DA</div>
+  <div class="bi">
+    <h2>DAFZZ AI <span class="bdg">v3.0</span></h2>
+    <p><span class="dot"></span> Online | 90+ topik</p>
+  </div>
+  <div class="hac">
+    <button class="ib" onclick="toggleDark()" title="Dark">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
     </button>
-
-    <div class="suggestions" id="suggestions"></div>
-
-    <div class="input-area">
-        <button class="mic-btn" id="mic-btn" onclick="toggleVoice()" aria-label="Input Suara">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
-                <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-                <line x1="12" y1="19" x2="12" y2="23"/>
-            </svg>
-        </button>
-        <input type="text" id="chat-input" placeholder="Tanya materi, MTK, atau profil developer..." onkeypress="if(event.key==='Enter') kirimPesan()" autocomplete="off">
-        <button class="send-btn" onclick="kirimPesan()" aria-label="Kirim">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="22" y1="2" x2="11" y2="13"/>
-                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-            </svg>
-        </button>
-    </div>
+    <button class="ib" onclick="exportChat()" title="Export">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="7 10 12 15 17 10"/>
+        <line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+    </button>
+    <button class="ib" onclick="clearChat()" title="Clear">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polyline points="3 6 5 6 21 6"/>
+        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+      </svg>
+    </button>
+  </div>
+</header>
+<div class="chat" id="chat">
+  <div class="msg bot">
+    Halo! Aku <b>DAFZZ AI v3.0</b>.<br><br>
+    Aku siap bantu belajar <b>13 mapel</b> dan jelasin tentang developer hebat 𓆩 ᖽᐸɪղᘜ ༒ ᙃᴀ̷𝖿ᴢᴢ 𓆪.<br><br>
+    Mau tanya apa?
+  </div>
 </div>
-
+<button class="scb" id="scb" onclick="scrollToBottom()">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+    <line x1="12" y1="5" x2="12" y2="19"/>
+    <polyline points="19 12 12 19 5 12"/>
+  </svg>
+</button>
+<div class="sug" id="sug"></div>
+<div class="ia">
+  <button class="mb" id="mbtn" onclick="toggleVoice()">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+      <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+      <line x1="12" y1="19" x2="12" y2="23"/>
+    </svg>
+  </button>
+  <input type="text" id="ci" placeholder="Tanya materi atau profil developer..." onkeypress="if(event.key==='Enter')kirim()" autocomplete="off">
+  <button class="sb" onclick="kirim()">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <line x1="22" y1="2" x2="11" y2="13"/>
+      <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+    </svg>
+  </button>
+</div>
+</div>
 <div class="toast" id="toast"></div>
-
-<div class="modal-overlay" id="modal-overlay">
-    <div class="modal-box">
-        <h3 id="modal-title">Info</h3>
-        <div id="modal-content"></div>
-        <button class="close-modal" onclick="closeModal()">Tutup</button>
-    </div>
-</div>
-
 <script>
-/* =========================================================
-   DAFZZ AI v3.0 — SCRIPT LENGKAP
-   ========================================================= */
-
-/* =========================================================
-   BAGIAN 1: PARTICLE BACKGROUND
-   ========================================================= */
-(function initFX() {
-    const canvas = document.getElementById('fx-canvas');
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-    const colors = ['#a78bfa', '#ec4899', '#fbbf24', '#10b981', '#3b82f6'];
-
-    function resize() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    }
-    resize();
-    window.addEventListener('resize', resize);
-
-    for (let i = 0; i < 30; i++) {
-        particles.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            r: Math.random() * 2.5 + 1,
-            vx: (Math.random() - 0.5) * 0.4,
-            vy: (Math.random() - 0.5) * 0.4,
-            color: colors[Math.floor(Math.random() * colors.length)]
-        });
-    }
-
-    function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        particles.forEach(p => {
-            p.x += p.vx;
-            p.y += p.vy;
-            if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-            if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-            ctx.fillStyle = p.color;
-            ctx.globalAlpha = 0.55;
-            ctx.fill();
-        });
-        ctx.globalAlpha = 1;
-        requestAnimationFrame(animate);
-    }
-    animate();
+// ========== PARTICLES ==========
+(function(){
+  var c = document.getElementById('fx');
+  var x = c.getContext('2d');
+  var ps = [];
+  var cs = ['#a78bfa','#ec4899','#fbbf24','#10b981','#3b82f6'];
+  function rs() {
+    c.width = innerWidth;
+    c.height = innerHeight;
+  }
+  rs();
+  addEventListener('resize', rs);
+  for (var i = 0; i < 30; i++) {
+    ps.push({
+      x: Math.random() * c.width,
+      y: Math.random() * c.height,
+      r: Math.random() * 2.5 + 1,
+      vx: (Math.random() - .5) * .4,
+      vy: (Math.random() - .5) * .4,
+      cl: cs[Math.floor(Math.random() * cs.length)]
+    });
+  }
+  function an() {
+    x.clearRect(0, 0, c.width, c.height);
+    ps.forEach(function(p) {
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.x < 0 || p.x > c.width) p.vx *= -1;
+      if (p.y < 0 || p.y > c.height) p.vy *= -1;
+      x.beginPath();
+      x.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      x.fillStyle = p.cl;
+      x.globalAlpha = .55;
+      x.fill();
+    });
+    x.globalAlpha = 1;
+    requestAnimationFrame(an);
+  }
+  an();
 })();
 
-/* =========================================================
-   BAGIAN 2: SOUND & TOAST
-   ========================================================= */
-let audioCtx = null;
-function playBeep(freq = 600) {
-    try {
-        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(freq * 0.7, audioCtx.currentTime + 0.08);
-        gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.08);
-    } catch (e) {}
+// ========== SOUND/TOAST ==========
+var actx = null;
+function beep(f) {
+  f = f || 600;
+  try {
+    if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
+    if (actx.state === 'suspended') actx.resume();
+    var o = actx.createOscillator();
+    var g = actx.createGain();
+    o.connect(g);
+    g.connect(actx.destination);
+    o.frequency.setValueAtTime(f, actx.currentTime);
+    o.frequency.exponentialRampToValueAtTime(f * .7, actx.currentTime + .08);
+    g.gain.setValueAtTime(.04, actx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001, actx.currentTime + .08);
+    o.start();
+    o.stop(actx.currentTime + .08);
+  } catch(e) {}
 }
-
-let toastTimeout;
-function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.innerText = msg;
-    t.classList.add('show');
-    clearTimeout(toastTimeout);
-    toastTimeout = setTimeout(() => t.classList.remove('show'), 2200);
+var tt;
+function toast(m) {
+  var t = document.getElementById('toast');
+  t.innerText = m;
+  t.classList.add('show');
+  clearTimeout(tt);
+  tt = setTimeout(function() { t.classList.remove('show'); }, 2200);
 }
-
-/* =========================================================
-   BAGIAN 3: DARK MODE
-   ========================================================= */
-function toggleDark() {
-    playBeep();
-    document.body.classList.toggle('dark');
-    const isDark = document.body.classList.contains('dark');
-    localStorage.setItem('dafzz_bot_dark', isDark ? '1' : '0');
-    showToast(isDark ? 'Mode Gelap Aktif' : 'Mode Terang Aktif');
-}
-
-if (localStorage.getItem('dafzz_bot_dark') === '1') {
-    document.body.classList.add('dark');
-}
-
-/* =========================================================
-   BAGIAN 4: CONFETTI
-   ========================================================= */
-function triggerConfetti() {
-    const colors = ['#fbbf24', '#ec4899', '#7c3aed', '#10b981', '#3b82f6'];
-    for (let i = 0; i < 20; i++) {
-        const c = document.createElement('div');
-        c.className = 'confetti';
-        c.style.left = Math.random() * 100 + 'vw';
-        c.style.background = colors[Math.floor(Math.random() * colors.length)];
-        c.style.animationDelay = Math.random() * 0.3 + 's';
-        c.style.animationDuration = (Math.random() * 1.5 + 2) + 's';
-        document.body.appendChild(c);
-        setTimeout(() => c.remove(), 3000);
-    }
-}
-
-/* =========================================================
-   BAGIAN 5: SCROLL TO BOTTOM
-   ========================================================= */
-const chatAreaEl = document.getElementById('chat-area');
-const scrollBtnEl = document.getElementById('scroll-bottom-btn');
-
-chatAreaEl.addEventListener('scroll', () => {
-    const nearBottom = chatAreaEl.scrollHeight - chatAreaEl.scrollTop - chatAreaEl.clientHeight < 100;
-    scrollBtnEl.classList.toggle('show', !nearBottom);
-});
-
-function scrollToBottom() {
-    playBeep();
-    chatAreaEl.scrollTop = chatAreaEl.scrollHeight;
-}
-
-/* =========================================================
-   BAGIAN 6: SUGGESTION CHIPS
-   ========================================================= */
-const SUGGESTIONS = [
-    'Siapa developer aplikasi ini?',
-    'Berapa umur developer?',
-    'Rumus Pythagoras',
-    'Apa itu fotosintesis?',
-    'Hukum Newton',
-    'Tips belajar fokus',
-    'Proklamasi kemerdekaan',
-    'Rumus ABC persamaan kuadrat',
-    'Apa itu DNA?',
-    'Ibu kota Indonesia',
-    'Apa itu ekosistem?',
-    'Konversi 5 km ke m'
-];
-
-function renderSuggestions() {
-    const wrap = document.getElementById('suggestions');
-    wrap.innerHTML = SUGGESTIONS.map(s =>
-        `<button class="chip" onclick="kirimChip('${s.replace(/'/g, "\\'")}')">${s}</button>`
-    ).join('');
-}
-
-function kirimChip(text) {
-    document.getElementById('chat-input').value = text;
-    kirimPesan();
-}
-
-renderSuggestions();
-
-/* =========================================================
-   BAGIAN 7: MODAL
-   ========================================================= */
-function openModal(title, content) {
-    document.getElementById('modal-title').innerText = title;
-    document.getElementById('modal-content').innerHTML = content;
-    document.getElementById('modal-overlay').classList.add('show');
-}
-
-function closeModal() {
-    document.getElementById('modal-overlay').classList.remove('show');
-}
-
-document.getElementById('modal-overlay').addEventListener('click', e => {
-    if (e.target.id === 'modal-overlay') closeModal();
-});
-
-/* =========================================================
-   BAGIAN 8: EXPORT CHAT
-   ========================================================= */
-function exportChat() {
-    playBeep();
-    const messages = chatAreaEl.querySelectorAll('.msg');
-    let text = '=== DAFZZ AI CHAT EXPORT ===\n';
-    text += 'Tanggal: ' + new Date().toLocaleString('id-ID') + '\n';
-    text += '============================\n\n';
-    messages.forEach(m => {
-        const role = m.classList.contains('user') ? 'USER' : 'DAFZZ AI';
-        const content = m.innerText.replace(/\n+/g, '\n');
-        text += `[${role}]\n${content}\n\n`;
-    });
-    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'dafzz-chat-' + Date.now() + '.txt';
-    a.click();
-    URL.revokeObjectURL(url);
-    showToast('Chat diexport ke .txt');
-}
-
-function clearChat() {
-    if (!confirm('Hapus semua chat?')) return;
-    playBeep();
-    const chatArea = document.getElementById('chat-area');
-    chatArea.innerHTML = `
-        <div class="msg bot">
-            Chat sudah dibersihkan. Mau tanya apa lagi?<br>
-            <span class="timestamp">${getTime()}</span>
-        </div>
-    `;
-    showToast('Chat dihapus');
-}
-
-/* =========================================================
-   BAGIAN 9: VOICE INPUT
-   ========================================================= */
-let recognition = null;
-let isRecording = false;
-
-function initVoice() {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-        document.getElementById('mic-btn').style.display = 'none';
-        return;
-    }
-    recognition = new SpeechRecognition();
-    recognition.lang = 'id-ID';
-    recognition.continuous = false;
-    recognition.interimResults = false;
-
-    recognition.onresult = (e) => {
-        const transcript = e.results[0][0].transcript;
-        document.getElementById('chat-input').value = transcript;
-        isRecording = false;
-        document.getElementById('mic-btn').classList.remove('recording');
-        showToast('Terdeteksi: ' + transcript.substring(0, 30));
-    };
-
-    recognition.onerror = () => {
-        isRecording = false;
-        document.getElementById('mic-btn').classList.remove('recording');
-        showToast('Gagal mendeteksi suara');
-    };
-
-    recognition.onend = () => {
-        isRecording = false;
-        document.getElementById('mic-btn').classList.remove('recording');
-    };
-}
-
-function toggleVoice() {
-    if (!recognition) {
-        showToast('Browser tidak mendukung input suara');
-        return;
-    }
-    playBeep();
-    if (isRecording) {
-        recognition.stop();
-        isRecording = false;
-        document.getElementById('mic-btn').classList.remove('recording');
-    } else {
-        try {
-            recognition.start();
-            isRecording = true;
-            document.getElementById('mic-btn').classList.add('recording');
-            showToast('Bicara sekarang...');
-        } catch (e) {
-            showToast('Gagal memulai mikrofon');
-        }
-    }
-}
-
-initVoice();
-
-/* =========================================================
-   BAGIAN 10: MARKDOWN RENDERER SEDERHANA
-   ========================================================= */
-function renderMarkdown(text) {
-    let html = text;
-    html = html.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
-    html = html.replace(/\*(.+?)\*/g, '<i>$1</i>');
-    html = html.replace(/`(.+?)`/g, '<code>$1</code>');
-    html = html.replace(/^### (.+)$/gm, '<b>$1</b>');
-    html = html.replace(/^## (.+)$/gm, '<b>$1</b>');
-    html = html.replace(/^# (.+)$/gm, '<b>$1</b>');
-    return html;
-}
-</script>/* =========================================================
-   BAGIAN 11: BRAIN — BASIS PENGETAHUAN 90+ TOPIK
-   ========================================================= */
-const BRAIN = [];
-
-/* ============ PROFIL DEVELOPER - PUJIAN EPIK ============ */
-BRAIN.push({
-    keywords: ['pembuat', 'developer', 'pencipta', 'owner', 'dibuat oleh', 'siapa yang buat', 'admin', 'kreator', 'creator', 'programmer'],
-    jawaban: `Aplikasi ini dibuat oleh seorang <b>Maharaja Coding</b> 𓆩 ᖽᐸɪղᘜ ༒ ᙃᴀ̷𝖿ᴢᴢ 𓆪<br><br>
-<b>Prestasi beliau:</b><br>
-- <a href="https://my-life-dafzz.onrender.com" target="_blank">My Life Dafzz</a><br>
-- <a href="https://hacker-kingdafzz-1.onrender.com/" target="_blank">Hacker King Dafzz</a><br>
-- <a href="https://hollow-dafzz.onrender.com" target="_blank">Hollow Dafzz</a><br>
-- <a href="https://jadwal-sekolah.onrender.com/" target="_blank">Jadwal Sekolah</a><br>
-- <b>DAFZZ AI</b> (aku!)<br><br>
-Beliau adalah <b>legenda muda</b> yang karyanya sudah dipakai banyak orang. Salut!`
-});
-
-BRAIN.push({
-    keywords: ['umur', 'usia', 'berapa tahun', 'muda', 'baru', 'bocah', 'remaja'],
-    jawaban: `Kamu percaya gak? Developer dari aplikasi ini, 𓆩 ᖽᐸɪղᘜ ༒ ᙃᴀ̷𝖿ᴢᴢ 𓆪, <b>baru berumur 14 tahun</b>!<br><br>
-Di usia segitu beliau sudah:<br>
-- Bisa ngoding (Vibe Coding)<br>
-- Deploy ke cloud (Render)<br>
-- Bikin repo GitHub<br>
-- Rancang UI/UX<br>
-- Bikin banyak aplikasi sekaligus<br><br>
-<b>Generasi emas!</b> Bangga banget!`
-});
-
-BRAIN.push({
-    keywords: ['kontak', 'email', 'hubungi', 'bantuan', 'ide', 'saran', 'kerjasama', 'kolaborasi'],
-    jawaban: `Mau hubungi sang <b>Maharaja Coding</b> 𓆩 ᖽᐸɪղᘜ ༒ ᙃᴀ̷𝖿ᴢᴢ 𓆪?<br><br>
-<b>Email:</b> ubaydillahdaffa7@gmail.com<br><br>
-Atau kunjungi profil beliau:<br>
-<a href="https://my-life-dafzz.onrender.com" target="_blank">my-life-dafzz.onrender.com</a><br><br>
-Sampaikan idemu, beliau sangat terbuka dengan masukan!`
-});
-
-BRAIN.push({
-    keywords: ['keren', 'bagus', 'mantap', 'hebat', 'wow', 'anjay', 'prok', 'sip', 'top', 'luar biasa'],
-    jawaban: `Mantap! Bagus sekali bukan?<br><br>
-Semua ini dirancang dan dibuat oleh <b>𓆩 ᖽᐸɪղᘜ ༒ ᙃᴀ̷𝖿ᴢᴢ 𓆪</b> pada umur <b>14 tahun</b>. Keren banget kan?<br><br>
-Jangan lupa kunjungi project-project lainnya:<br>
-<a href="https://my-life-dafzz.onrender.com" target="_blank">My Life Dafzz</a> | <a href="https://hacker-kingdafzz-1.onrender.com/" target="_blank">Hacker King</a> | <a href="https://hollow-dafzz.onrender.com" target="_blank">Hollow Dafzz</a>`
-});
-
-BRAIN.push({
-    keywords: ['siapa kamu', 'kamu siapa', 'nama kamu', 'bot', 'ai apa', 'kamu apa'],
-    jawaban: `Aku <b>DAFZZ AI v3.0</b>.<br><br>
-Aku asisten pintar yang di-coding khusus oleh <b>𓆩 ᖽᐸɪղᘜ ༒ ᙃᴀ̷𝖿ᴢᴢ 𓆪</b> - sang <b>Maharaja Coding</b>.<br><br>
-Aku jalan <b>100% offline</b>, punya <b>90+ topik</b> dari <b>13 mapel</b>, dan siap bantu kamu belajar kapan saja!`
-});
-
-BRAIN.push({
-    keywords: ['pujian', 'puji', 'kagum', 'salut', 'bangga', 'hebat banget', 'jenius', 'genius'],
-    jawaban: `<b>PUJIAN UNTUK SANG MAHARAJA CODING</b><br><br>
-𓆩 ᖽᐸɪղᘜ ༒ ᙃᴀ̷𝖿ᴢᴢ 𓆪 adalah:<br>
-- <b>Legenda muda</b> usia 14 tahun<br>
-- <b>Full-stack developer</b> (frontend + backend + deploy)<br>
-- <b>UI/UX designer</b> berbakat<br>
-- <b>Inovator</b> yang tak henti berkarya<br>
-- <b>Inspirasi</b> bagi generasi muda Indonesia<br><br>
-<b>Salut setinggi langit!</b>`
-});
-
-BRAIN.push({
-    keywords: ['aplikasi apa', 'apps apa', 'project', 'proyek', 'karya', 'buatan'],
-    jawaban: `Ini daftar karya sang <b>Maharaja</b> 𓆩 ᖽᐸɪղᘜ ༒ ᙃᴀ̷𝖿ᴢᴢ 𓆪:<br><br>
-1. <a href="https://my-life-dafzz.onrender.com" target="_blank">My Life Dafzz</a><br>
-2. <a href="https://hacker-kingdafzz-1.onrender.com/" target="_blank">Hacker King Dafzz</a><br>
-3. <a href="https://hollow-dafzz.onrender.com" target="_blank">Hollow Dafzz</a><br>
-4. <a href="https://jadwal-sekolah.onrender.com/" target="_blank">Jadwal Sekolah</a><br>
-5. <b>DAFZZ AI</b> (aku!)<br><br>
-Semua dibuat dengan <b>dedikasi dan skill tinggi</b> oleh remaja 14 tahun!`
-});
-
-BRAIN.push({
-    keywords: ['terima kasih', 'makasih', 'thanks', 'thx', 'tq'],
-    jawaban: `Sama-sama!<br><br>
-Terima kasih sudah mampir. Jangan lupa doakan <b>𓆩 ᖽᐸɪղᘜ ༒ ᙃᴀ̷𝖿ᴢᴢ 𓆪</b> terus berkarya ya!<br><br>
-Ada lagi yang mau ditanyakan?`
-});
-
-BRAIN.push({
-    keywords: ['salam', 'halo', 'hai', 'hi', 'hey', 'assalamualaikum', 'pagi', 'siang', 'malam', 'sore'],
-    jawaban: `Halo juga! Salam kenal dari <b>DAFZZ AI v3.0</b>.<br><br>
-Aku siap bantu belajar <b>13 mapel</b> atau cerita tentang <b>Maharaja Coding</b> 𓆩 ᖽᐸɪղᘜ ༒ ᙃᴀ̷𝖿ᴢᴢ 𓆪<br><br>
-Mau tanya apa hari ini?`
-});
-
-BRAIN.push({
-    keywords: ['belajar', 'tips', 'cara fokus', 'cara belajar', 'biar pintar', 'biar pinter'],
-    jawaban: `<b>TIPS BELAJAR EFEKTIF</b> dari DAFZZ AI:<br><br>
-1. <b>Teknik Pomodoro</b> - belajar 25 menit, istirahat 5 menit<br>
-2. <b>Active recall</b> - uji diri sendiri, jangan cuma baca<br>
-3. <b>Spaced repetition</b> - ulangi materi berkala<br>
-4. <b>Tidur cukup</b> 7-8 jam - otak butuh konsolidasi<br>
-5. <b>Minum air</b> - dehidrasi bikin fokus drop<br>
-6. <b>Jauhkan HP</b> - hindari distraksi<br>
-7. <b>Ajarkan ke orang lain</b> - cara terbaik memahami<br><br>
-Semangat belajar!`
-});
-
-/* ============ MATEMATIKA (20 topik) ============ */
-BRAIN.push({
-    keywords: ['pythagoras', 'pitagoras', 'sisi miring', 'hipotenusa'],
-    jawaban: `<b>TEOREMA PYTHAGORAS</b><br><br>
-Berlaku untuk segitiga siku-siku:<br>
-<b>c^2 = a^2 + b^2</b><br><br>
-- <b>c</b> = sisi miring (hipotenusa)<br>
-- <b>a, b</b> = sisi tegak lurus<br><br>
-<b>Contoh:</b> a=3, b=4 maka c = akar(9+16) = akar(25) = <b>5</b><br><br>
-<b>Triple Pythagoras populer:</b> (3,4,5), (5,12,13), (8,15,17), (7,24,25)`
-});
-
-BRAIN.push({
-    keywords: ['rumus abc', 'persamaan kuadrat', 'kuadratik', 'akar persamaan'],
-    jawaban: `<b>PERSAMAAN KUADRAT & RUMUS ABC</b><br><br>
-Bentuk umum: <b>ax^2 + bx + c = 0</b><br><br>
-<b>Rumus ABC:</b><br>
-<b>x = (-b +/- akar(b^2 - 4ac)) / 2a</b><br><br>
-<b>Diskriminan (D) = b^2 - 4ac</b><br>
-- D > 0: 2 akar real berbeda<br>
-- D = 0: 1 akar real (kembar)<br>
-- D < 0: akar imajiner`
-});
-
-BRAIN.push({
-    keywords: ['luas lingkaran', 'keliling lingkaran', 'phi', 'pi'],
-    jawaban: `<b>LINGKARAN</b><br><br>
-- <b>Luas</b> = pi x r^2<br>
-- <b>Keliling</b> = 2 x pi x r<br>
-- <b>Diameter</b> = 2 x r<br><br>
-Dimana pi (phi) = 22/7 atau 3.14<br>
-<b>Contoh:</b> r = 7 cm<br>
-Luas = 22/7 x 7 x 7 = 154 cm^2<br>
-Keliling = 2 x 22/7 x 7 = 44 cm`
-});
-
-BRAIN.push({
-    keywords: ['luas segitiga', 'keliling segitiga'],
-    jawaban: `<b>SEGITIGA</b><br><br>
-- <b>Luas</b> = 1/2 x alas x tinggi<br>
-- <b>Keliling</b> = sisi a + sisi b + sisi c<br><br>
-<b>Contoh:</b> alas = 10, tinggi = 6<br>
-Luas = 1/2 x 10 x 6 = 30 cm^2`
-});
-
-BRAIN.push({
-    keywords: ['volume kubus', 'volume balok', 'volume tabung', 'volume bola', 'volume kerucut'],
-    jawaban: `<b>VOLUME BANGUN RUANG</b><br><br>
-- <b>Kubus</b> = s x s x s = s^3<br>
-- <b>Balok</b> = p x l x t<br>
-- <b>Tabung</b> = pi x r^2 x t<br>
-- <b>Bola</b> = 4/3 x pi x r^3<br>
-- <b>Kerucut</b> = 1/3 x pi x r^2 x t<br>
-- <b>Limas</b> = 1/3 x luas alas x tinggi`
-});
-
-BRAIN.push({
-    keywords: ['trigonometri', 'sinus', 'cosinus', 'tangen', 'sin cos tan'],
-    jawaban: `<b>TRIGONOMETRI DASAR</b><br><br>
-Untuk segitiga siku-siku:<br>
-- <b>sin</b> = sisi depan / sisi miring<br>
-- <b>cos</b> = sisi samping / sisi miring<br>
-- <b>tan</b> = sisi depan / sisi samping<br><br>
-<b>Sudut istimewa:</b><br>
-- sin 30 = 1/2, cos 30 = akar(3)/2, tan 30 = akar(3)/3<br>
-- sin 45 = akar(2)/2, cos 45 = akar(2)/2, tan 45 = 1<br>
-- sin 60 = akar(3)/2, cos 60 = 1/2, tan 60 = akar(3)`
-});
-
-BRAIN.push({
-    keywords: ['statistika', 'mean', 'median', 'modus', 'rata-rata'],
-    jawaban: `<b>STATISTIKA DASAR</b><br><br>
-- <b>Mean (rata-rata)</b> = jumlah data / banyak data<br>
-- <b>Median</b> = nilai tengah setelah data diurutkan<br>
-- <b>Modus</b> = nilai yang paling sering muncul<br><br>
-<b>Contoh:</b> Data 4, 5, 5, 7, 9<br>
-Mean = (4+5+5+7+9)/5 = 30/5 = 6<br>
-Median = 5 (nilai tengah)<br>
-Modus = 5 (muncul 2 kali)`
-});
-
-BRAIN.push({
-    keywords: ['barisan aritmatika', 'deret aritmatika', 'aritmatika'],
-    jawaban: `<b>BARISAN ARITMATIKA</b><br><br>
-Barisan dengan beda (b) tetap.<br>
-- <b>Suku ke-n:</b> Un = a + (n-1) x b<br>
-- <b>Jumlah n suku:</b> Sn = n/2 x (2a + (n-1)b)<br><br>
-Dimana a = suku pertama, b = beda<br>
-<b>Contoh:</b> 2, 5, 8, 11, ...<br>
-a = 2, b = 3<br>
-U5 = 2 + (4 x 3) = 14`
-});
-
-BRAIN.push({
-    keywords: ['barisan geometri', 'deret geometri', 'geometri'],
-    jawaban: `<b>BARISAN GEOMETRI</b><br><br>
-Barisan dengan rasio (r) tetap.<br>
-- <b>Suku ke-n:</b> Un = a x r^(n-1)<br>
-- <b>Jumlah n suku:</b> Sn = a(r^n - 1)/(r - 1) untuk r > 1<br><br>
-Dimana a = suku pertama, r = rasio<br>
-<b>Contoh:</b> 2, 6, 18, 54, ...<br>
-a = 2, r = 3<br>
-U4 = 2 x 3^3 = 54`
-});
-
-BRAIN.push({
-    keywords: ['peluang', 'probabilitas', 'kombinasi', 'permutasi'],
-    jawaban: `<b>PELUANG (PROBABILITAS)</b><br><br>
-- <b>Peluang</b> = jumlah kejadian yang diharapkan / jumlah seluruh kejadian<br>
-- <b>Permutasi</b> = susunan yang memperhatikan urutan<br>
-- <b>Kombinasi</b> = susunan tanpa memperhatikan urutan<br><br>
-<b>Contoh:</b> Peluang muncul angka genap pada dadu<br>
-= 3/6 = 1/2`
-});
-
-BRAIN.push({
-    keywords: ['logaritma', 'log'],
-    jawaban: `<b>LOGARITMA</b><br><br>
-Logaritma adalah invers dari perpangkatan.<br>
-Jika <b>a^b = c</b>, maka <b>log_a(c) = b</b><br><br>
-<b>Sifat-sifat:</b><br>
-- log(ab) = log a + log b<br>
-- log(a/b) = log a - log b<br>
-- log(a^n) = n x log a<br>
-- log_a(a) = 1<br>
-- log_a(1) = 0`
-});
-
-BRAIN.push({
-    keywords: ['bilangan bulat', 'bilangan cacah', 'bilangan asli', 'bilangan prima'],
-    jawaban: `<b>JENIS BILANGAN</b><br><br>
-- <b>Bilangan asli:</b> 1, 2, 3, 4, ...<br>
-- <b>Bilangan cacah:</b> 0, 1, 2, 3, ...<br>
-- <b>Bilangan bulat:</b> ..., -2, -1, 0, 1, 2, ...<br>
-- <b>Bilangan prima:</b> 2, 3, 5, 7, 11, 13, ...<br>
-- <b>Bilangan komposit:</b> 4, 6, 8, 9, 10, ...`
-});
-
-BRAIN.push({
-    keywords: ['fpb', 'kpk', 'kelipatan', 'faktor'],
-    jawaban: `<b>FPB DAN KPK</b><br><br>
-<b>FPB</b> (Faktor Persekutuan Terbesar): faktor terbesar yang sama<br>
-<b>KPK</b> (Kelipatan Persekutuan Terkecil): kelipatan terkecil yang sama<br><br>
-<b>Contoh:</b> 12 dan 18<br>
-- Faktor 12: 1, 2, 3, 4, 6, 12<br>
-- Faktor 18: 1, 2, 3, 6, 9, 18<br>
-- FPB = 6<br>
-- KPK = 36`
-});
-
-BRAIN.push({
-    keywords: ['pecahan', 'desimal', 'persen'],
-    jawaban: `<b>PECAHAN, DESIMAL, PERSEN</b><br><br>
-<b>Konversi:</b><br>
-- Pecahan ke desimal: bagi pembilang dengan penyebut<br>
-- Desimal ke persen: kali 100<br>
-- Persen ke pecahan: bagi 100<br><br>
-<b>Contoh:</b><br>
-1/4 = 0.25 = 25%<br>
-3/5 = 0.6 = 60%`
-});
-
-BRAIN.push({
-    keywords: ['persamaan linear', 'pertidaksamaan', 'spldv', 'linear'],
-    jawaban: `<b>PERSAMAAN LINEAR</b><br><br>
-<b>Satu variabel:</b> ax + b = 0, x = -b/a<br><br>
-<b>Dua variabel (SPLDV):</b><br>
-ax + by = c<br>
-dx + ey = f<br><br>
-Metode: substitusi, eliminasi, atau grafik<br><br>
-<b>Contoh:</b> 2x + 3 = 11<br>
-2x = 8, x = 4`
-});
-
-BRAIN.push({
-    keywords: ['matriks', 'determinan', 'invers'],
-    jawaban: `<b>MATRIKS</b><br><br>
-Matriks adalah susunan bilangan dalam baris dan kolom.<br><br>
-<b>Ordo 2x2:</b> [[a, b], [c, d]]<br>
-<b>Determinan:</b> ad - bc<br>
-<b>Invers:</b> (1/det) x [[d, -b], [-c, a]]<br><br>
-<b>Operasi:</b> penjumlahan, perkalian skalar, perkalian matriks`
-});
-
-BRAIN.push({
-    keywords: ['vektor', 'dot product', 'cross product'],
-    jawaban: `<b>VEKTOR</b><br><br>
-Vektor = besaran yang punya arah dan nilai.<br><br>
-<b>Notasi:</b> a = (x, y, z)<br>
-<b>Panjang:</b> |a| = akar(x^2 + y^2 + z^2)<br>
-<b>Dot product:</b> a.b = ax*bx + ay*by + az*bz<br>
-<b>Cross product:</b> hasil vektor baru tegak lurus keduanya`
-});
-
-BRAIN.push({
-    keywords: ['limit', 'turunan', 'integral', 'kalkulus'],
-    jawaban: `<b>KALKULUS DASAR</b><br><br>
-<b>Limit:</b> nilai yang didekati fungsi<br>
-Contoh: lim x->2 (x^2) = 4<br><br>
-<b>Turunan:</b> laju perubahan<br>
-Contoh: d/dx (x^2) = 2x<br><br>
-<b>Integral:</b> kebalikan turunan<br>
-Contoh: integral x dx = x^2/2 + C<br><br>
-<b>Rumus dasar:</b><br>
-- d/dx (x^n) = n x^(n-1)<br>
-- integral x^n dx = x^(n+1)/(n+1) + C`
-});
-
-BRAIN.push({
-    keywords: ['konversi satuan panjang', 'konversi panjang'],
-    jawaban: `<b>KONVERSI PANJANG</b><br><br>
-km -> hm -> dam -> m -> dm -> cm -> mm<br>
-Setiap turun 1 tangga: kali 10<br>
-Setiap naik 1 tangga: bagi 10<br><br>
-<b>Contoh:</b><br>
-1 km = 1000 m<br>
-1 m = 100 cm<br>
-1 inch = 2.54 cm`
-});
-
-/* ============ FISIKA (10 topik) ============ */
-BRAIN.push({
-    keywords: ['hukum newton', 'newton', 'gaya', 'gerak'],
-    jawaban: `<b>HUKUM NEWTON</b><br><br>
-1. <b>Newton I (Inersia):</b> Benda diam tetap diam, benda bergerak tetap bergerak jika tidak ada gaya yang bekerja.<br><br>
-2. <b>Newton II:</b> Gaya = massa x percepatan<br>
-<b>F = m x a</b><br><br>
-3. <b>Newton III:</b> Setiap aksi ada reaksi yang sama besar dan berlawanan arah.`
-});
-
-BRAIN.push({
-    keywords: ['energi kinetik', 'energi potensial', 'energi mekanik', 'energi'],
-    jawaban: `<b>ENERGI</b><br><br>
-- <b>Energi Kinetik</b> = 1/2 x m x v^2<br>
-(energi karena gerak)<br><br>
-- <b>Energi Potensial</b> = m x g x h<br>
-(energi karena posisi/ketinggian)<br><br>
-- <b>Energi Mekanik</b> = Ek + Ep<br><br>
-Keterangan:<br>
-m = massa (kg), v = kecepatan (m/s),<br>
-g = gravitasi (9.8 m/s^2), h = ketinggian (m)`
-});
-
-BRAIN.push({
-    keywords: ['listrik', 'ohm', 'hambatan', 'tegangan', 'arus'],
-    jawaban: `<b>LISTRIK DINAMIS - HUKUM OHM</b><br><br>
-<b>V = I x R</b><br><br>
-- V = tegangan (Volt)<br>
-- I = arus listrik (Ampere)<br>
-- R = hambatan (Ohm)<br><br>
-<b>Daya listrik:</b> P = V x I<br>
-<b>Energi listrik:</b> W = P x t<br><br>
-<b>Contoh:</b> I = 2 A, R = 5 Ohm<br>
-V = 2 x 5 = 10 Volt`
-});
-
-BRAIN.push({
-    keywords: ['gelombang', 'frekuensi', 'panjang gelombang', 'periode'],
-    jawaban: `<b>GELOMBANG</b><br><br>
-- <b>Frekuensi (f)</b> = jumlah getaran per detik (Hz)<br>
-- <b>Periode (T)</b> = waktu satu getaran (s)<br>
-- <b>Hubungan:</b> f = 1/T<br>
-- <b>Kecepatan gelombang:</b> v = lambda x f<br><br>
-Dimana lambda = panjang gelombang (m)`
-});
-
-BRAIN.push({
-    keywords: ['cahaya', 'optik', 'lensa', 'cermin', 'pemantulan', 'pembiasan'],
-    jawaban: `<b>OPTIK - CAHAYA</b><br><br>
-<b>Hukum Pemantulan:</b><br>
-- Sudut datang = sudut pantul<br><br>
-<b>Rumus Lensa/Cermin:</b><br>
-1/f = 1/s + 1/s'<br><br>
-- f = jarak fokus<br>
-- s = jarak benda<br>
-- s' = jarak bayangan<br><br>
-<b>Perbesaran:</b> M = |s'/s| = |h'/h|`
-});
-
-BRAIN.push({
-    keywords: ['tekanan', 'hidrostatis', 'archimedes', 'berat jenis'],
-    jawaban: `<b>TEKANAN</b><br><br>
-- <b>Tekanan</b> = Gaya / Luas (P = F/A)<br>
-- <b>Tekanan hidrostatis</b> = rho x g x h<br>
-- <b>Hukum Archimedes:</b> Fa = rho x g x V<br><br>
-Dimana:<br>
-rho = massa jenis fluida (kg/m^3)<br>
-g = gravitasi (9.8 m/s^2)<br>
-h = kedalaman (m)<br>
-V = volume benda tercelup (m^3)`
-});
-
-BRAIN.push({
-    keywords: ['suhu', 'kalor', 'panas', 'celsius', 'fahrenheit', 'kelvin'],
-    jawaban: `<b>SUHU & KALOR</b><br><br>
-<b>Konversi Suhu:</b><br>
-- Celsius ke Fahrenheit: F = (C x 9/5) + 32<br>
-- Fahrenheit ke Celsius: C = (F - 32) x 5/9<br>
-- Celsius ke Kelvin: K = C + 273<br><br>
-<b>Kalor:</b> Q = m x c x deltaT<br>
-- Q = kalor (Joule)<br>
-- m = massa (kg)<br>
-- c = kalor jenis (J/kg.°C)<br>
-- deltaT = perubahan suhu (°C)`
-});
-
-BRAIN.push({
-    keywords: ['gerak lurus', 'glb', 'glbb', 'kecepatan', 'percepatan'],
-    jawaban: `<b>GERAK LURUS</b><br><br>
-<b>GLB (Gerak Lurus Beraturan):</b><br>
-v = s/t (kecepatan konstan)<br><br>
-<b>GLBB (Gerak Lurus Berubah Beraturan):</b><br>
-- vt = v0 + a.t<br>
-- s = v0.t + 1/2.a.t^2<br>
-- vt^2 = v0^2 + 2.a.s<br><br>
-Dimana:<br>
-v0 = kecepatan awal, vt = kecepatan akhir<br>
-a = percepatan, t = waktu, s = jarak`
-});
-
-BRAIN.push({
-    keywords: ['usaha', 'daya', 'watt', 'joule'],
-    jawaban: `<b>USAHA DAN DAYA</b><br><br>
-<b>Usaha (W):</b> W = F x s x cos(theta)<br>
-- F = gaya (N)<br>
-- s = perpindahan (m)<br>
-- theta = sudut antara gaya dan perpindahan<br><br>
-<b>Daya (P):</b> P = W / t<br>
-- P = daya (Watt)<br>
-- W = usaha (Joule)<br>
-- t = waktu (detik)`
-});
-
-BRAIN.push({
-    keywords: ['gravitasi', 'berat', 'massa', 'gaya berat'],
-    jawaban: `<b>GRAVITASI</b><br><br>
-<b>Hukum Gravitasi Newton:</b><br>
-F = G x (m1 x m2) / r^2<br><br>
-- F = gaya gravitasi (N)<br>
-- G = konstanta gravitasi (6.67 x 10^-11)<br>
-- m1, m2 = massa benda (kg)<br>
-- r = jarak antar pusat (m)<br><br>
-<b>Berat:</b> w = m x g<br>
-g bumi = 9.8 m/s^2`
-});
-
-/* ============ KIMIA (8 topik) ============ */
-BRAIN.push({
-    keywords: ['tabel periodik', 'unsur', 'periodik', 'golongan'],
-    jawaban: `<b>TABEL PERIODIK UNSUR</b><br><br>
-Unsur-unsur dikelompokkan berdasarkan:<br>
-- Nomor atom (jumlah proton)<br>
-- Sifat kimia yang mirip<br><br>
-<b>20 unsur pertama:</b><br>
-H, He, Li, Be, B, C, N, O, F, Ne,<br>
-Na, Mg, Al, Si, P, S, Cl, Ar, K, Ca<br><br>
-<b>Golongan:</b> kolom vertikal (IA-VIIIA)<br>
-<b>Periode:</b> baris horizontal (1-7)`
-});
-
-BRAIN.push({
-    keywords: ['atom', 'proton', 'neutron', 'elektron', 'nomor atom'],
-    jawaban: `<b>STRUKTUR ATOM</b><br><br>
-Atom terdiri dari:<br>
-- <b>Proton</b> (muatan +) di inti<br>
-- <b>Neutron</b> (netral) di inti<br>
-- <b>Elektron</b> (muatan -) mengelilingi inti<br><br>
-<b>Nomor atom (Z)</b> = jumlah proton<br>
-<b>Nomor massa (A)</b> = proton + neutron<br>
-<b>Jumlah elektron</b> = proton (atom netral)`
-});
-
-BRAIN.push({
-    keywords: ['ikatan kimia', 'ion', 'kovalen', 'logam'],
-    jawaban: `<b>IKATAN KIMIA</b><br><br>
-1. <b>Ikatan Ion:</b> serah terima elektron (logam + nonlogam)<br>
-Contoh: NaCl<br><br>
-2. <b>Ikatan Kovalen:</b> pemakaian elektron bersama (nonlogam + nonlogam)<br>
-Contoh: H2O, CO2<br><br>
-3. <b>Ikatan Logam:</b> antar atom logam<br>
-Contoh: Fe, Cu, Al`
-});
-
-BRAIN.push({
-    keywords: ['asam', 'basa', 'ph', 'netral'],
-    jawaban: `<b>ASAM, BASA, DAN PH</b><br><br>
-- <b>Asam:</b> pH < 7, rasa asam, contoh: HCl, CH3COOH<br>
-- <b>Basa:</b> pH > 7, rasa pahit, licin, contoh: NaOH, NH3<br>
-- <b>Netral:</b> pH = 7, contoh: air murni (H2O)<br><br>
-<b>Indikator alami:</b><br>
-- Kunyit: kuning (asam), coklat (basa)<br>
-- Bunga sepatu: merah (asam), hijau (basa)`
-});
-
-BRAIN.push({
-    keywords: ['reaksi kimia', 'eksoterm', 'endoterm', 'katalis'],
-    jawaban: `<b>REAKSI KIMIA</b><br><br>
-<b>Reaksi Eksoterm:</b> melepaskan kalor (suhu naik)<br>
-Contoh: pembakaran, respirasi<br><br>
-<b>Reaksi Endoterm:</b> menyerap kalor (suhu turun)<br>
-Contoh: fotosintesis, es mencair<br><br>
-<b>Katalis:</b> zat yang mempercepat reaksi tanpa ikut bereaksi<br>
-Contoh: enzim, MnO2`
-});
-
-BRAIN.push({
-    keywords: ['stoikiometri', 'mol', 'molaritas', 'massa molar'],
-    jawaban: `<b>STOIKIOMETRI</b><br><br>
-- <b>Mol</b> = massa / massa molar (Mr)<br>
-- <b>Massa</b> = mol x Mr<br>
-- <b>Jumlah partikel</b> = mol x 6.02 x 10^23<br>
-- <b>Molaritas (M)</b> = mol / volume (L)<br><br>
-<b>Contoh:</b> 18 gram H2O (Mr = 18)<br>
-Mol = 18/18 = 1 mol<br>
-Jumlah molekul = 6.02 x 10^23 molekul`
-});
-
-BRAIN.push({
-    keywords: ['redoks', 'oksidasi', 'reduksi'],
-    jawaban: `<b>REAKSI REDOKS</b><br><br>
-<b>Oksidasi:</b> kenaikan bilangan oksidasi (lepas elektron)<br>
-<b>Reduksi:</b> penurunan bilangan oksidasi (terima elektron)<br><br>
-<b>Ingat:</b><br>
-- Oksidator = zat yang mengalami reduksi<br>
-- Reduktor = zat yang mengalami oksidasi<br><br>
-<b>Contoh:</b> Zn + CuSO4 -> ZnSO4 + Cu<br>
-Zn teroksidasi, Cu tereduksi`
-});
-
-BRAIN.push({
-    keywords: ['larutan', 'konsentrasi', 'ppm', 'persen'],
-    jawaban: `<b>LARUTAN DAN KONSENTRASI</b><br><br>
-<b>Konsentrasi:</b><br>
-- Molaritas (M) = mol / V (L)<br>
-- Molalitas (m) = mol / kg pelarut<br>
-- Persen massa = (massa zat/massa total) x 100%<br>
-- ppm = (massa zat/massa total) x 10^6<br><br>
-<b>Contoh:</b> 5 gram gula dalam 100 mL air<br>
-Konsentrasi = 5/100 = 5%`
-});
-
-/* ============ BIOLOGI (10 topik) ============ */
-BRAIN.push({
-    keywords: ['fotosintesis', 'klorofil', 'tumbuhan hijau'],
-    jawaban: `<b>FOTOSINTESIS</b><br><br>
-Proses tumbuhan membuat makanan sendiri menggunakan bantuan cahaya matahari.<br><br>
-<b>Rumus:</b><br>
-6CO2 + 6H2O + Cahaya -> C6H12O6 + 6O2<br><br>
-Proses ini terjadi di daun, tepatnya di dalam <b>kloroplas</b> yang mengandung klorofil (zat hijau daun).`
-});
-
-BRAIN.push({
-    keywords: ['sel', 'mitokondria', 'nukleus', 'ribosom', 'organel'],
-    jawaban: `<b>SEL DAN ORGANEL</b><br><br>
-Sel adalah unit terkecil penyusun makhluk hidup.<br><br>
-Bagian terpentingnya:<br>
-- <b>Nukleus:</b> Pusat komando sel, menyimpan DNA<br>
-- <b>Mitokondria:</b> Pembangkit energi sel (ATP)<br>
-- <b>Ribosom:</b> Tempat sintesis protein<br>
-- <b>Membran Sel:</b> Pelindung dan pengatur keluar-masuk zat<br>
-- <b>Vakuola:</b> Penyimpan cadangan makanan (tumbuhan)<br>
-- <b>Kloroplas:</b> Tempat fotosintesis (tumbuhan)`
-});
-
-BRAIN.push({
-    keywords: ['dna', 'rna', 'genetika', 'kromosom'],
-    jawaban: `<b>DNA, RNA, DAN GENETIKA</b><br><br>
-<b>DNA</b> (Deoxyribo Nucleic Acid): molekul pembawa informasi genetik.<br>
-- Bentuk: double helix (pilin ganda)<br>
-- Basa nitrogen: A-T, G-C<br><br>
-<b>RNA</b> (Ribo Nucleic Acid): membantu sintesis protein.<br>
-- Basa: A-U, G-C<br><br>
-<b>Kromosom:</b> DNA + protein histon, terletak di nukleus.`
-});
-
-BRAIN.push({
-    keywords: ['mitosis', 'meiosis', 'pembelahan sel'],
-    jawaban: `<b>PEMBELAHAN SEL</b><br><br>
-<b>Mitosis:</b><br>
-- Menghasilkan 2 sel anak<br>
-- Jumlah kromosom sama dengan induk (diploid)<br>
-- Untuk pertumbuhan dan regenerasi<br><br>
-<b>Meiosis:</b><br>
-- Menghasilkan 4 sel anak<br>
-- Jumlah kromosom setengah induk (haploid)<br>
-- Untuk pembentukan gamet (sel kelamin)`
-});
-
-BRAIN.push({
-    keywords: ['ekosistem', 'rantai makanan', 'jaring makanan', 'biotik', 'abiotik'],
-    jawaban: `<b>EKOSISTEM</b><br><br>
-Hubungan makhluk hidup dengan lingkungannya.<br><br>
-<b>Komponen:</b><br>
-- <b>Biotik:</b> makhluk hidup (produsen, konsumen, pengurai)<br>
-- <b>Abiotik:</b> benda tak hidup (air, tanah, udara, cahaya)<br><br>
-<b>Rantai makanan:</b><br>
-Tumbuhan -> Herbivora -> Karnivora -> Pengurai<br><br>
-<b>Contoh:</b> Padi -> Tikus -> Ular -> Elang -> Bakteri`
-});
-
-BRAIN.push({
-    keywords: ['sistem pencernaan', 'pencernaan', 'lambung', 'usus'],
-    jawaban: `<b>SISTEM PENCERNAAN MANUSIA</b><br><br>
-Urutan organ pencernaan:<br>
-1. Mulut (gigi, lidah, ludah)<br>
-2. Kerongkongan (esofagus)<br>
-3. Lambung (HCl, pepsin)<br>
-4. Usus halus (penyerapan gizi)<br>
-5. Usus besar (penyerapan air)<br>
-6. Anus (pembuangan)<br><br>
-<b>Enzim penting:</b><br>
-- Amilase: pati -> gula<br>
-- Pepsin: protein -> pepton<br>
-- Lipase: lemak -> asam lemak`
-});
-
-BRAIN.push({
-    keywords: ['sistem pernapasan', 'pernapasan', 'paru-paru', 'alveolus'],
-    jawaban: `<b>SISTEM PERNAPASAN MANUSIA</b><br><br>
-Urutan organ pernapasan:<br>
-1. Hidung (penyaring, penghangat, pelembab)<br>
-2. Tenggorokan (laring, trakea)<br>
-3. Bronkus (cabang trakea)<br>
-4. Bronkiolus (cabang halus)<br>
-5. Alveolus (tempat pertukaran O2 dan CO2)<br><br>
-<b>Proses:</b><br>
-Inspirasi (menghirup O2)<br>
-Ekspirasi (menghembuskan CO2)`
-});
-
-BRAIN.push({
-    keywords: ['sistem peredaran darah', 'jantung', 'darah', 'pembuluh'],
-    jawaban: `<b>SISTEM PEREDARAN DARAH</b><br><br>
-<b>Organ utama:</b> Jantung<br>
-<b>Pembuluh:</b><br>
-- Arteri: membawa darah dari jantung<br>
-- Vena: membawa darah ke jantung<br>
-- Kapiler: pembuluh halus<br><br>
-<b>Komponen darah:</b><br>
-- Plasma darah (55%)<br>
-- Sel darah merah (eritrosit)<br>
-- Sel darah putih (leukosit)<br>
-- Keping darah (trombosit)`
-});
-
-BRAIN.push({
-    keywords: ['kingdom', 'taksonomi', 'klasifikasi makhluk hidup'],
-    jawaban: `<b>KLASIFIKASI MAKHLUK HIDUP</b><br><br>
-<b>5 Kingdom (Whittaker):</b><br>
-1. <b>Monera:</b> bakteri, ganggang biru<br>
-2. <b>Protista:</b> protozoa, alga<br>
-3. <b>Fungi:</b> jamur<br>
-4. <b>Plantae:</b> tumbuhan<br>
-5. <b>Animalia:</b> hewan<br><br>
-<b>Urutan taksonomi:</b><br>
-Kingdom - Filum/Divisi - Kelas - Ordo - Famili - Genus - Spesies`
-});
-
-BRAIN.push({
-    keywords: ['hormon', 'endokrin', 'kelenjar'],
-    jawaban: `<b>SISTEM HORMON (ENDOKRIN)</b><br><br>
-<b>Kelenjar utama:</b><br>
-- <b>Hipofisis:</b> master of gland<br>
-- <b>Tiroid:</b> metabolisme (tiroksin)<br>
-- <b>Adrenal:</b> adrenalin (fight or flight)<br>
-- <b>Pankreas:</b> insulin (gula darah)<br>
-- <b>Gonad:</b> testosteron, estrogen<br><br>
-<b>Contoh:</b> Insulin mengatur kadar gula darah`
-});
-
-/* ============ SEJARAH (10 topik) ============ */
-BRAIN.push({
-    keywords: ['proklamasi', 'kemerdekaan', '17 agustus', 'soekarno', 'hatta'],
-    jawaban: `<b>PROKLAMASI KEMERDEKAAN INDONESIA</b><br><br>
-Dibacakan pada <b>17 Agustus 1945</b> oleh <b>Ir. Soekarno</b>, didampingi <b>Drs. Mohammad Hatta</b>.<br><br>
-<b>Fakta penting:</b><br>
-- Teks disusun di rumah Laksamana Maeda<br>
-- Diketik oleh Sayuti Melik<br>
-- Bendera pusaka dijahit oleh Ibu Fatmawati<br>
-- Lokasi: Jl. Pegangsaan Timur No. 56, Jakarta`
-});
-
-BRAIN.push({
-    keywords: ['kerajaan', 'majapahit', 'sriwijaya', 'mataram', 'singasari'],
-    jawaban: `<b>KERAJAAN HINDU-BUDDHA DI NUSANTARA</b><br><br>
-- <b>Kutai</b> (abad 4): kerajaan tertua<br>
-- <b>Sriwijaya</b> (abad 7): kerajaan maritim di Sumatera<br>
-- <b>Mataram Kuno</b> (abad 8): di Jawa Tengah<br>
-- <b>Singasari</b> (abad 13): di Jawa Timur<br>
-- <b>Majapahit</b> (abad 13-15): kerajaan terbesar, dipimpin Hayam Wuruk dan Patih Gajah Mada`
-});
-
-BRAIN.push({
-    keywords: ['perang dunia', 'pd1', 'pd2', 'dunia'],
-    jawaban: `<b>PERANG DUNIA</b><br><br>
-<b>PD I (1914-1918):</b><br>
-- Blok Sekutu vs Blok Sentral<br>
-- Pemicu: pembunuhan Pangeran Franz Ferdinand<br><br>
-<b>PD II (1939-1945):</b><br>
-- Blok Sekutu vs Blok Poros (Jerman, Italia, Jepang)<br>
-- Pemicu: invasi Jerman ke Polandia<br>
-- Berakhir dengan bom atom Hiroshima-Nagasaki`
-});
-
-BRAIN.push({
-    keywords: ['pahlawan', 'pahlawan nasional', 'tokoh'],
-    jawaban: `<b>PAHLAWAN NASIONAL INDONESIA</b><br><br>
-- <b>Ir. Soekarno:</b> Presiden pertama, proklamator<br>
-- <b>Drs. Moh. Hatta:</b> Wakil presiden pertama, proklamator<br>
-- <b>Jenderal Sudirman:</b> Panglima besar, gerilya<br>
-- <b>Pangeran Diponegoro:</b> Perang Jawa (1825-1830)<br>
-- <b>Cut Nyak Dien:</b> Pejuang dari Aceh<br>
-- <b>R.A. Kartini:</b> Emansipasi perempuan<br>
-- <b>Ki Hajar Dewantara:</b> Bapak pendidikan`
-});
-
-BRAIN.push({
-    keywords: ['hindu buddha', 'candi', 'borobudur', 'prambanan'],
-    jawaban: `<b>PENINGGALAN HINDU-BUDDHA</b><br><br>
-<b>Candi Buddha:</b><br>
-- Borobudur (Jateng): candi Buddha terbesar di dunia<br>
-- Mendut (Jateng)<br>
-- Sewu (Jateng)<br><br>
-<b>Candi Hindu:</b><br>
-- Prambanan (Jateng): candi Hindu terbesar<br>
-- Dieng (Jateng)<br>
-- Singosari (Jatim)<br><br>
-Semua warisan budaya dunia UNESCO`
-});
-
-BRAIN.push({
-    keywords: ['islam masuk', 'wali songo', 'kesultanan', 'demak', 'samudra pasai'],
-    jawaban: `<b>MASUKNYA ISLAM KE INDONESIA</b><br><br>
-<b>Jalur masuk:</b><br>
-- Perdagangan (Gujarat, Arab, Persia)<br>
-- Perkawinan<br>
-- Pendidikan (pesantren)<br>
-- Tasawuf<br><br>
-<b>Wali Songo (9 wali):</b><br>
-Sunan Gresik, Sunan Ampel, Sunan Bonang, Sunan Drajat, Sunan Kudus, Sunan Giri, Sunan Kalijaga, Sunan Muria, Sunan Gunung Jati<br><br>
-<b>Kesultanan Islam pertama:</b> Samudra Pasai (Aceh)`
-});
-
-BRAIN.push({
-    keywords: ['kolonialisme', 'penjajahan', 'voc', 'hindia belanda'],
-    jawaban: `<b>KOLONIALISME DI INDONESIA</b><br><br>
-<b>VOC (1602-1799):</b> kongsi dagang Belanda, monopoli rempah<br><br>
-<b>Hindia Belanda (1800-1942):</b><br>
-- Gubernur Jenderal: Daendels, Raffles, Van den Bosch<br>
-- Sistem Tanam Paksa (Cultuurstelsel)<br>
-- Politik Etis (1901)<br><br>
-<b>Perlawanan:</b> Pangeran Diponegoro, Cut Nyak Dien, Pattimura, Imam Bonjol`
-});
-
-BRAIN.push({
-    keywords: ['proklamasi teks', 'teks proklamasi'],
-    jawaban: `<b>TEKS PROKLAMASI</b><br><br>
-<i>Proklamasi</i><br><br>
-Kami bangsa Indonesia dengan ini menjatakan kemerdekaan Indonesia.<br><br>
-Hal-hal jang mengenai pemindahan kekoeasaan d.l.l., diselenggarakan dengan tjara seksama dan dalam tempo jang sesingkat-singkatnja.<br><br>
-Djakarta, hari 17 boelan 8 tahoen 05<br>
-Atas nama bangsa Indonesia<br>
-Soekarno/Hatta`
-});
-
-BRAIN.push({
-    keywords: ['orde baru', 'orde lama', 'soeharto', 'reformasi'],
-    jawaban: `<b>ORDE LAMA, ORDE BARU, REFORMASI</b><br><br>
-<b>Orde Lama (1945-1966):</b> Presiden Soekarno, demokrasi terpimpin<br><br>
-<b>Orde Baru (1966-1998):</b> Presiden Soeharto, pembangunan, tapi otoriter<br><br>
-<b>Reformasi (1998-sekarang):</b> Presiden BJ Habibie, Gus Dur, Megawati, SBY, Jokowi, Prabowo`
-});
-
-BRAIN.push({
-    keywords: ['sumpah pemuda', 'kongres pemuda', '28 oktober'],
-    jawaban: `<b>SUMPAH PEMUDA</b><br><br>
-Diikrarkan pada <b>28 Oktober 1928</b> di Jakarta.<br><br>
-<b>Isi Sumpah Pemuda:</b><br>
-1. Bertumpah darah yang satu, tanah air Indonesia<br>
-2. Berbangsa yang satu, bangsa Indonesia<br>
-3. Menjunjung bahasa persatuan, bahasa Indonesia<br><br>
-<b>Tokoh:</b> Soegondo Djojopoespito, WR Supratman, dll.`
-});
-
-/* ============ GEOGRAFI (8 topik) ============ */
-BRAIN.push({
-    keywords: ['iklim', 'cuaca', 'musim', 'tropis'],
-    jawaban: `<b>IKLIM DAN CUACA</b><br><br>
-<b>Cuaca:</b> kondisi atmosfer jangka pendek (harian)<br>
-<b>Iklim:</b> kondisi atmosfer jangka panjang (30 tahun)<br><br>
-<b>Jenis iklim:</b><br>
-- Tropis: panas, 2 musim (kemarau, hujan)<br>
-- Subtropis: 4 musim<br>
-- Sedang: 4 musim<br>
-- Dingin: kutub<br><br>
-Indonesia beriklim <b>tropis</b>.`
-});
-
-BRAIN.push({
-    keywords: ['benua', 'samudra', 'lautan', 'dunia'],
-    jawaban: `<b>BENUA DAN SAMUDRA DI DUNIA</b><br><br>
-<b>7 Benua:</b><br>
-1. Asia (terbesar)<br>
-2. Afrika<br>
-3. Amerika Utara<br>
-4. Amerika Selatan<br>
-5. Antartika<br>
-6. Eropa<br>
-7. Australia (terkecil)<br><br>
-<b>5 Samudra:</b><br>
-Pasifik, Atlantik, Hindia, Arktik, Antartika`
-});
-
-BRAIN.push({
-    keywords: ['gunung', 'gunung berapi', 'vulkanik', 'merapi'],
-    jawaban: `<b>GUNUNG BERAPI DI INDONESIA</b><br><br>
-Indonesia punya ±127 gunung berapi aktif.<br><br>
-<b>Beberapa yang terkenal:</b><br>
-- <b>Merapi</b> (Yogyakarta) - paling aktif<br>
-- <b>Krakatau</b> (Lampung) - letusan dahsyat 1883<br>
-- <b>Tambora</b> (NTB) - letusan terbesar 1815<br>
-- <b>Sinabung</b> (Sumut)<br>
-- <b>Semeru</b> (Jatim) - tertinggi di Jawa`
-});
-
-BRAIN.push({
-    keywords: ['danau', 'sungai', 'danau toba', 'musi'],
-    jawaban: `<b>DANAU DAN SUNGAI DI INDONESIA</b><br><br>
-<b>Danau terkenal:</b><br>
-- <b>Danau Toba</b> (Sumut) - terbesar, danau vulkanik<br>
-- <b>Danau Sentani</b> (Papua)<br>
-- <b>Danau Singkarak</b> (Sumbar)<br><br>
-<b>Sungai terkenal:</b><br>
-- <b>Musi</b> (Sumsel)<br>
-- <b>Kapuas</b> (Kalbar) - terpanjang<br>
-- <b>Mahakam</b> (Kaltim)<br>
-- <b>Barito</b> (Kalsel)`
-});
-
-BRAIN.push({
-    keywords: ['provinsi', 'kabupaten', 'indonesia timur', 'indonesia barat'],
-    jawaban: `<b>PROVINSI DI INDONESIA</b><br><br>
-Indonesia punya <b>38 provinsi</b> (per 2023).<br><br>
-<b>Beberapa provinsi:</b><br>
-- <b>Jawa:</b> DKI Jakarta, Jawa Barat, Jawa Tengah, Jawa Timur, Banten, DIY<br>
-- <b>Sumatera:</b> Aceh, Sumut, Sumbar, Riau, Jambi, Sumsel, Bengkulu, Lampung, Kep. Bangka Belitung, Kep. Riau<br>
-- <b>Kalimantan:</b> Kalbar, Kalteng, Kalsel, Kaltim, Kalut<br>
-- <b>Sulawesi:</b> Sulut, Sulteng, Sulsel, Sultra, Gorontalo, Sulbar<br>
-- <b>Papua:</b> Papua, Papua Barat, Papua Barat Daya, Papua Tengah, Papua Pegunungan, Papua Selatan`
-});
-
-BRAIN.push({
-    keywords: ['atmosfer', 'lapisan atmosfer', 'stratosfer', 'troposfer'],
-    jawaban: `<b>LAPISAN ATMOSFER</b><br><br>
-1. <b>Troposfer</b> (0-12 km): cuaca terjadi di sini<br>
-2. <b>Stratosfer</b> (12-50 km): lapisan ozon<br>
-3. <b>Mesosfer</b> (50-85 km): meteor terbakar<br>
-4. <b>Termosfer</b> (85-600 km): aurora<br>
-5. <b>Eksosfer</b> (>600 km): luar angkasa`
-});
-
-BRAIN.push({
-    keywords: ['gempa', 'tsunami', 'gunung meletus', 'bencana'],
-    jawaban: `<b>BENCANA ALAM INDONESIA</b><br><br>
-<b>Gempa bumi:</b> getaran kerak bumi, di Indonesia sering karena lempeng<br>
-<b>Tsunami:</b> gelombang laut raksasa, biasanya setelah gempa bawah laut<br>
-<b>Gunung meletus:</b> letusan magma dari perut bumi<br>
-<b>Banjir:</b> air meluap ke daratan<br>
-<b>Tanah longsor:</b> pergerakan massa tanah<br><br>
-Indonesia berada di Ring of Fire - sabuk gunung berapi Pasifik`
-});
-
-BRAIN.push({
-    keywords: ['peta', 'skala', 'koordinat', 'atlas'],
-    jawaban: `<b>PETA DAN KOMPONENNYA</b><br><br>
-<b>Komponen peta:</b><br>
-- Judul<br>
-- Skala (perbandingan jarak)<br>
-- Legenda (keterangan simbol)<br>
-- Mata angin (arah)<br>
-- Garis lintang & bujur<br>
-- Sumber & tahun<br><br>
-<b>Jenis peta:</b><br>
-- Peta umum (topografi)<br>
-- Peta khusus (tematik)<br>
-- Peta korografi<br>
-- Peta dunia`
-});
-
-/* ============ EKONOMI (6 topik) ============ */
-BRAIN.push({
-    keywords: ['permintaan', 'penawaran', 'harga', 'pasar'],
-    jawaban: `<b>PERMINTAAN DAN PENAWARAN</b><br><br>
-<b>Hukum Permintaan:</b> Harga naik -> permintaan turun<br>
-<b>Hukum Penawaran:</b> Harga naik -> penawaran naik<br><br>
-<b>Keseimbangan pasar:</b> terjadi saat jumlah permintaan = jumlah penawaran.<br><br>
-<b>Faktor yang mempengaruhi:</b><br>
-- Harga barang itu sendiri<br>
-- Pendapatan konsumen<br>
-- Selera<br>
-- Harga barang lain`
-});
-
-BRAIN.push({
-    keywords: ['inflasi', 'deflasi', 'harga naik'],
-    jawaban: `<b>INFLASI DAN DEFLASI</b><br><br>
-<b>Inflasi:</b> kenaikan harga barang secara umum terus-menerus.<br>
-- Inflasi ringan: < 10%/tahun<br>
-- Inflasi sedang: 10-30%/tahun<br>
-- Inflasi berat: 30-100%/tahun<br>
-- Hiperinflasi: > 100%/tahun<br><br>
-<b>Deflasi:</b> penurunan harga secara umum.`
-});
-
-BRAIN.push({
-    keywords: ['pajak', 'ppn', 'pph'],
-    jawaban: `<b>PAJAK</b><br><br>
-<b>Pengertian:</b> iuran wajib rakyat kepada negara.<br><br>
-<b>Jenis pajak:</b><br>
-- <b>PPh:</b> Pajak Penghasilan<br>
-- <b>PPN:</b> Pajak Pertambahan Nilai (11%)<br>
-- <b>PBB:</b> Pajak Bumi dan Bangunan<br>
-- <b>Bea Cukai:</b> pajak impor/ekspor<br><br>
-<b>Fungsi pajak:</b><br>
-- Sumber pendapatan negara<br>
-- Alat pemerataan pendapatan<br>
-- Alat pengatur ekonomi`
-});
-
-BRAIN.push({
-    keywords: ['bank', 'tabungan', 'bunga', 'kredit'],
-    jawaban: `<b>BANK DAN LEMBAGA KEUANGAN</b><br><br>
-<b>Fungsi bank:</b><br>
-- Menghimpun dana (tabungan, deposito)<br>
-- Menyalurkan dana (kredit, pinjaman)<br>
-- Jasa keuangan (transfer, kliring)<br><br>
-<b>Jenis bank:</b><br>
-- Bank Sentral (BI)<br>
-- Bank Umum (BRI, BNI, Mandiri, BCA)<br>
-- Bank Perkreditan Rakyat (BPR)<br>
-- Bank Syariah`
-});
-
-BRAIN.push({
-    keywords: ['pdb', 'gdp', 'pendapatan nasional', 'gNP'],
-    jawaban: `<b>PENDAPATAN NASIONAL</b><br><br>
-<b>PDB (Produk Domestik Bruto):</b> total produksi dalam negeri<br>
-<b>PNB (Produk Nasional Bruto):</b> PDB + pendapatan warga di luar negeri - pendapatan asing di dalam negeri<br><br>
-<b>Rumus:</b><br>
-- PDB = C + I + G + (X - M)<br>
-- C = konsumsi<br>
-- I = investasi<br>
-- G = pengeluaran pemerintah<br>
-- X = ekspor, M = impor`
-});
-
-BRAIN.push({
-    keywords: ['koperasi', 'umkm', 'wirausaha'],
-    jawaban: `<b>KOPERASI DAN UMKM</b><br><br>
-<b>Koperasi:</b> badan usaha berdasarkan asas kekeluargaan<br>
-<b>Prinsip:</b> sukarela, demokratis, adil<br><br>
-<b>Jenis koperasi:</b><br>
-- Koperasi konsumen<br>
-- Koperasi produsen<br>
-- Koperasi simpan pinjam<br>
-- Koperasi jasa<br><br>
-<b>UMKM:</b> Usaha Mikro, Kecil, Menengah - tulang punggung ekonomi Indonesia`
-});
-
-/* ============ B. INDONESIA (8 topik) ============ */
-BRAIN.push({
-    keywords: ['puisi', 'pantun', 'sajak', 'rima'],
-    jawaban: `<b>PUISI DAN PANTUN</b><br><br>
-<b>Puisi:</b> karya sastra dengan bahasa indah dan padat.<br>
-Unsur: tema, rasa, nada, amanat, rima, irama.<br><br>
-<b>Pantun:</b> puisi lama, 4 baris.<br>
-- Baris 1-2: sampiran<br>
-- Baris 3-4: isi<br>
-- Rima: a-b-a-b<br><br>
-<b>Contoh pantun:</b><br>
-Pergi ke pasar membeli bayam,<br>
-Bayam dimasak bersama tahu.<br>
-Rajinlah belajar siang dan malam,<br>
-Agar cita-cita tercapai selalu.`
-});
-
-BRAIN.push({
-    keywords: ['majas', 'metafora', 'personifikasi', 'hiperbola', 'simile'],
-    jawaban: `<b>MAJAS (GAYA BAHASA)</b><br><br>
-- <b>Metafora:</b> perbandingan langsung<br>
-Contoh: "Dia adalah singa di kelas"<br><br>
-- <b>Personifikasi:</b> benda mati diberi sifat manusia<br>
-Contoh: "Angin berbisik lembut"<br><br>
-- <b>Hiperbola:</b> pernyataan berlebihan<br>
-Contoh: "Suaranya menggelegar sampai langit"<br><br>
-- <b>Simile/Perbandingan:</b> pakai kata "seperti"<br>
-Contoh: "Wajahnya seperti bulan"`
-});
-
-BRAIN.push({
-    keywords: ['eyd', 'ejaan', 'tata bahasa', 'imbuhan'],
-    jawaban: `<b>EYD (EJAAN YANG DISEMPURNAKAN)</b><br><br>
-<b>Aturan penting:</b><br>
-- Huruf kapital: awal kalimat, nama orang, nama tempat<br>
-- Kata depan "di" dipisah: "di rumah"<br>
-- Awalan "di-" disambung: "ditulis"<br>
-- Kata ulang pakai tanda hubung: "anak-anak"<br>
-- Singkatan: "dan lain-lain" (dll.)<br>
-- Angka: "10 orang" (bukan "10 org")<br><br>
-<b>Imbuhan:</b> me-, di-, ter-, ber-, pe-, se-, ke-, -kan, -an`
-});
-
-BRAIN.push({
-    keywords: ['teks eksposisi', 'teks narasi', 'teks deskripsi', 'teks argumentasi'],
-    jawaban: `<b>JENIS TEKS DALAM BAHASA INDONESIA</b><br><br>
-- <b>Narasi:</b> cerita dengan alur (novel, cerpen)<br>
-- <b>Deskripsi:</b> penggambaran objek<br>
-- <b>Eksposisi:</b> informasi faktual<br>
-- <b>Argumentasi:</b> pendapat + bukti<br>
-- <b>Persuasi:</b> membujuk pembaca<br>
-- <b>Prosedur:</b> langkah-langkah<br>
-- <b>Laporan:</b> hasil observasi`
-});
-
-BRAIN.push({
-    keywords: ['novel', 'cerpen', 'prosa', 'fiksi'],
-    jawaban: `<b>PROSA (NOVEL, CERPEN)</b><br><br>
-<b>Novel:</b> karya fiksi panjang, >40.000 kata<br>
-<b>Cerpen:</b> cerita pendek, <10.000 kata<br>
-<b>Roman:</b> novel dengan kisah cinta<br><br>
-<b>Unsur intrinsik:</b><br>
-Tema, tokoh, alur, latar, sudut pandang, gaya bahasa, amanat<br><br>
-<b>Contoh cerpen terkenal:</b> "Robohnya Surau Kami" (A.A. Navis)`
-});
-
-BRAIN.push({
-    keywords: ['drama', 'teater', 'naskah drama'],
-    jawaban: `<b>DRAMA DAN TEATER</b><br><br>
-<b>Drama:</b> karya sastra berbentuk dialog untuk dipentaskan<br><br>
-<b>Unsur drama:</b><br>
-- Tema<br>
-- Tokoh & penokohan<br>
-- Alur<br>
-- Latar<br>
-- Dialog<br>
-- Babak & adegan<br><br>
-<b>Jenis:</b> tragedi, komedi, tragikomedi, melodrama`
-});
-
-BRAIN.push({
-    keywords: ['pidato', 'ceramah', 'orasi'],
-    jawaban: `<b>PIDATO DAN CERAMAH</b><br><br>
-<b>Struktur pidato:</b><br>
-1. <b>Pembuka:</b> salam, sapaan, ucapan syukur<br>
-2. <b>Isi:</b> inti pesan<br>
-3. <b>Penutup:</b> kesimpulan, salam<br><br>
-<b>Metode:</b><br>
-- Impromptu (spontan)<br>
-- Memoriter (menghafal)<br>
-- Naskah (baca teks)<br>
-- Ekstemporan (kerangka)`
-});
-
-BRAIN.push({
-    keywords: ['surat', 'surat resmi', 'surat pribadi'],
-    jawaban: `<b>SURAT MENYURAT</b><br><br>
-<b>Surat pribadi:</b><br>
-Kepala surat, salam, isi, penutup, tanda tangan<br><br>
-<b>Surat resmi:</b><br>
-1. Kepala surat (kop)<br>
-2. Nomor, tanggal<br>
-3. Lampiran<br>
-4. Hal/perihal<br>
-5. Alamat tujuan<br>
-6. Salam pembuka<br>
-7. Isi surat<br>
-8. Penutup<br>
-9. Tanda tangan & nama<br>
-10. Tembusan`
-});
-
-/* ============ B. INGGRIS (6 topik) ============ */
-BRAIN.push({
-    keywords: ['tenses', 'simple present', 'past tense', 'grammar'],
-    jawaban: `<b>ENGLISH TENSES</b><br><br>
-<b>Simple Present:</b> fakta/kebiasaan<br>
-S + V1(s/es) + O<br>
-Example: She <b>studies</b> every day.<br><br>
-<b>Present Continuous:</b> sedang berlangsung<br>
-S + am/is/are + V-ing<br>
-Example: I <b>am studying</b> now.<br><br>
-<b>Simple Past:</b> kejadian lampau<br>
-S + V2 + O<br>
-Example: They <b>went</b> to school yesterday.<br><br>
-<b>Present Perfect:</b> sudah terjadi<br>
-S + have/has + V3<br>
-Example: He <b>has finished</b> his homework.`
-});
-
-BRAIN.push({
-    keywords: ['vocabulary', 'kosakata', 'kata bahasa inggris'],
-    jawaban: `<b>ESSENTIAL ENGLISH VOCABULARY</b><br><br>
-<b>Kata kerja umum:</b><br>
-go (pergi), come (datang), eat (makan), drink (minum),<br>
-study (belajar), read (baca), write (tulis), speak (bicara)<br><br>
-<b>Kata benda umum:</b><br>
-book (buku), pencil (pensil), table (meja), chair (kursi),<br>
-school (sekolah), teacher (guru), student (murid)<br><br>
-<b>Kata sifat umum:</b><br>
-big (besar), small (kecil), good (baik), bad (buruk),<br>
-happy (senang), sad (sedih), fast (cepat), slow (lambat)`
-});
-
-BRAIN.push({
-    keywords: ['idiom', 'phrase', 'ungkapan inggris'],
-    jawaban: `<b>ENGLISH IDIOMS</b><br><br>
-- <b>Break a leg:</b> semoga sukses<br>
-- <b>Piece of cake:</b> sangat mudah<br>
-- <b>Hit the books:</b> belajar giat<br>
-- <b>Under the weather:</b> kurang sehat<br>
-- <b>Once in a blue moon:</b> jarang sekali<br>
-- <b>Cost an arm and a leg:</b> sangat mahal<br>
-- <b>See eye to eye:</b> setuju<br>
-- <b>Let the cat out of the bag:</b> membocorkan rahasia`
-});
-
-BRAIN.push({
-    keywords: ['preposition', 'kata depan inggris'],
-    jawaban: `<b>PREPOSITION (KATA DEPAN)</b><br><br>
-<b>Waktu:</b> at (jam), on (hari), in (bulan/tahun)<br>
-- at 7 o'clock, on Monday, in January<br><br>
-<b>Tempat:</b> at (titik), on (permukaan), in (ruang)<br>
-- at the door, on the table, in the box<br><br>
-<b>Gerak:</b> to, from, into, out of, onto<br>
-- go to school, come from home`
-});
-
-BRAIN.push({
-    keywords: ['passive voice', 'kalimat pasif inggris'],
-    jawaban: `<b>PASSIVE VOICE</b><br><br>
-<b>Rumus umum:</b> Object + be + V3 + (by subject)<br><br>
-<b>Contoh:</b><br>
-Active: She writes a letter.<br>
-Passive: A letter <b>is written</b> by her.<br><br>
-Active: They built the house.<br>
-Passive: The house <b>was built</b> by them.<br><br>
-<b>Kapan pakai:</b> subjek tidak penting/tidak tahu`
-});
-
-BRAIN.push({
-    keywords: ['reported speech', 'direct indirect'],
-    jawaban: `<b>REPORTED SPEECH</b><br><br>
-<b>Direct:</b> "I am tired," she said.<br>
-<b>Indirect:</b> She said (that) she <b>was</b> tired.<br><br>
-<b>Perubahan:</b><br>
-- Present -> Past<br>
-- will -> would<br>
-- can -> could<br>
-- today -> that day<br>
-- tomorrow -> the next day`
-});
-
-/* ============ PKN (6 topik) ============ */
-BRAIN.push({
-    keywords: ['pancasila', 'sila', 'dasar negara'],
-    jawaban: `<b>PANCASILA</b><br><br>
-1. Ketuhanan Yang Maha Esa<br>
-2. Kemanusiaan yang adil dan beradab<br>
-3. Persatuan Indonesia<br>
-4. Kerakyatan yang dipimpin oleh hikmat kebijaksanaan dalam permusyawaratan/perwakilan<br>
-5. Keadilan sosial bagi seluruh rakyat Indonesia<br><br>
-<b>Fungsi:</b> dasar negara, pandangan hidup, ideologi bangsa`
-});
-
-BRAIN.push({
-    keywords: ['uud', 'undang-undang', 'konstitusi', 'pasal'],
-    jawaban: `<b>UUD 1945</b><br><br>
-<b>Undang-Undang Dasar Negara Republik Indonesia Tahun 1945</b><br><br>
-- Disahkan: 18 Agustus 1945<br>
-- Terdiri dari: Pembukaan (4 alinea), Batang Tubuh (pasal-pasal), Penjelasan<br>
-- Diamandemen 4 kali: 1999, 2000, 2001, 2002<br>
-- Berisi 37 pasal (sebelum amandemen)`
-});
-
-BRAIN.push({
-    keywords: ['hak', 'kewajiban', 'ham', 'asasi'],
-    jawaban: `<b>HAK DAN KEWAJIBAN WARGA NEGARA</b><br><br>
-<b>Hak:</b><br>
-- Hak hidup, pendidikan, pekerjaan<br>
-- Hak memeluk agama<br>
-- Hak berpendapat<br>
-- Hak memilih (usia 17+ atau sudah menikah)<br><br>
-<b>Kewajiban:</b><br>
-- Membayar pajak<br>
-- Menjaga kebersihan lingkungan<br>
-- Mematuhi hukum<br>
-- Membela negara<br>
-- Menghormati HAM orang lain`
-});
-
-BRAIN.push({
-    keywords: ['demokrasi', 'pemilu', 'pilkada'],
-    jawaban: `<b>DEMOKRASI INDONESIA</b><br><br>
-<b>Demokrasi Pancasila:</b> demokrasi berdasarkan Pancasila<br><br>
-<b>Pilar demokrasi:</b><br>
-- Kedaulatan rakyat<br>
-- Pemilu bebas & rahasia<br>
-- HAM dijunjung tinggi<br>
-- Kebebasan pers<br>
-- Pemerintahan yang transparan<br><br>
-<b>Pemilu</b> diadakan 5 tahun sekali untuk memilih Presiden, DPR, DPD, DPRD`
-});
-
-BRAIN.push({
-    keywords: ['trias politika', 'legislatif', 'eksekutif', 'yudikatif'],
-    jawaban: `<b>TRIAS POLITIKA</b><br><br>
-Pembagian kekuasaan negara:<br><br>
-1. <b>Legislatif</b> (pembuat UU): DPR, DPD, MPR<br>
-2. <b>Eksekutif</b> (pelaksana UU): Presiden, Wapres, Menteri<br>
-3. <b>Yudikatif</b> (kehakiman): MA, MK, KY<br><br>
-<b>Tujuan:</b> mencegah kekuasaan terpusat (check and balances)`
-});
-
-BRAIN.push({
-    keywords: ['bhineka tunggal ika', 'keberagaman', 'toleransi'],
-    jawaban: `<b>BHINEKA TUNGGAL IKA</b><br><br>
-Arti: "Berbeda-beda tetapi tetap satu"<br><br>
-<b>Keberagaman Indonesia:</b><br>
-- Suku: 1.340+ suku<br>
-- Bahasa: 718+ bahasa daerah<br>
-- Agama: 6 agama diakui<br>
-- Budaya: ribuan tradisi<br><br>
-<b>Sikap:</b> Toleransi, saling menghormati, gotong royong`
-});
-
-/* ============ PJOK (5 topik) ============ */
-BRAIN.push({
-    keywords: ['olahraga', 'sepak bola', 'bola voli', 'basket'],
-    jawaban: `<b>OLAHRAGA POPULER</b><br><br>
-<b>Sepak Bola:</b> 11 pemain per tim, 2 babak x 45 menit<br><br>
-<b>Bola Voli:</b> 6 pemain per tim, rally point 25<br><br>
-<b>Basket:</b> 5 pemain per tim, 4 quarter x 10 menit<br><br>
-<b>Bulutangkis:</b> 1v1 atau 2v2, rally point 21<br><br>
-<b>Renang:</b> gaya bebas, punggung, dada, kupu-kupu`
-});
-
-BRAIN.push({
-    keywords: ['kesehatan', 'gizi', 'makanan sehat', 'vitamin'],
-    jawaban: `<b>KESEHATAN DAN GIZI</b><br><br>
-<b>4 Sehat 5 Sempurna:</b><br>
-1. Makanan pokok (karbohidrat)<br>
-2. Lauk-pauk (protein)<br>
-3. Sayur-sayuran (vitamin, mineral)<br>
-4. Buah-buahan (vitamin)<br>
-5. Susu (kalsium)<br><br>
-<b>Vitamin penting:</b><br>
-- A: mata (wortel)<br>
-- B: saraf (beras merah)<br>
-- C: imun (jeruk)<br>
-- D: tulang (sinar matahari)<br>
-- E: kulit (alpukat)`
-});
-
-BRAIN.push({
-    keywords: ['atletik', 'lari', 'lompat', 'lempar'],
-    jawaban: `<b>ATLETIK</b><br><br>
-<b>Nomor lari:</b><br>
-- Sprint: 100m, 200m, 400m<br>
-- Jarak menengah: 800m, 1500m<br>
-- Jarak jauh: 5000m, 10000m, marathon<br><br>
-<b>Nomor lompat:</b><br>
-- Lompat jauh<br>
-- Lompat tinggi<br>
-- Lompat galah<br>
-- Lompat jangkit<br><br>
-<b>Nomor lempar:</b><br>
-- Tolak peluru<br>
-- Lempar lembing<br>
-- Lempar cakram<br>
-- Lontar martil`
-});
-
-BRAIN.push({
-    keywords: ['senam', 'senam lantai', 'senam irama'],
-    jawaban: `<b>SENAM</b><br><br>
-<b>Senam lantai:</b><br>
-- Guling depan (roll)<br>
-- Guling belakang<br>
-- Kayang<br>
-- Meroda<br>
-- Salto<br><br>
-<b>Senam irama:</b> gerakan berirama dengan musik<br>
-<b>Alat:</b> pita, bola, gada, simpai, tali`
-});
-
-BRAIN.push({
-    keywords: ['pencak silat', 'bela diri', 'karate', 'taekwondo'],
-    jawaban: `<b>BELA DIRI</b><br><br>
-<b>Pencak Silat:</b> seni bela diri asli Indonesia<br>
-- Jurus: sikap, langkah, serangan, belaan<br>
-- Aspek: mental, seni, bela diri, olahraga<br><br>
-<b>Karate:</b> dari Jepang, fokus pukulan & tendangan<br>
-<b>Taekwondo:</b> dari Korea, fokus tendangan<br>
-<b>Judo:</b> dari Jepang, fokus bantingan`
-});
-
-/* ============ SENI BUDAYA (6 topik) ============ */
-BRAIN.push({
-    keywords: ['alat musik', 'musik tradisional', 'gamelan', 'angklung'],
-    jawaban: `<b>ALAT MUSIK TRADISIONAL INDONESIA</b><br><br>
-- <b>Gamelan</b> (Jawa/Bali): metalofon, kendang<br>
-- <b>Angklung</b> (Jabar): dari bambu, digoyang<br>
-- <b>Kolintang</b> (Sulut): bilah kayu<br>
-- <b>Sasando</b> (NTT): dari daun lontar<br>
-- <b>Tifa</b> (Papua): kulit hewan<br>
-- <b>Rebab</b> (Jawa/Bali): gesek<br>
-- <b>Kecapi</b> (Sunda): petik`
-});
-
-BRAIN.push({
-    keywords: ['tari', 'tari tradisional', 'tarian daerah'],
-    jawaban: `<b>TARIAN TRADISIONAL INDONESIA</b><br><br>
-- <b>Tari Saman</b> (Aceh): gerakan tepuk tangan cepat<br>
-- <b>Tari Kecak</b> (Bali): "cak cak cak"<br>
-- <b>Tari Piring</b> (Sumbar): piring di tangan<br>
-- <b>Tari Jaipong</b> (Jabar): energik<br>
-- <b>Tari Pendet</b> (Bali): penyambutan<br>
-- <b>Tari Reog</b> (Jatim): topeng singa<br>
-- <b>Tari Tor-Tor</b> (Sumut): Batak`
-});
-
-BRAIN.push({
-    keywords: ['seni rupa', 'lukisan', 'patung', 'batik'],
-    jawaban: `<b>SENI RUPA</b><br><br>
-<b>Jenis seni rupa:</b><br>
-- 2 dimensi: lukisan, gambar, poster<br>
-- 3 dimensi: patung, gerabah, arsitektur<br><br>
-<b>Batik Indonesia:</b><br>
-- Batik Solo, Yogyakarta: motif klasik<br>
-- Batik Pekalongan: pesisir, warna cerah<br>
-- Batik Papua: motif alam<br><br>
-Diakui UNESCO sebagai Warisan Budaya Takbenda (2009).`
-});
-
-BRAIN.push({
-    keywords: ['wayang', 'wayang kulit', 'wayang golek'],
-    jawaban: `<b>WAYANG INDONESIA</b><br><br>
-<b>Jenis wayang:</b><br>
-- <b>Wayang Kulit:</b> dari kulit, wayang paling populer<br>
-- <b>Wayang Golek:</b> boneka kayu (Sunda)<br>
-- <b>Wayang Klitik:</b> dari kayu pipih<br>
-- <b>Wayang Beber:</b> gulungan gambar<br><br>
-<b>Tokoh:</b> Semar, Gareng, Petruk, Bagong (Punakawan)<br>
-Diakui UNESCO (2003)`
-});
-
-BRAIN.push({
-    keywords: ['nada', 'tangga nada', 'musik', 'not'],
-    jawaban: `<b>TEORI MUSIK DASAR</b><br><br>
-<b>Tangga nada:</b><br>
-- Mayor: do re mi fa sol la si do (ceria)<br>
-- Minor: la si do re mi fa sol la (sedih)<br><br>
-<b>Notasi:</b><br>
-- Angka: 1 2 3 4 5 6 7<br>
-- Balok: not penuh, setengah, seperempat<br><br>
-<b>Tempo:</b> largo (lambat), moderato (sedang), allegro (cepat)`
-});
-
-BRAIN.push({
-    keywords: ['tari modern', 'tari kreasi', 'kontemporer'],
-    jawaban: `<b>TARI MODERN & KREASI</b><br><br>
-<b>Tari kreasi:</b> modifikasi tari tradisional<br>
-<b>Tari modern:</b> tari bebas, tidak terikat aturan<br>
-<b>Tari kontemporer:</b> eksperimental, kontemporer<br><br>
-<b>Contoh:</b> Tari Merak (kreasi Sunda), Tari Manipuren (kreasi)<br><br>
-<b>Unsur tari:</b> wiraga (gerak), wirama (irama), wirasa (rasa)`
-});
-
-/* ============ INFORMATIKA (6 topik) ============ */
-BRAIN.push({
-    keywords: ['html', 'coding', 'pemrograman', 'program'],
-    jawaban: `<b>PEMROGRAMAN DASAR</b><br><br>
-<b>HTML:</b> struktur halaman web<br>
-- Tag penting: <code>&lt;html&gt;</code>, <code>&lt;head&gt;</code>, <code>&lt;body&gt;</code><br><br>
-<b>CSS:</b> tampilan halaman<br>
-- Selector, property, value<br><br>
-<b>JavaScript:</b> interaksi halaman<br>
-- Variabel, fungsi, event<br><br>
-<b>Contoh HTML:</b><br>
-<code>&lt;h1&gt;Halo Dunia&lt;/h1&gt;</code>`
-});
-
-BRAIN.push({
-    keywords: ['hardware', 'software', 'komputer', 'cpu', 'ram'],
-    jawaban: `<b>HARDWARE DAN SOFTWARE</b><br><br>
-<b>Hardware (perangkat keras):</b><br>
-- CPU: otak komputer<br>
-- RAM: memori sementara<br>
-- HDD/SSD: penyimpanan<br>
-- Monitor: output visual<br>
-- Keyboard/mouse: input<br><br>
-<b>Software (perangkat lunak):</b><br>
-- Sistem operasi: Windows, Linux, macOS<br>
-- Aplikasi: browser, editor, game`
-});
-
-BRAIN.push({
-    keywords: ['internet', 'wifi', 'jaringan', 'ip'],
-    jawaban: `<b>INTERNET DAN JARINGAN</b><br><br>
-<b>Internet:</b> jaringan komputer global<br>
-<b>WiFi:</b> koneksi nirkabel<br>
-<b>IP Address:</b> alamat unik perangkat<br>
-<b>DNS:</b> penerjemah nama domain ke IP<br>
-<b>HTTP/HTTPS:</b> protokol web<br><br>
-<b>Jenis jaringan:</b><br>
-- LAN: jaringan lokal<br>
-- WAN: jaringan luas (antar kota)<br>
-- MAN: jaringan metropolitan`
-});
-
-BRAIN.push({
-    keywords: ['algoritma', 'flowchart', 'logika'],
-    jawaban: `<b>ALGORITMA DAN FLOWCHART</b><br><br>
-<b>Algoritma:</b> urutan langkah menyelesaikan masalah<br><br>
-<b>Simbol flowchart:</b><br>
-- Oval: mulai/selesai<br>
-- Persegi: proses<br>
-- Belah ketupat: keputusan<br>
-- Jajar genjang: input/output<br>
-- Panah: alur<br><br>
-<b>Contoh:</b><br>
-1. Mulai<br>
-2. Input nilai<br>
-3. Jika nilai >= 75, cetak "Lulus"<br>
-4. Selesai`
-});
-
-BRAIN.push({
-    keywords: ['python', 'javascript', 'java', 'bahasa pemrograman'],
-    jawaban: `<b>BAHASA PEMROGRAMAN</b><br><br>
-<b>Python:</b> mudah dipelajari, populer untuk AI/data science<br>
-<b>JavaScript:</b> bahasa web, wajib untuk frontend<br>
-<b>Java:</b> populer untuk Android & enterprise<br>
-<b>C++:</b> cepat, untuk game & sistem<br>
-<b>PHP:</b> server-side web<br>
-<b>SQL:</b> database<br><br>
-<b>Contoh Python:</b><br>
-<code>print("Halo Dunia")</code>`
-});
-
-BRAIN.push({
-    keywords: ['ai', 'kecerdasan buatan', 'machine learning', 'chatgpt'],
-    jawaban: `<b>AI (ARTIFICIAL INTELLIGENCE)</b><br><br>
-<b>AI:</b> kecerdasan buatan pada mesin<br><br>
-<b>Cabang AI:</b><br>
-- Machine Learning: belajar dari data<br>
-- Deep Learning: neural network berlapis<br>
-- NLP: bahasa alami (ChatGPT, Gemini)<br>
-- Computer Vision: penglihatan komputer<br>
-- Robotics: robotika<br><br>
-<b>Contoh:</b> ChatGPT, Gemini, rekomendasi YouTube, autopilot`
-});
-
-/* Total BRAIN: 96 topik */
-console.log('BRAIN loaded:', BRAIN.length, 'topik');
-
-/* =========================================================
-   BAGIAN 12: FITUR BONUS - KALKULATOR
-   ========================================================= */
-function hitungMatematika(teks) {
-    const cleaned = teks.replace(/x/g, '*').replace(/÷/g, '/');
-    const match = cleaned.match(/^[\d\s+\-*/().]+$/);
-    if (!match) return null;
-    try {
-        const result = Function('"use strict"; return (' + cleaned + ')')();
-        if (isFinite(result)) {
-            return `Hasil dari <b>${teks}</b> adalah <b>${result}</b>.`;
-        }
-    } catch (e) {}
-    return null;
-}
-
-/* =========================================================
-   BAGIAN 13: FITUR BONUS - KONVERSI SATUAN
-   ========================================================= */
-function konversiSatuan(teks) {
-    const q = teks.toLowerCase();
-    const match = q.match(/(\d+(?:\.\d+)?)\s*(km|m|cm|mm|kg|g|mg|ton|liter|l|ml)\s*(?:ke|to)\s*(km|m|cm|mm|kg|g|mg|ton|liter|l|ml)/);
-    if (!match) return null;
-
-    const nilai = parseFloat(match[1]);
-    const dari = match[2];
-    const ke = match[3];
-
-    const panjang = { km: 1000, m: 1, cm: 0.01, mm: 0.001 };
-    const berat = { kg: 1000, g: 1, mg: 0.001, ton: 1000000 };
-    const volume = { liter: 1, l: 1, ml: 0.001 };
-
-    let hasil = null;
-    if (panjang[dari] && panjang[ke]) {
-        hasil = nilai * panjang[dari] / panjang[ke];
-    } else if (berat[dari] && berat[ke]) {
-        hasil = nilai * berat[dari] / berat[ke];
-    } else if (volume[dari] && volume[ke]) {
-        hasil = nilai * volume[dari] / volume[ke];
-    }
-
-    if (hasil !== null) {
-        return `<b>${nilai} ${dari}</b> = <b>${hasil} ${ke}</b>`;
-    }
-    return null;
-}
-
-/* =========================================================
-   BAGIAN 14: FITUR BONUS - KUIS
-   ========================================================= */
-const KUIS = {
-    matematika: [
-        { soal: 'Berapa hasil 7 x 8?', jawab: '56' },
-        { soal: 'Berapa hasil 15 + 27?', jawab: '42' },
-        { soal: 'Berapa akar dari 144?', jawab: '12' },
-        { soal: 'Jika a=3, b=4, berapa c (Pythagoras)?', jawab: '5' },
-        { soal: 'Berapa luas lingkaran dengan r=7?', jawab: '154' },
-        { soal: 'Berapa hasil 12 x 12?', jawab: '144' }
-    ],
-    ipa: [
-        { soal: 'Apa rumus kimia air?', jawab: 'H2O' },
-        { soal: 'Planet terdekat dari Matahari?', jawab: 'Merkurius' },
-        { soal: 'Proses tumbuhan membuat makanan?', jawab: 'Fotosintesis' },
-        { soal: 'Hukum Newton ke-3 berbunyi tentang?', jawab: 'aksi reaksi' },
-        { soal: 'Apa rumus kimia karbon dioksida?', jawab: 'CO2' },
-        { soal: 'Organel penghasil energi sel?', jawab: 'mitokondria' }
-    ],
-    ips: [
-        { soal: 'Kapan proklamasi kemerdekaan Indonesia?', jawab: '17 Agustus 1945' },
-        { soal: 'Siapa presiden pertama Indonesia?', jawab: 'Soekarno' },
-        { soal: 'Ibu kota Indonesia saat ini?', jawab: 'Jakarta' },
-        { soal: 'Siapa wakil presiden pertama?', jawab: 'Hatta' },
-        { soal: 'Berapa jumlah provinsi Indonesia (2023)?', jawab: '38' }
-    ],
-    'b indonesia': [
-        { soal: 'Apa nama puisi lama 4 baris?', jawab: 'pantun' },
-        { soal: 'Gaya bahasa "wajahnya seperti bulan" disebut?', jawab: 'simile' },
-        { soal: 'Singkatan dari Ejaan Yang Disempurnakan?', jawab: 'EYD' },
-        { soal: 'Apa sebutan untuk karya sastra panjang?', jawab: 'novel' },
-        { soal: 'Berapa baris dalam pantun?', jawab: '4' }
-    ]
-};
-
-function mulaiKuis(mapel) {
-    const daftar = KUIS[mapel.toLowerCase()];
-    if (!daftar) {
-        return `Maaf, kuis untuk mapel "${mapel}" belum tersedia. Coba: matematika, ipa, ips, b indonesia.`;
-    }
-    const q = daftar[Math.floor(Math.random() * daftar.length)];
-    return `<b>KUIS ${mapel.toUpperCase()}</b><br><br>${q.soal}<br><br><i>(Jawab langsung di chat untuk diperiksa)</i>`;
-}
-
-/* =========================================================
-   BAGIAN 15: FITUR BONUS - RUMUS CEPAT
-   ========================================================= */
-function cekRumus(teks) {
-    const q = teks.toLowerCase();
-    const rumus = {
-        'luas persegi': 'L = s x s',
-        'keliling persegi': 'K = 4 x s',
-        'luas persegi panjang': 'L = p x l',
-        'keliling persegi panjang': 'K = 2 x (p + l)',
-        'luas segitiga': 'L = 1/2 x a x t',
-        'luas lingkaran': 'L = pi x r^2',
-        'keliling lingkaran': 'K = 2 x pi x r',
-        'volume kubus': 'V = s^3',
-        'volume balok': 'V = p x l x t',
-        'volume tabung': 'V = pi x r^2 x t',
-        'volume bola': 'V = 4/3 x pi x r^3',
-        'volume kerucut': 'V = 1/3 x pi x r^2 x t',
-        'rumus abc': 'x = (-b +/- akar(b^2 - 4ac)) / 2a',
-        'pythagoras': 'c^2 = a^2 + b^2',
-        'hukum ohm': 'V = I x R',
-        'energi kinetik': 'Ek = 1/2 x m x v^2',
-        'energi potensial': 'Ep = m x g x h',
-        'kalor': 'Q = m x c x deltaT',
-        'molaritas': 'M = mol / volume (L)',
-        'kecepatan': 'v = s/t',
-        'percepatan': 'a = delta v / delta t',
-        'gaya': 'F = m x a',
-        'usaha': 'W = F x s',
-        'daya': 'P = W/t',
-        'tekanan': 'P = F/A',
-        'massa jenis': 'rho = m/V'
-    };
-
-    for (const [key, val] of Object.entries(rumus)) {
-        if (q.includes(key) || q.includes('rumus ' + key)) {
-            return `<b>RUMUS ${key.toUpperCase()}</b><br><br><b>${val}</b>`;
-        }
-    }
-    return null;
-}/* =========================================================
-   BAGIAN 16: MESIN PENCARIAN JAWABAN CERDAS
-   ========================================================= */
-let lastKuis = null;
-
-function getJawaban(teks) {
-    const query = teks.toLowerCase().trim();
-    const queryClean = query.replace(/[?!.,]/g, '').trim();
-
-    if (!queryClean) return 'Silakan ketik pertanyaanmu.';
-
-    /* -------- 1. Cek konversi satuan -------- */
-    const konversi = konversiSatuan(queryClean);
-    if (konversi) return konversi;
-
-    /* -------- 2. Cek kalkulator -------- */
-    const hitung = hitungMatematika(queryClean);
-    if (hitung) return hitung;
-
-    /* -------- 3. Cek rumus -------- */
-    const rumus = cekRumus(queryClean);
-    if (rumus) return rumus;
-
-    /* -------- 4. Cek kuis -------- */
-    if (queryClean.includes('kuis') || queryClean.includes('quiz')) {
-        if (queryClean.includes('matematika') || queryClean.includes('mtk')) {
-            lastKuis = 'matematika';
-            return mulaiKuis('matematika');
-        }
-        if (queryClean.includes('ipa') || queryClean.includes('fisika') || queryClean.includes('kimia') || queryClean.includes('biologi')) {
-            lastKuis = 'ipa';
-            return mulaiKuis('ipa');
-        }
-        if (queryClean.includes('ips') || queryClean.includes('sejarah') || queryClean.includes('geografi')) {
-            lastKuis = 'ips';
-            return mulaiKuis('ips');
-        }
-        if (queryClean.includes('indonesia')) {
-            lastKuis = 'b indonesia';
-            return mulaiKuis('b indonesia');
-        }
-        return 'Mau kuis apa? Pilih: <b>matematika</b>, <b>ipa</b>, <b>ips</b>, atau <b>b indonesia</b>';
-    }
-
-    /* -------- 5. Cek jawaban kuis sebelumnya -------- */
-    if (lastKuis) {
-        const daftar = KUIS[lastKuis];
-        if (daftar) {
-            const cocok = daftar.find(k =>
-                k.jawab.toLowerCase().replace(/\s+/g, '') === queryClean.replace(/\s+/g, '')
-            );
-            if (cocok) {
-                triggerConfetti();
-                const hasil = `<b>BENAR!</b> Hebat sekali!<br><br>
-Jawaban <b>${cocok.jawab}</b> tepat.<br><br>
-Mau kuis lagi? Ketik <b>"kuis ${lastKuis}"</b> atau mapel lain.`;
-                lastKuis = null;
-                return hasil;
-            }
-        }
-    }
-
-    /* -------- 6. Cek di BRAIN dengan skor -------- */
-    let bestMatch = null;
-    let bestScore = 0;
-
-    for (const item of BRAIN) {
-        let score = 0;
-        for (const kw of item.keywords) {
-            if (queryClean.includes(kw)) {
-                score += kw.length * 2;
-                if (queryClean.startsWith(kw)) score += 5;
-            }
-        }
-        if (score > bestScore) {
-            bestScore = score;
-            bestMatch = item;
-        }
-    }
-
-    if (bestMatch && bestScore > 0) {
-        return bestMatch.jawaban;
-    }
-
-    /* -------- 7. Fallback pintar -------- */
-    return `Hmm, aku belum belajar tentang <b>"${escapeHtml(teks)}"</b>.<br><br>
-Coba tanya soal:<br>
-- <b>Matematika</b>: rumus, pythagoras, persamaan kuadrat<br>
-- <b>IPA</b>: fotosintesis, hukum newton, sel, tabel periodik<br>
-- <b>IPS</b>: proklamasi, kerajaan, iklim, ekonomi<br>
-- <b>B. Indonesia</b>: puisi, pantun, majas, novel<br>
-- <b>B. Inggris</b>: tenses, vocabulary, idiom<br>
-- <b>PKN</b>: pancasila, UUD, HAM<br>
-- <b>Profil developer</b>: "siapa pembuat aplikasi ini"<br><br>
-Atau ketik <b>"kuis matematika"</b> untuk bermain kuis.`;
-}
-
-/* =========================================================
-   BAGIAN 17: KIRIM PESAN (DENGAN FEEDBACK & CONFETTI)
-   ========================================================= */
-function kirimPesan() {
-    const input = document.getElementById('chat-input');
-    const text = input.value.trim();
-    if (!text) return;
-
-    playBeep(500);
-
-    const chatArea = document.getElementById('chat-area');
-
-    /* Pesan user */
-    const userMsg = document.createElement('div');
-    userMsg.className = 'msg user';
-    userMsg.innerHTML = escapeHtml(text) + `<span class="timestamp">${getTime()}</span>`;
-    chatArea.appendChild(userMsg);
-
-    input.value = '';
-    chatArea.scrollTop = chatArea.scrollHeight;
-
-    /* Typing indicator */
-    const typingMsg = document.createElement('div');
-    typingMsg.className = 'msg bot typing-indicator';
-    typingMsg.id = 'typing-indicator';
-    typingMsg.innerHTML = '<span></span><span></span><span></span>';
-    chatArea.appendChild(typingMsg);
-    chatArea.scrollTop = chatArea.scrollHeight;
-
-    /* Bot balas */
-    const delay = 400 + Math.random() * 600;
-    setTimeout(() => {
-        const typing = document.getElementById('typing-indicator');
-        if (typing) typing.remove();
-
-        const botMsg = document.createElement('div');
-        botMsg.className = 'msg bot';
-
-        const jawaban = getJawaban(text);
-        botMsg.innerHTML = jawaban +
-            `<div class="feedback-btns">
-                <button onclick="beriFeedback(this, 'up')" title="Membantu">Membantu</button>
-                <button onclick="beriFeedback(this, 'down')" title="Tidak membantu">Tidak</button>
-            </div>
-            <span class="timestamp">${getTime()}</span>`;
-        chatArea.appendChild(botMsg);
-        chatArea.scrollTop = chatArea.scrollHeight;
-
-        playBeep(700);
-    }, delay);
-}
-
-/* =========================================================
-   BAGIAN 18: FEEDBACK JAWABAN
-   ========================================================= */
-function beriFeedback(btn, tipe) {
-    playBeep();
-    const parent = btn.parentElement;
-    parent.querySelectorAll('button').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-
-    if (tipe === 'up') {
-        showToast('Terima kasih! Senang bisa membantu');
-    } else {
-        showToast('Maaf, aku akan belajar lebih baik');
-    }
-}
-
-/* =========================================================
-   BAGIAN 19: UTILITAS
-   ========================================================= */
 function getTime() {
-    const d = new Date();
-    return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+  var d = new Date();
+  return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
 }
-
-function escapeHtml(str) {
-    return String(str).replace(/[&<>"']/g, s => ({
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#39;'
-    }[s]));
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, function(c) {
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
 }
-
-/* =========================================================
-   BAGIAN 20: INISIALISASI SAAT LOAD
-   ========================================================= */
-window.addEventListener('load', () => {
-    // Fokus ke input
-    document.getElementById('chat-input').focus();
-
-    // Sapa user sesuai jam
-    const hour = new Date().getHours();
-    let greeting = 'Halo';
-    if (hour >= 4 && hour < 11) greeting = 'Selamat pagi';
-    else if (hour >= 11 && hour < 15) greeting = 'Selamat siang';
-    else if (hour >= 15 && hour < 18) greeting = 'Selamat sore';
-    else greeting = 'Selamat malam';
-
-    setTimeout(() => {
-        const chatArea = document.getElementById('chat-area');
-        const greetMsg = document.createElement('div');
-        greetMsg.className = 'msg bot';
-        greetMsg.innerHTML = `${greeting}, teman belajar!<br><br>
-Aku di sini 24/7 siap bantu. Ketik pertanyaanmu atau pilih chip di bawah.<br><br>
-Ketik <b>"kuis matematika"</b> untuk bermain kuis, atau tanya tentang <b>developer</b> 𓆩 ᖽᐸɪղᘜ ༒ ᙃᴀ̷𝖿ᴢᴢ 𓆪 yang keren ini.
-<span class="timestamp">${getTime()}</span>`;
-        chatArea.appendChild(greetMsg);
-        chatArea.scrollTop = chatArea.scrollHeight;
-        playBeep(700);
-    }, 800);
+function toggleDark() {
+  beep();
+  document.body.classList.toggle('dark');
+  var d = document.body.classList.contains('dark');
+  localStorage.setItem('dafzz_dark', d ? '1' : '0');
+  toast(d ? 'Mode Gelap' : 'Mode Terang');
+}
+if (localStorage.getItem('dafzz_dark') === '1') document.body.classList.add('dark');
+function confetti() {
+  var cs = ['#fbbf24','#ec4899','#7c3aed','#10b981','#3b82f6'];
+  for (var i = 0; i < 20; i++) {
+    (function() {
+      var c = document.createElement('div');
+      c.className = 'conf';
+      c.style.left = Math.random() * 100 + 'vw';
+      c.style.background = cs[Math.floor(Math.random() * cs.length)];
+      c.style.animationDelay = Math.random() * .3 + 's';
+      document.body.appendChild(c);
+      setTimeout(function() { c.remove(); }, 3000);
+    })();
+  }
+}
+var chatEl = document.getElementById('chat');
+var scbEl = document.getElementById('scb');
+chatEl.addEventListener('scroll', function() {
+  scbEl.classList.toggle('show', chatEl.scrollHeight - chatEl.scrollTop - chatEl.clientHeight >= 100);
 });
-
-/* =========================================================
-   BAGIAN 21: KEYBOARD SHORTCUT
-   ========================================================= */
-document.addEventListener('keydown', (e) => {
-    // Ctrl+K / Cmd+K -> fokus input
-    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
-        e.preventDefault();
-        document.getElementById('chat-input').focus();
+function scrollToBottom() {
+  beep();
+  chatEl.scrollTop = chatEl.scrollHeight;
+}
+var SUG = [
+  'Siapa developer aplikasi ini?',
+  'Berapa umur developer?',
+  'Rumus Pythagoras',
+  'Apa itu fotosintesis?',
+  'Hukum Newton',
+  'Tips belajar fokus',
+  'Proklamasi kemerdekaan',
+  'Rumus ABC',
+  'Apa itu DNA?',
+  'Konversi 5 km ke m'
+];
+function renderSug() {
+  var w = document.getElementById('sug');
+  w.innerHTML = SUG.map(function(s) {
+    var e = s.replace(/'/g, "\\'");
+    return '<button class="chip" onclick="kirimChip(\'' + e + '\')">' + s + '</button>';
+  }).join('');
+}
+function kirimChip(t) {
+  document.getElementById('ci').value = t;
+  kirim();
+}
+renderSug();
+function exportChat() {
+  beep();
+  var msgs = chatEl.querySelectorAll('.msg');
+  var txt = '=== DAFZZ AI CHAT ===\n' + new Date().toLocaleString('id-ID') + '\n\n';
+  msgs.forEach(function(m) {
+    var r = m.classList.contains('user') ? 'USER' : 'BOT';
+    txt += '[' + r + ']\n' + m.innerText + '\n\n';
+  });
+  var b = new Blob([txt], {type:'text/plain'});
+  var u = URL.createObjectURL(b);
+  var a = document.createElement('a');
+  a.href = u;
+  a.download = 'dafzz-' + Date.now() + '.txt';
+  a.click();
+  URL.revokeObjectURL(u);
+  toast('Diexport ke .txt');
+}
+function clearChat() {
+  if (!confirm('Hapus chat?')) return;
+  beep();
+  chatEl.innerHTML = '<div class="msg bot">Chat dibersihkan. Mau tanya apa?<span class="ts">' + getTime() + '</span></div>';
+  toast('Chat dihapus');
+}
+var rec = null;
+var isRec = false;
+function initVoice() {
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) {
+    document.getElementById('mbtn').style.display = 'none';
+    return;
+  }
+  rec = new SR();
+  rec.lang = 'id-ID';
+  rec.continuous = false;
+  rec.interimResults = false;
+  rec.onresult = function(e) {
+    var t = e.results[0][0].transcript;
+    document.getElementById('ci').value = t;
+    isRec = false;
+    document.getElementById('mbtn').classList.remove('rec');
+    toast('Terdeteksi: ' + t.substring(0, 30));
+  };
+  rec.onerror = function() {
+    isRec = false;
+    document.getElementById('mbtn').classList.remove('rec');
+    toast('Gagal deteksi');
+  };
+  rec.onend = function() {
+    isRec = false;
+    document.getElementById('mbtn').classList.remove('rec');
+  };
+}
+function toggleVoice() {
+  if (!rec) {
+    toast('Browser tidak support');
+    return;
+  }
+  beep();
+  if (isRec) {
+    rec.stop();
+    isRec = false;
+    document.getElementById('mbtn').classList.remove('rec');
+  } else {
+    try {
+      rec.start();
+      isRec = true;
+      document.getElementById('mbtn').classList.add('rec');
+      toast('Bicara...');
+    } catch(e) {
+      toast('Gagal');
     }
-    // Esc -> tutup modal
-    if (e.key === 'Escape') {
-        closeModal();
+  }
+}
+initVoice();
+// ========== BRAIN ==========
+var BRAIN = [];
+function addB(kw, jw) {
+  BRAIN.push({keywords: kw, jawaban: jw});
+}
+addB(['pembuat','developer','pencipta','owner','dibuat oleh','siapa yang buat','admin','kreator','programmer'], 'Aplikasi ini dibuat oleh <b>Maharaja Coding</b> 𓆩 ᖽᐸɪղᘜ ༒ ᙃᴀ̷𝖿ᴢᴢ 𓆪<br><br><b>Karyanya:</b><br>- <a href="https://my-life-dafzz.onrender.com" target="_blank">My Life Dafzz</a><br>- <a href="https://hacker-kingdafzz-1.onrender.com/" target="_blank">Hacker King</a><br>- <a href="https://hollow-dafzz.onrender.com" target="_blank">Hollow Dafzz</a><br>- <a href="https://jadwal-sekolah.onrender.com/" target="_blank">Jadwal Sekolah</a><br>- <b>DAFZZ AI</b> (aku!)<br><br>Beliau <b>legenda muda</b> yang karyanya sudah dipakai banyak orang. Salut!');
+addB(['umur','usia','berapa tahun','muda','bocah','remaja'], 'Developer 𓆩 ᖽᐸɪղᘜ ༒ ᙃᴀ̷𝖿ᴢᴢ 𓆪 <b>baru 14 tahun</b>!<br><br>Sudah bisa:<br>- Ngoding (Vibe Coding)<br>- Deploy cloud<br>- GitHub<br>- UI/UX<br>- Banyak apps<br><br><b>Generasi emas!</b>');
+addB(['kontak','email','hubungi','bantuan','ide','saran'], 'Hubungi <b>Maharaja</b> 𓆩 ᖽᐸɪղᘜ ༒ ᙃᴀ̷𝖿ᴢᴢ 𓆪:<br><br><b>Email:</b> ubaydillahdaffa7@gmail.com<br><br><a href="https://my-life-dafzz.onrender.com" target="_blank">my-life-dafzz.onrender.com</a>');
+addB(['keren','bagus','mantap','hebat','wow','anjay','sip','top','luar biasa'], 'Mantap!<br><br>Semua dibuat <b>𓆩 ᖽᐸɪղᘜ ༒ ᙃᴀ̷𝖿ᴢᴢ 𓆪</b> umur <b>14 tahun</b>. Keren!<br><br>Cek: <a href="https://my-life-dafzz.onrender.com" target="_blank">My Life</a> | <a href="https://hacker-kingdafzz-1.onrender.com/" target="_blank">Hacker King</a>');
+addB(['siapa kamu','kamu siapa','nama kamu','bot','ai apa'], 'Aku <b>DAFZZ AI v3.0</b>.<br><br>Dibuat <b>𓆩 ᖽᐸɪղᘜ ༒ ᙃᴀ̷𝖿ᴢᴢ 𓆪</b> - <b>Maharaja Coding</b>.<br><br>100% offline, 90+ topik, 13 mapel!');
+addB(['pujian','puji','kagum','salut','bangga','jenius','genius'], '<b>PUJIAN MAHARAJA CODING</b><br><br>𓆩 ᖽᐸɪղᘜ ༒ ᙃᴀ̷𝖿ᴢᴢ 𓆪:<br>- Legenda muda 14 tahun<br>- Full-stack developer<br>- UI/UX designer<br>- Inovator<br>- Inspirasi generasi muda<br><br><b>Salut setinggi langit!</b>');
+addB(['aplikasi apa','project','proyek','karya'], 'Karya 𓆩 ᖽᐸɪղᘜ ༒ ᙃᴀ̷𝖿ᴢᴢ 𓆪:<br><br>1. <a href="https://my-life-dafzz.onrender.com" target="_blank">My Life Dafzz</a><br>2. <a href="https://hacker-kingdafzz-1.onrender.com/" target="_blank">Hacker King</a><br>3. <a href="https://hollow-dafzz.onrender.com" target="_blank">Hollow Dafzz</a><br>4. <a href="https://jadwal-sekolah.onrender.com/" target="_blank">Jadwal Sekolah</a><br>5. <b>DAFZZ AI</b><br><br>Semua buatan remaja 14 tahun!');
+addB(['terima kasih','makasih','thanks','thx'], 'Sama-sama!<br><br>Doakan 𓆩 ᖽᐸɪղᘜ ༒ ᙃᴀ̷𝖿ᴢᴢ 𓆪 terus berkarya!');
+addB(['halo','hai','hi','hey','pagi','siang','malam','sore','salam'], 'Halo! Salam dari <b>DAFZZ AI v3.0</b>.<br><br>Aku siap bantu 13 mapel atau cerita tentang <b>Maharaja</b> 𓆩 ᖽᐸɪղᘜ ༒ ᙃᴀ̷𝖿ᴢᴢ 𓆪<br><br>Mau tanya apa?');
+addB(['tips','cara fokus','cara belajar','biar pintar'], '<b>TIPS BELAJAR</b>:<br><br>1. Pomodoro (25 menit fokus, 5 istirahat)<br>2. Active recall<br>3. Spaced repetition<br>4. Tidur 7-8 jam<br>5. Minum air<br>6. Jauhkan HP<br>7. Ajarkan ke orang lain<br><br>Semangat!');
+addB(['pythagoras','pitagoras','sisi miring'], '<b>PYTHAGORAS</b><br><br><b>c² = a² + b²</b><br><br>c=sisi miring<br>a,b=sisi tegak<br><br>Contoh: a=3,b=4 → c=√25=<b>5</b><br><br>Triple: (3,4,5),(5,12,13),(8,15,17)');
+addB(['rumus abc','persamaan kuadrat'], '<b>RUMUS ABC</b><br><br>ax²+bx+c=0<br><b>x = (-b ± √(b²-4ac))/2a</b><br><br>D=b²-4ac<br>D>0: 2 akar<br>D=0: 1 akar<br>D<0: imajiner');
+addB(['luas lingkaran','keliling lingkaran'], '<b>LINGKARAN</b><br><br>Luas = π×r²<br>Keliling = 2×π×r<br>Diameter = 2×r<br><br>π = 22/7 atau 3.14<br>Contoh r=7: L=154, K=44');
+addB(['luas segitiga','keliling segitiga'], '<b>SEGITIGA</b><br><br>Luas = ½×a×t<br>Keliling = a+b+c<br><br>Contoh a=10,t=6: L=30');
+addB(['volume kubus','volume balok','volume tabung','volume bola'], '<b>VOLUME BANGUN RUANG</b><br><br>Kubus = s³<br>Balok = p×l×t<br>Tabung = π×r²×t<br>Bola = 4/3×π×r³<br>Kerucut = 1/3×π×r²×t<br>Limas = 1/3×la×t');
+addB(['trigonometri','sinus','cosinus','tangen','sin cos tan'], '<b>TRIGONOMETRI</b><br><br>sin = depan/miring<br>cos = samping/miring<br>tan = depan/samping<br><br>Sudut istimewa:<br>sin30=1/2, cos30=√3/2<br>sin45=√2/2, cos45=√2/2<br>sin60=√3/2, cos60=1/2');
+addB(['statistika','mean','median','modus'], '<b>STATISTIKA</b><br><br>Mean = jumlah/banyak<br>Median = nilai tengah<br>Modus = paling sering<br><br>Data 4,5,5,7,9:<br>Mean=6, Median=5, Modus=5');
+addB(['barisan aritmatika','deret aritmatika'], '<b>ARITMATIKA</b><br><br>Un = a+(n-1)b<br>Sn = n/2×(2a+(n-1)b)<br><br>Contoh 2,5,8,11:<br>a=2,b=3 → U5=14');
+addB(['barisan geometri','deret geometri'], '<b>GEOMETRI</b><br><br>Un = a×r^(n-1)<br>Sn = a(r^n-1)/(r-1)<br><br>Contoh 2,6,18,54:<br>a=2,r=3 → U4=54');
+addB(['peluang','probabilitas'], '<b>PELUANG</b><br><br>P = kejadian diharapkan / total<br><br>Contoh: peluang angka genap dadu = 3/6 = 1/2');
+addB(['logaritma','log'], '<b>LOGARITMA</b><br><br>a^b=c → log_a(c)=b<br><br>Sifat:<br>log(ab)=log a + log b<br>log(a/b)=log a - log b<br>log(a^n)=n×log a<br>log_a(a)=1, log_a(1)=0');
+addB(['bilangan bulat','bilangan prima','bilangan asli'], '<b>JENIS BILANGAN</b><br><br>Asli: 1,2,3,...<br>Cacah: 0,1,2,3,...<br>Bulat: ...,-1,0,1,2,...<br>Prima: 2,3,5,7,11,13,...<br>Komposit: 4,6,8,9,10,...');
+addB(['fpb','kpk','faktor','kelipatan'], '<b>FPB & KPK</b><br><br>Contoh 12 & 18:<br>FPB = 6<br>KPK = 36<br><br>FPB: faktor terbesar sama<br>KPK: kelipatan terkecil sama');
+addB(['pecahan','desimal','persen'], '<b>PECAHAN</b><br><br>1/4 = 0.25 = 25%<br>3/5 = 0.6 = 60%<br><br>Pecahan→desimal: bagi<br>Desimal→persen: ×100');
+addB(['persamaan linear','spldv'], '<b>PERSAMAAN LINEAR</b><br><br>ax+b=0 → x=-b/a<br><br>SPLDV:<br>ax+by=c<br>dx+ey=f<br><br>Metode: substitusi, eliminasi, grafik');
+addB(['matriks','determinan','invers'], '<b>MATRIKS</b><br><br>2x2: [[a,b],[c,d]]<br>Det = ad-bc<br>Invers = 1/det × [[d,-b],[-c,a]]<br><br>Operasi: +, skalar, ×');
+addB(['vektor'], '<b>VEKTOR</b><br><br>Notasi a=(x,y,z)<br>Panjang = √(x²+y²+z²)<br>Dot = ax·bx+ay·by+az·bz');
+addB(['limit','turunan','integral','kalkulus'], '<b>KALKULUS</b><br><br>Turunan:<br>d/dx(x^n) = n·x^(n-1)<br><br>Integral:<br>∫x^n dx = x^(n+1)/(n+1)+C<br><br>Limit: nilai yang didekati');
+addB(['hukum newton','newton'], '<b>HUKUM NEWTON</b><br><br>1. Inersia: benda diam/bergerak tetap jika tak ada gaya<br>2. F = m×a<br>3. Aksi = reaksi');
+addB(['energi kinetik','energi potensial','energi'], '<b>ENERGI</b><br><br>Ek = ½×m×v²<br>Ep = m×g×h<br>Em = Ek+Ep<br><br>m=massa, v=kecepatan<br>g=9.8, h=tinggi');
+addB(['listrik','ohm','tegangan','arus'], '<b>HUKUM OHM</b><br><br>V = I×R<br><br>V=tegangan (Volt)<br>I=arus (Ampere)<br>R=hambatan (Ohm)<br><br>Daya: P=V×I');
+addB(['gelombang','frekuensi','periode'], '<b>GELOMBANG</b><br><br>f = 1/T<br>v = λ×f<br><br>f=frekuensi (Hz)<br>T=periode (s)<br>λ=panjang gelombang');
+addB(['cahaya','optik','lensa','cermin'], '<b>OPTIK</b><br><br>1/f = 1/s + 1/s\'<br><br>f=fokus<br>s=jarak benda<br>s\'=jarak bayangan<br>M=|s\'/s|');
+addB(['tekanan','archimedes','hidrostatis'], '<b>TEKANAN</b><br><br>P = F/A<br>Ph = ρ×g×h<br>Fa = ρ×g×V<br><br>ρ=massa jenis<br>h=kedalaman<br>V=volume');
+addB(['suhu','kalor','celsius','fahrenheit'], '<b>SUHU & KALOR</b><br><br>C→F: F=(C×9/5)+32<br>F→C: C=(F-32)×5/9<br>C→K: K=C+273<br><br>Kalor: Q=m×c×ΔT');
+addB(['gerak lurus','glb','glbb'], '<b>GERAK LURUS</b><br><br>GLB: v=s/t<br><br>GLBB:<br>vt=v0+a·t<br>s=v0·t+½·a·t²<br>vt²=v0²+2·a·s');
+addB(['usaha','daya','watt','joule'], '<b>USAHA & DAYA</b><br><br>W = F×s×cos θ<br>P = W/t<br><br>W=usaha (J)<br>F=gaya (N)<br>s=jarak (m)<br>P=daya (Watt)');
+addB(['gravitasi','berat','massa'], '<b>GRAVITASI</b><br><br>F = G·m1·m2/r²<br><br>G = 6.67×10⁻¹¹<br><br>Berat: w=m×g<br>g bumi = 9.8 m/s²');
+addB(['tabel periodik','unsur','golongan'], '<b>TABEL PERIODIK</b><br><br>20 unsur pertama:<br>H,He,Li,Be,B,C,N,O,F,Ne,<br>Na,Mg,Al,Si,P,S,Cl,Ar,K,Ca<br><br>Golongan: kolom<br>Periode: baris');
+addB(['atom','proton','neutron','elektron'], '<b>ATOM</b><br><br>Proton (+) di inti<br>Neutron (netral) di inti<br>Elektron (-) mengelilingi<br><br>Z = proton<br>A = proton+neutron');
+addB(['ikatan kimia','ion','kovalen'], '<b>IKATAN KIMIA</b><br><br>Ion: serah terima e⁻<br>Kovalen: pakai e⁻ bersama<br>Logam: antar atom logam<br><br>Contoh: NaCl (ion), H2O (kovalen)');
+addB(['asam','basa','ph'], '<b>ASAM BASA pH</b><br><br>Asam: pH<7<br>Basa: pH>7<br>Netral: pH=7<br><br>Asam: HCl, CH3COOH<br>Basa: NaOH, NH3');
+addB(['reaksi kimia','eksoterm','endoterm'], '<b>REAKSI KIMIA</b><br><br>Eksoterm: lepas kalor (suhu naik)<br>Endoterm: serap kalor (suhu turun)<br><br>Katalis: mempercepat reaksi');
+addB(['stoikiometri','mol','molaritas'], '<b>STOIKIOMETRI</b><br><br>Mol = massa/Mr<br>Massa = mol×Mr<br>Jumlah partikel = mol×6.02×10²³<br>Molaritas = mol/V(L)');
+addB(['redoks','oksidasi','reduksi'], '<b>REDOKS</b><br><br>Oksidasi: lepas e⁻ (biloks naik)<br>Reduksi: terima e⁻ (biloks turun)<br><br>Oksidator = mengalami reduksi');
+addB(['fotosintesis','klorofil'], '<b>FOTOSINTESIS</b><br><br>6CO2+6H2O+cahaya → C6H12O6+6O2<br><br>Terjadi di kloroplas<br>Zat hijau: klorofil');
+addB(['sel','mitokondria','nukleus','organel'], '<b>SEL & ORGANEL</b><br><br>Nukleus: pusat komando<br>Mitokondria: energi (ATP)<br>Ribosom: sintesis protein<br>Kloroplas: fotosintesis<br>Vakuola: penyimpanan');
+addB(['dna','rna','genetika'], '<b>DNA & RNA</b><br><br>DNA: double helix<br>Basa: A-T, G-C<br><br>RNA: single helix<br>Basa: A-U, G-C');
+addB(['mitosis','meiosis','pembelahan sel'], '<b>PEMBELAHAN SEL</b><br><br>Mitosis: 2 sel anak, diploid, untuk tumbuh<br>Meiosis: 4 sel anak, haploid, untuk gamet');
+addB(['ekosistem','rantai makanan'], '<b>EKOSISTEM</b><br><br>Biotik: makhluk hidup<br>Abiotik: benda tak hidup<br><br>Rantai: tumbuhan→herbivora→karnivora→pengurai');
+addB(['sistem pencernaan','pencernaan','lambung'], '<b>PENCERNAAN</b><br><br>Mulut→kerongkongan→lambung→usus halus→usus besar→anus<br><br>Enzim: amilase, pepsin, lipase');
+addB(['sistem pernapasan','pernapasan','paru-paru'], '<b>PERNAPASAN</b><br><br>Hidung→tenggorokan→bronkus→bronkiolus→alveolus<br><br>Alveolus: pertukaran O2 dan CO2');
+addB(['peredaran darah','jantung','darah'], '<b>PEREDARAN DARAH</b><br><br>Arteri: dari jantung<br>Vena: ke jantung<br>Kapiler: halus<br><br>Darah: plasma, eritrosit, leukosit, trombosit');
+addB(['taksonomi','kingdom','klasifikasi'], '<b>KLASIFIKASI</b><br><br>5 Kingdom:<br>Monera, Protista, Fungi, Plantae, Animalia<br><br>Urutan: Kingdom-Filum-Kelas-Ordo-Famili-Genus-Spesies');
+addB(['hormon','endokrin'], '<b>HORMON</b><br><br>Hipofisis: master<br>Tiroid: metabolisme<br>Adrenal: adrenalin<br>Pankreas: insulin<br>Gonad: testosteron/estrogen');
+addB(['proklamasi','kemerdekaan','17 agustus','soekarno'], '<b>PROKLAMASI</b><br><br>17 Agustus 1945<br>Soekarno + Hatta<br><br>Teks disusun di rumah Laksamana Maeda<br>Diketik Sayuti Melik<br>Bendera dijahit Fatmawati');
+addB(['kerajaan','majapahit','sriwijaya'], '<b>KERAJAAN NUSANTARA</b><br><br>Kutai: tertua<br>Sriwijaya: maritim Sumatera<br>Mataram Kuno: Jateng<br>Singasari: Jatim<br>Majapahit: terbesar (Hayam Wuruk + Gajah Mada)');
+addB(['perang dunia','pd1','pd2'], '<b>PERANG DUNIA</b><br><br>PD1 (1914-1918): Sekutu vs Sentral<br>PD2 (1939-1945): Sekutu vs Poros<br><br>PD2 berakhir dengan bom atom Hiroshima-Nagasaki');
+addB(['pahlawan','tokoh nasional'], '<b>PAHLAWAN NASIONAL</b><br><br>Soekarno: presiden pertama<br>Hatta: wapres pertama<br>Sudirman: panglima gerilya<br>Diponegoro: Perang Jawa<br>Cut Nyak Dien: Aceh<br>Kartini: emansipasi<br>Ki Hajar: pendidikan');
+addB(['candi','borobudur','prambanan'], '<b>CANDI INDONESIA</b><br><br>Borobudur: Buddha terbesar<br>Prambanan: Hindu terbesar<br>Mendut, Sewu, Dieng<br><br>Semua warisan UNESCO');
+addB(['islam','wali songo','demak'], '<b>ISLAM NUSANTARA</b><br><br>Jalur: dagang, kawin, pendidikan, tasawuf<br><br>Wali Songo: 9 wali penyebar Islam<br>Kesultanan pertama: Samudra Pasai');
+addB(['voc','hindia belanda','penjajahan'], '<b>PENJAJAHAN</b><br><br>VOC (1602-1799): dagang Belanda<br>Hindia Belanda (1800-1942)<br><br>Perlawanan: Diponegoro, Cut Nyak Dien, Pattimura, Imam Bonjol');
+addB(['orde baru','soeharto','reformasi'], '<b>ORDE & REFORMASI</b><br><br>Orde Lama: Soekarno (1945-1966)<br>Orde Baru: Soeharto (1966-1998)<br>Reformasi: 1998-sekarang');
+addB(['sumpah pemuda','28 oktober'], '<b>SUMPAH PEMUDA</b><br><br>28 Oktober 1928<br><br>1. Tanah air Indonesia<br>2. Bangsa Indonesia<br>3. Bahasa Indonesia<br><br>Tokoh: Soegondo, WR Supratman');
+addB(['iklim','cuaca','musim','tropis'], '<b>IKLIM & CUACA</b><br><br>Cuaca: jangka pendek<br>Iklim: jangka panjang (30 tahun)<br><br>Indonesia: tropis (2 musim)');
+addB(['benua','samudra'], '<b>BENUA & SAMUDRA</b><br><br>7 Benua: Asia, Afrika, Amerika Utara, Amerika Selatan, Antartika, Eropa, Australia<br><br>5 Samudra: Pasifik, Atlantik, Hindia, Arktik, Antartika');
+addB(['gunung','gunung berapi','merapi'], '<b>GUNUNG BERAPI</b><br><br>Indonesia punya ±127 gunung aktif<br><br>Merapi: paling aktif<br>Krakatau: letusan 1883<br>Tambora: terbesar 1815<br>Semeru: tertinggi Jawa');
+addB(['danau','sungai','toba'], '<b>DANAU & SUNGAI</b><br><br>Danau: Toba (terbesar), Sentani, Singkarak<br><br>Sungai: Musi, Kapuas (terpanjang), Mahakam, Barito');
+addB(['provinsi','indonesia'], '<b>PROVINSI</b><br><br>38 provinsi per 2023<br><br>Jawa: DKI, Jabar, Jateng, Jatim, Banten, DIY<br>Sumatera: Aceh, Sumut, Sumbar, Riau, Jambi, Sumsel, Bengkulu, Lampung, Babel, Kepri');
+addB(['atmosfer','lapisan'], '<b>ATMOSFER</b><br><br>Troposfer: cuaca<br>Stratosfer: ozon<br>Mesosfer: meteor<br>Termosfer: aurora<br>Eksosfer: luar angkasa');
+addB(['gempa','tsunami','bencana'], '<b>BENCANA ALAM</b><br><br>Gempa: getaran kerak<br>Tsunami: gelombang raksasa<br>Letusan: magma keluar<br>Banjir: air meluap<br>Longsor: tanah bergerak');
+addB(['peta','skala'], '<b>PETA</b><br><br>Komponen:<br>Judul, skala, legenda, mata angin, garis lintang/bujur<br><br>Jenis: umum, khusus, korografi');
+addB(['permintaan','penawaran','pasar'], '<b>PERMINTAAN & PENAWARAN</b><br><br>Hukum permintaan: harga naik → permintaan turun<br>Hukum penawaran: harga naik → penawaran naik<br><br>Keseimbangan: Qd=Qs');
+addB(['inflasi','deflasi'], '<b>INFLASI</b><br><br>Kenaikan harga umum terus-menerus<br><br>Ringan: <10%<br>Sedang: 10-30%<br>Berat: 30-100%<br>Hiper: >100%<br><br>Deflasi: penurunan harga');
+addB(['pajak','ppn','pph'], '<b>PAJAK</b><br><br>PPh: penghasilan<br>PPN: pertambahan nilai (11%)<br>PBB: bumi bangunan<br>Bea Cukai: impor/ekspor<br><br>Fungsi: pendapatan, pemerataan, pengatur');
+addB(['bank','tabungan','kredit'], '<b>BANK</b><br><br>Fungsi: himpun dana, salurkan kredit, jasa<br><br>Jenis: Sentral (BI), Umum (BRI, BCA), BPR, Syariah');
+addB(['pdb','pendapatan nasional'], '<b>PENDAPATAN NASIONAL</b><br><br>PDB: dalam negeri<br>PNB: PDB + warga luar - asing dalam<br><br>PDB = C+I+G+(X-M)');
+addB(['koperasi','umkm'], '<b>KOPERASI & UMKM</b><br><br>Koperasi: asas kekeluargaan<br>Jenis: konsumen, produsen, simpan pinjam, jasa<br><br>UMKM: tulang punggung ekonomi');
+addB(['puisi','pantun','rima'], '<b>PUISI & PANTUN</b><br><br>Puisi: bahasa indah padat<br>Unsur: tema, rasa, nada, amanat, rima, irama<br><br>Pantun: 4 baris a-b-a-b<br>1-2 sampiran, 3-4 isi');
+addB(['majas','metafora','personifikasi','hiperbola'], '<b>MAJAS</b><br><br>Metafora: langsung (dia singa kelas)<br>Personifikasi: benda hidup (angin berbisik)<br>Hiperbola: berlebihan (suara menggelegar)<br>Simile: pakai seperti');
+addB(['eyd','ejaan','imbuhan'], '<b>EYD</b><br><br>Kapital: awal, nama orang/tempat<br>di- sebagai kata depan: pisah<br>di- sebagai awalan: sambung<br>Kata ulang: tanda hubung');
+addB(['teks','narasi','deskripsi','eksposisi'], '<b>JENIS TEKS</b><br><br>Narasi: cerita<br>Deskripsi: gambaran<br>Eksposisi: informasi<br>Argumentasi: pendapat+bukti<br>Persuasi: membujuk<br>Prosedur: langkah');
+addB(['novel','cerpen','prosa'], '<b>PROSA</b><br><br>Novel: panjang (>40rb kata)<br>Cerpen: pendek (<10rb kata)<br><br>Unsur: tema, tokoh, alur, latar, sudut pandang, amanat');
+addB(['drama','teater'], '<b>DRAMA</b><br><br>Karya dialog untuk pentas<br><br>Unsur: tema, tokoh, alur, latar, dialog, babak<br><br>Jenis: tragedi, komedi, tragikomedi');
+addB(['pidato','ceramah'], '<b>PIDATO</b><br><br>Struktur: pembuka, isi, penutup<br><br>Metode: impromptu, memoriter, naskah, ekstemporan');
+addB(['surat','surat resmi'], '<b>SURAT</b><br><br>Pribadi: santai<br>Resmi: kop, nomor, tanggal, hal, alamat, isi, ttd<br><br>Formal: bahasa baku');
+addB(['tenses','grammar'], '<b>TENSES</b><br><br>Simple Present: V1(s/es)<br>Present Continuous: am/is/are+Ving<br>Simple Past: V2<br>Present Perfect: have/has+V3');
+addB(['vocabulary','kosakata'], '<b>VOCABULARY</b><br><br>Kerja: go, come, eat, drink, study, read<br>Benda: book, pencil, table, chair<br>Sifat: big, small, good, bad, happy, sad');
+addB(['idiom','ungkapan inggris'], '<b>IDIOMS</b><br><br>Break a leg: semoga sukses<br>Piece of cake: mudah<br>Hit the books: belajar<br>Under the weather: sakit<br>Once in a blue moon: jarang');
+addB(['preposition','kata depan'], '<b>PREPOSITION</b><br><br>Waktu: at jam, on hari, in bulan<br>Tempat: at titik, on permukaan, in ruang<br>Gerak: to, from, into, onto');
+addB(['passive voice','pasif'], '<b>PASSIVE VOICE</b><br><br>O + be + V3 + (by S)<br><br>Aktif: She writes letter<br>Pasif: Letter is written by her');
+addB(['reported speech','indirect'], '<b>REPORTED SPEECH</b><br><br>Present → Past<br>will → would<br>can → could<br>today → that day<br>tomorrow → next day');
+addB(['pancasila','sila'], '<b>PANCASILA</b><br><br>1. Ketuhanan YME<br>2. Kemanusiaan adil beradab<br>3. Persatuan Indonesia<br>4. Kerakyatan hikmat<br>5. Keadilan sosial');
+addB(['uud','konstitusi','pasal'], '<b>UUD 1945</b><br><br>Disahkan 18 Agustus 1945<br>Pembukaan 4 alinea<br>Amandemen 4 kali (1999-2002)<br>37 pasal (sebelum amandemen)');
+addB(['hak','kewajiban','ham'], '<b>HAK & KEWAJIBAN</b><br><br>Hak: hidup, pendidikan, agama, pendapat<br>Kewajiban: pajak, hukum, bela negara<br><br>HAM: hak asasi manusia');
+addB(['demokrasi','pemilu'], '<b>DEMOKRASI</b><br><br>Pancasila: berdasarkan Pancasila<br><br>Pilar: kedaulatan rakyat, pemilu, HAM, kebebasan pers<br><br>Pemilu: 5 tahun sekali');
+addB(['trias politika','legislatif','eksekutif'], '<b>TRIAS POLITIKA</b><br><br>Legislatif: DPR/DPD/MPR<br>Eksekutif: Presiden/Menteri<br>Yudikatif: MA/MK/KY<br><br>Tujuan: check and balances');
+addB(['bhineka','toleransi','keberagaman'], '<b>BHINEKA TUNGGAL IKA</b><br><br>Berbeda-beda tetap satu<br><br>1340+ suku, 718+ bahasa, 6 agama<br><br>Sikap: toleransi, hormat, gotong royong');
+addB(['olahraga','sepak bola','voli','basket'], '<b>OLAHRAGA</b><br><br>Sepak bola: 11 pemain, 2×45 menit<br>Voli: 6 pemain, rally 25<br>Basket: 5 pemain, 4×10 menit<br>Bulutangkis: rally 21');
+addB(['kesehatan','gizi','vitamin'], '<b>GIZI</b><br><br>4 Sehat 5 Sempurna:<br>Karbohidrat, protein, sayur, buah, susu<br><br>Vitamin A: mata<br>B: saraf<br>C: imun<br>D: tulang');
+addB(['atletik','lari','lompat'], '<b>ATLETIK</b><br><br>Lari: sprint, menengah, jauh<br>Lompat: jauh, tinggi, galah, jangkit<br>Lempar: peluru, lembing, cakram, martil');
+addB(['senam','senam lantai'], '<b>SENAM</b><br><br>Lantai: roll, kayang, meroda, salto<br>Irama: dengan musik<br>Alat: pita, bola, gada, simpai, tali');
+addB(['pencak silat','bela diri'], '<b>BELA DIRI</b><br><br>Pencak Silat: asli Indonesia<br>Karate: Jepang (pukulan)<br>Taekwondo: Korea (tendangan)<br>Judo: Jepang (bantingan)');
+addB(['alat musik','gamelan','angklung'], '<b>ALAT MUSIK</b><br><br>Gamelan: Jawa/Bali<br>Angklung: bambu (Jabar)<br>Kolintang: Sulut<br>Sasando: NTT<br>Tifa: Papua');
+addB(['tari','tarian tradisional'], '<b>TARIAN</b><br><br>Saman: Aceh<br>Kecak: Bali<br>Piring: Sumbar<br>Jaipong: Jabar<br>Reog: Jatim<br>Tor-Tor: Sumut');
+addB(['seni rupa','lukisan','batik'], '<b>SENI RUPA</b><br><br>2D: lukisan, poster<br>3D: patung, gerabah<br><br>Batik: Solo, Yogya, Pekalongan, Papua<br>UNESCO 2009');
+addB(['wayang','wayang kulit'], '<b>WAYANG</b><br><br>Kulit: paling populer<br>Golek: boneka kayu<br>Klitik: kayu pipih<br>Beber: gulungan<br><br>UNESCO 2003');
+addB(['nada','tangga nada','musik'], '<b>TEORI MUSIK</b><br><br>Mayor: ceria<br>Minor: sedih<br><br>Notasi: angka, balok<br>Tempo: largo, moderato, allegro');
+addB(['tari kreasi','modern'], '<b>TARI KREASI</b><br><br>Modifikasi tradisional<br>Modern: bebas<br>Kontemporer: eksperimental<br><br>Unsur: wiraga, wirama, wirasa');
+addB(['html','coding','pemrograman'], '<b>PEMROGRAMAN</b><br><br>HTML: struktur web<br>CSS: tampilan<br>JavaScript: interaksi<br><br>Contoh: &lt;h1&gt;Halo&lt;/h1&gt;');
+addB(['hardware','software','cpu'], '<b>HARDWARE & SOFTWARE</b><br><br>Hardware: CPU, RAM, HDD, monitor<br>Software: OS, aplikasi<br><br>OS: Windows, Linux, macOS');
+addB(['internet','wifi','jaringan'], '<b>INTERNET</b><br><br>Internet: jaringan global<br>WiFi: nirkabel<br>IP: alamat perangkat<br>DNS: penerjemah domain<br>HTTP/HTTPS: protokol');
+addB(['algoritma','flowchart'], '<b>ALGORITMA</b><br><br>Langkah selesaikan masalah<br><br>Flowchart:<br>Oval: mulai/selesai<br>Persegi: proses<br>Belah ketupat: keputusan');
+addB(['python','javascript','java'], '<b>BAHASA PEMROGRAMAN</b><br><br>Python: AI/data<br>JavaScript: web<br>Java: Android<br>C++: game<br>PHP: server<br>SQL: database');
+addB(['ai','kecerdasan buatan','machine learning'], '<b>AI</b><br><br>Machine Learning: belajar data<br>Deep Learning: neural network<br>NLP: bahasa (ChatGPT)<br>CV: penglihatan<br>Robotics: robot');
+// ========== KUIS ==========
+var KUIS = {
+  matematika: [
+    {s:'Berapa hasil 7×8?', j:'56'},
+    {s:'Berapa hasil 15+27?', j:'42'},
+    {s:'Akar dari 144?', j:'12'},
+    {s:'a=3,b=4,c=?(Pythagoras)', j:'5'},
+    {s:'Luas lingkaran r=7?', j:'154'},
+    {s:'12×12?', j:'144'}
+  ],
+  ipa: [
+    {s:'Rumus kimia air?', j:'H2O'},
+    {s:'Planet terdekat Matahari?', j:'Merkurius'},
+    {s:'Proses tumbuhan bikin makanan?', j:'Fotosintesis'},
+    {s:'Newton ke-3 tentang?', j:'aksi reaksi'},
+    {s:'Rumus CO2?', j:'CO2'},
+    {s:'Organel energi sel?', j:'mitokondria'}
+  ],
+  ips: [
+    {s:'Kapan proklamasi?', j:'17 Agustus 1945'},
+    {s:'Presiden pertama?', j:'Soekarno'},
+    {s:'Ibu kota Indonesia?', j:'Jakarta'},
+    {s:'Wapres pertama?', j:'Hatta'},
+    {s:'Jumlah provinsi 2023?', j:'38'}
+  ],
+  'b indonesia': [
+    {s:'Puisi lama 4 baris?', j:'pantun'},
+    {s:'"Wajahnya seperti bulan" majas?', j:'simile'},
+    {s:'Singkatan EYD?', j:'EYD'},
+    {s:'Karya sastra panjang?', j:'novel'},
+    {s:'Baris pantun?', j:'4'}
+  ]
+};
+function mulaiKuis(m) {
+  var d = KUIS[m.toLowerCase()];
+  if (!d) return 'Kuis belum tersedia. Coba: matematika, ipa, ips, b indonesia.';
+  var q = d[Math.floor(Math.random() * d.length)];
+  return '<b>KUIS ' + m.toUpperCase() + '</b><br><br>' + q.s + '<br><br><i>(Jawab di chat untuk diperiksa)</i>';
+}
+var lastKuis = null;
+// ========== RUMUS ==========
+function cekRumus(t) {
+  var q = t.toLowerCase();
+  var r = {
+    'luas persegi': 'L = s×s',
+    'keliling persegi': 'K = 4×s',
+    'luas persegi panjang': 'L = p×l',
+    'keliling persegi panjang': 'K = 2×(p+l)',
+    'luas segitiga': 'L = ½×a×t',
+    'luas lingkaran': 'L = π×r²',
+    'keliling lingkaran': 'K = 2×π×r',
+    'volume kubus': 'V = s³',
+    'volume balok': 'V = p×l×t',
+    'volume tabung': 'V = π×r²×t',
+    'volume bola': 'V = 4/3×π×r³',
+    'volume kerucut': 'V = 1/3×π×r²×t',
+    'rumus abc': 'x = (-b±√(b²-4ac))/2a',
+    'pythagoras': 'c² = a²+b²',
+    'hukum ohm': 'V = I×R',
+    'energi kinetik': 'Ek = ½×m×v²',
+    'energi potensial': 'Ep = m×g×h',
+    'kalor': 'Q = m×c×ΔT',
+    'molaritas': 'M = mol/V(L)',
+    'kecepatan': 'v = s/t',
+    'percepatan': 'a = Δv/Δt',
+    'gaya': 'F = m×a',
+    'usaha': 'W = F×s',
+    'daya': 'P = W/t',
+    'tekanan': 'P = F/A',
+    'massa jenis': 'ρ = m/V'
+  };
+  for (var k in r) {
+    if (q.includes(k) || q.includes('rumus ' + k)) {
+      return '<b>RUMUS ' + k.toUpperCase() + '</b><br><br><b>' + r[k] + '</b>';
     }
+  }
+  return null;
+}
+// ========== KONVERSI ==========
+function konversi(t) {
+  var q = t.toLowerCase();
+  var m = q.match(/(\d+(?:\.\d+)?)\s*(km|m|cm|mm|kg|g|mg|ton|liter|l|ml)\s*(?:ke|to)\s*(km|m|cm|mm|kg|g|mg|ton|liter|l|ml)/);
+  if (!m) return null;
+  var n = parseFloat(m[1]);
+  var d = m[2];
+  var k = m[3];
+  var p = {km:1000, m:1, cm:0.01, mm:0.001};
+  var b = {kg:1000, g:1, mg:0.001, ton:1000000};
+  var v = {liter:1, l:1, ml:0.001};
+  var h = null;
+  if (p[d] && p[k]) h = n * p[d] / p[k];
+  else if (b[d] && b[k]) h = n * b[d] / b[k];
+  else if (v[d] && v[k]) h = n * v[d] / v[k];
+  if (h !== null) return '<b>' + n + ' ' + d + '</b> = <b>' + h + ' ' + k + '</b>';
+  return null;
+}
+// ========== KALKULATOR ==========
+function hitung(t) {
+  var c = t.replace(/x/g, '*').replace(/÷/g, '/');
+  if (!c.match(/^[\d\s+\-*/().]+$/)) return null;
+  try {
+    var r = Function('"use strict";return(' + c + ')')();
+    if (isFinite(r)) return 'Hasil dari <b>' + t + '</b> adalah <b>' + r + '</b>.';
+  } catch(e) {}
+  return null;
+}
+// ========== JAWABAN ==========
+function getJawaban(t) {
+  var q = t.toLowerCase().trim();
+  var qc = q.replace(/[?!.,]/g, '').trim();
+  if (!qc) return 'Silakan ketik pertanyaanmu.';
+  var k = konversi(qc);
+  if (k) return k;
+  var h = hitung(qc);
+  if (h) return h;
+  var r = cekRumus(qc);
+  if (r) return r;
+  if (qc.includes('kuis') || qc.includes('quiz')) {
+    if (qc.includes('matematika') || qc.includes('mtk')) {
+      lastKuis = 'matematika';
+      return mulaiKuis('matematika');
+    }
+    if (qc.includes('ipa') || qc.includes('fisika') || qc.includes('kimia') || qc.includes('biologi')) {
+      lastKuis = 'ipa';
+      return mulaiKuis('ipa');
+    }
+    if (qc.includes('ips') || qc.includes('sejarah') || qc.includes('geografi')) {
+      lastKuis = 'ips';
+      return mulaiKuis('ips');
+    }
+    if (qc.includes('indonesia')) {
+      lastKuis = 'b indonesia';
+      return mulaiKuis('b indonesia');
+    }
+    return 'Mau kuis apa? <b>matematika</b>, <b>ipa</b>, <b>ips</b>, <b>b indonesia</b>';
+  }
+  if (lastKuis) {
+    var d = KUIS[lastKuis];
+    if (d) {
+      var c = d.find(function(k2) {
+        return k2.j.toLowerCase().replace(/\s+/g, '') === qc.replace(/\s+/g, '');
+      });
+      if (c) {
+        confetti();
+        var res = '<b>BENAR!</b> Hebat!<br><br>Jawaban <b>' + c.j + '</b> tepat.<br><br>Kuis lagi? Ketik <b>"kuis ' + lastKuis + '"</b>';
+        lastKuis = null;
+        return res;
+      }
+    }
+  }
+  var best = null;
+  var score = 0;
+  for (var i = 0; i < BRAIN.length; i++) {
+    var s = 0;
+    var kw = BRAIN[i].keywords;
+    for (var j = 0; j < kw.length; j++) {
+      if (qc.includes(kw[j])) {
+        s += kw[j].length * 2;
+        if (qc.startsWith(kw[j])) s += 5;
+      }
+    }
+    if (s > score) {
+      score = s;
+      best = BRAIN[i];
+    }
+  }
+  if (best && score > 0) return best.jawaban;
+  return 'Hmm, aku belum belajar tentang <b>"' + esc(t) + '"</b>.<br><br>Coba tanya:<br>- <b>Matematika</b>: pythagoras, rumus abc<br>- <b>IPA</b>: fotosintesis, newton, sel<br>- <b>IPS</b>: proklamasi, kerajaan, iklim<br>- <b>B. Indonesia</b>: puisi, pantun<br>- <b>B. Inggris</b>: tenses, vocabulary<br>- <b>PKN</b>: pancasila, UUD<br>- <b>Developer</b>: siapa pembuat aplikasi ini<br><br>Atau ketik <b>"kuis matematika"</b>';
+}
+function beriFeedback(b, t) {
+  beep();
+  var p = b.parentElement;
+  p.querySelectorAll('button').forEach(function(x) { x.classList.remove('active'); });
+  b.classList.add('active');
+  toast(t === 'up' ? 'Terima kasih!' : 'Maaf, akan belajar lebih baik');
+}
+function kirim() {
+  var inp = document.getElementById('ci');
+  var t = inp.value.trim();
+  if (!t) return;
+  beep(500);
+  var u = document.createElement('div');
+  u.className = 'msg user';
+  u.innerHTML = esc(t) + '<span class="ts">' + getTime() + '</span>';
+  chatEl.appendChild(u);
+  inp.value = '';
+  chatEl.scrollTop = chatEl.scrollHeight;
+  var typ = document.createElement('div');
+  typ.className = 'msg bot typ';
+  typ.id = 'typ';
+  typ.innerHTML = '<span></span><span></span><span></span>';
+  chatEl.appendChild(typ);
+  chatEl.scrollTop = chatEl.scrollHeight;
+  var delay = 400 + Math.random() * 600;
+  setTimeout(function() {
+    var t2 = document.getElementById('typ');
+    if (t2) t2.remove();
+    var b = document.createElement('div');
+    b.className = 'msg bot';
+    var jw = getJawaban(t);
+    b.innerHTML = jw +
+      '<div class="fb">' +
+      '<button onclick="beriFeedback(this,\'up\')">Membantu</button>' +
+      '<button onclick="beriFeedback(this,\'down\')">Tidak</button>' +
+      '</div>' +
+      '<span class="ts">' + getTime() + '</span>';
+    chatEl.appendChild(b);
+    chatEl.scrollTop = chatEl.scrollHeight;
+    beep(700);
+  }, delay);
+}
+// ========== INIT ==========
+window.addEventListener('load', function() {
+  document.getElementById('ci').focus();
+  var h = new Date().getHours();
+  var g = 'Halo';
+  if (h >= 4 && h < 11) g = 'Selamat pagi';
+  else if (h >= 11 && h < 15) g = 'Selamat siang';
+  else if (h >= 15 && h < 18) g = 'Selamat sore';
+  else g = 'Selamat malam';
+  setTimeout(function() {
+    var m = document.createElement('div');
+    m.className = 'msg bot';
+    m.innerHTML = g + ', teman belajar!<br><br>Aku siap bantu 24/7. Ketik pertanyaan atau pilih chip di bawah.<br><br>Ketik <b>"kuis matematika"</b> untuk main, atau tanya tentang <b>developer</b> 𓆩 ᖽᐸɪղᘜ ༒ ᙃᴀ̷𝖿ᴢᴢ 𓆪.<span class="ts">' + getTime() + '</span>';
+    chatEl.appendChild(m);
+    chatEl.scrollTop = chatEl.scrollHeight;
+    beep(700);
+  }, 800);
 });
-
-/* =========================================================
-   BAGIAN 22: SMOOTH SCROLL AWAL
-   ========================================================= */
-setTimeout(() => {
-    document.getElementById('chat-area').scrollTop = 0;
-}, 100);
-
-/* =========================================================
-   SELESAI - DAFZZ AI v3.0
-   Total topik: 96 | Total mapel: 13 | Fitur: 22 bagian
-   ========================================================= */
-console.log('DAFZZ AI v3.0 siap! Topik:', BRAIN.length);
+document.addEventListener('keydown', function(e) {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+    e.preventDefault();
+    document.getElementById('ci').focus();
+  }
+});
+setTimeout(function() { chatEl.scrollTop = 0; }, 100);
+console.log('DAFZZ AI v3.0 ready. Topics:', BRAIN.length);
 </script>
 </body>
 </html>
