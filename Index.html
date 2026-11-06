@@ -1209,12 +1209,12 @@
                     </svg>
                 </div>
                 <span style="font-size: 0.68rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9; position: relative;">Pelajaran Utama Hari Ini</span>
-                <h2 id="beranda-mapel">Matematika</h2>
+                <h2>Matematika</h2>
                 <p>
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                    <span id="beranda-jam">07.00 - 08.30</span>
+                    07.00 - 08.30
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:8px;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-                    <span id="beranda-ruang">Ruang B1</span>
+                    Ruang B1
                 </p>
             </div>
 
@@ -1332,15 +1332,48 @@
             </div>
 
             <div id="sub-jadwal" class="sub-tab-content" style="display: none;">
-                <div id="jadwal-day-tabs" class="day-tab">
-                    <button data-day="senin" class="active" onclick="pilihJadwalHari('senin', this)">Senin</button>
-                    <button data-day="selasa" onclick="pilihJadwalHari('selasa', this)">Selasa</button>
-                    <button data-day="rabu" onclick="pilihJadwalHari('rabu', this)">Rabu</button>
-                    <button data-day="kamis" onclick="pilihJadwalHari('kamis', this)">Kamis</button>
-                    <button data-day="jumat" onclick="pilihJadwalHari('jumat', this)">Jumat</button>
-                    <button data-day="sabtu" onclick="pilihJadwalHari('sabtu', this)">Sabtu</button>
+                <div class="schedule-item senin">
+                    <div class="schedule-day-badge">SEN</div>
+                    <div class="schedule-content">
+                        <h4>Senin</h4>
+                        <p>07.00 - IPA • 08.30 - MTK • 10.00 - PKN</p>
+                    </div>
                 </div>
-                <div id="jadwal-detail-container"></div>
+                <div class="schedule-item selasa">
+                    <div class="schedule-day-badge">SEL</div>
+                    <div class="schedule-content">
+                        <h4>Selasa</h4>
+                        <p>07.00 - TIK • 08.30 - SBK • 10.00 - B.Indo</p>
+                    </div>
+                </div>
+                <div class="schedule-item rabu">
+                    <div class="schedule-day-badge">RAB</div>
+                    <div class="schedule-content">
+                        <h4>Rabu</h4>
+                        <p>07.00 - MTK • 08.30 - IPA • 10.00 - B.Inggris</p>
+                    </div>
+                </div>
+                <div class="schedule-item kamis">
+                    <div class="schedule-day-badge">KAM</div>
+                    <div class="schedule-content">
+                        <h4>Kamis</h4>
+                        <p>07.00 - IPS • 08.30 - MTK • 10.00 - Seni</p>
+                    </div>
+                </div>
+                <div class="schedule-item jumat">
+                    <div class="schedule-day-badge">JUM</div>
+                    <div class="schedule-content">
+                        <h4>Jumat</h4>
+                        <p>07.00 - Agama • 08.30 - PJOK • 10.00 - B.Indo</p>
+                    </div>
+                </div>
+                <div class="schedule-item sabtu">
+                    <div class="schedule-day-badge">SAB</div>
+                    <div class="schedule-content">
+                        <h4>Sabtu</h4>
+                        <p>07.00 - Ekstrakurikuler • 09.00 - Pramuka</p>
+                    </div>
+                </div>
             </div>
 
             <div id="sub-kalender" class="sub-tab-content" style="display: none;">
@@ -1459,8 +1492,8 @@
         </div>
     </div>
 
-    <!-- Bot FAB -->
-    <a href="bot.html" class="bot-fab" title="Chat dengan Bot">
+    <!-- Chatbot: langsung menuju halaman bot di Render -->
+    <a href="https://belajar-seru.onrender.com/bot.html" class="bot-fab" title="Buka Chatbot" aria-label="Buka Chatbot">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
             <circle cx="9" cy="10" r="1" fill="currentColor"/>
@@ -1797,9 +1830,8 @@ function buildToolGrid() {
 
 /* ============ BOT CHAT ============ */
 function openBotChat() {
-    window.location.href = 'bot.html';
+    window.location.href = 'https://belajar-seru.onrender.com/bot.html';
 }
-
 /* ============ MODAL ============ */
 function clearActiveTimers() {
     activeTimers.forEach(id => clearInterval(id));
@@ -2729,9 +2761,12 @@ TOOLS.ujian = {
 
 /* =========================================================
    VIVO 1820 FIX — dipasang setelah semua inisialisasi.
+   Cuma menambahkan setup ulang event & fallback untuk
+   browser lama. TIDAK mengubah TOOLS, state, atau UI.
    ========================================================= */
 function applyVivoFix() {
     try {
+        // 1. Paksa bottom-nav & nav-item bisa diklik
         var nav = document.querySelector('.bottom-nav');
         if (nav) {
             nav.style.position = 'fixed';
@@ -2745,6 +2780,8 @@ function applyVivoFix() {
             nav.style.pointerEvents = 'auto';
         }
 
+        // 2. Tiap nav-item: paksa pointer-event & pasang listener
+        //    eksplisit (untuk browser lama yang event bubbling-nya aneh)
         var views = ['view-beranda', 'view-belajar', 'view-tool', 'view-info'];
         var items = document.querySelectorAll('.nav-item');
         for (var i = 0; i < items.length; i++) {
@@ -2756,6 +2793,7 @@ function applyVivoFix() {
                 btn.style.opacity = '1';
                 btn.style.cursor = 'pointer';
 
+                // Hapus onclick lama, ganti dengan yang lebih stabil
                 btn.onclick = null;
                 btn.addEventListener('click', function(ev) {
                     ev.preventDefault();
@@ -2765,12 +2803,14 @@ function applyVivoFix() {
             })(i);
         }
 
+        // 3. FAB jangan nutupi nav
         var fab = document.querySelector('.bot-fab');
         if (fab) {
             fab.style.zIndex = '50';
             fab.style.bottom = '84px';
         }
 
+        // 4. Content jangan overlap nav
         var content = document.querySelector('.content-area');
         if (content) content.style.paddingBottom = '90px';
 
@@ -2780,9 +2820,13 @@ function applyVivoFix() {
     }
 }
 
+// Jalankan setelah DOM siap + delay sedikit untuk browser lambat
 setTimeout(applyVivoFix, 300);
 window.addEventListener('load', applyVivoFix);
 
+/* =========================================================
+   INIT
+   ========================================================= */
 /* =========================================================
    REAL-TIME: Jam, Sapaan, Pelajaran Otomatis
    ========================================================= */
@@ -2840,6 +2884,63 @@ function updateLiveClock() {
 setInterval(updateLiveClock, 1000);
 updateLiveClock();
 
+/* =========================================================
+   VIVO 1820 FIX
+   ========================================================= */
+function applyVivoFix() {
+    try {
+        var nav = document.querySelector('.bottom-nav');
+        if (nav) {
+            nav.style.position = 'fixed';
+            nav.style.bottom = '0';
+            nav.style.left = '0';
+            nav.style.right = '0';
+            nav.style.zIndex = '999999';
+            nav.style.background = '#ffffff';
+            nav.style.display = 'flex';
+            nav.style.flexDirection = 'row';
+            nav.style.pointerEvents = 'auto';
+        }
+
+        var views = ['view-beranda', 'view-belajar', 'view-tool', 'view-info'];
+        var items = document.querySelectorAll('.nav-item');
+        for (var i = 0; i < items.length; i++) {
+            (function(idx) {
+                var btn = items[idx];
+                btn.style.pointerEvents = 'auto';
+                btn.style.zIndex = '1000000';
+                btn.style.visibility = 'visible';
+                btn.style.opacity = '1';
+                btn.style.cursor = 'pointer';
+                btn.onclick = null;
+                btn.addEventListener('click', function(ev) {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    switchMainView(views[idx], btn);
+                }, true);
+            })(i);
+        }
+
+        var fab = document.querySelector('.bot-fab');
+        if (fab) {
+            fab.style.zIndex = '50';
+            fab.style.bottom = '84px';
+        }
+
+        var content = document.querySelector('.content-area');
+        if (content) content.style.paddingBottom = '90px';
+
+        console.log('[VIVO FIX] Nav & FAB di-reset.');
+    } catch (e) {
+        console.warn('[VIVO FIX] Gagal:', e);
+    }
+}
+setTimeout(applyVivoFix, 300);
+window.addEventListener('load', applyVivoFix);
+
+/* =========================================================
+   INIT
+   ========================================================= */
 /* ============ FITUR JADWAL BARU ============ */
 const JADWAL_DATA = {
     senin: [{ mapel: 'IPA', jam: '07.00 - 08.30' }, { mapel: 'PKN', jam: '08.30 - 10.00' }, { mapel: 'MTK', jam: '10.00 - 11.30' }],
@@ -2970,6 +3071,29 @@ setTimeout(() => {
 }, 500);
 
 window.onload = loadData;
-</script>
+
+<style>
+  /* Tombol chatbot ringan dan selalu bisa diklik */
+  .bot-fab {
+      position: fixed;
+      right: 16px;
+      bottom: 90px;
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #7c3aed, #ec4899);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      box-shadow: 0 5px 14px rgba(124,58,237,0.28);
+      z-index: 10001;
+      text-decoration: none;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+  }
+  .bot-fab:active { transform: scale(0.96); }
+  .bot-fab svg { pointer-events: none; }
+</style>
 </body>
 </html>
